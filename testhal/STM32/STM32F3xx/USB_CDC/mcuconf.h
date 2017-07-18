@@ -66,6 +66,10 @@
 #define STM32_USB_CLOCK_REQUIRED            TRUE
 #define STM32_USBPRE                        STM32_USBPRE_DIV1P5
 
+#undef STM32_HSE_BYPASS
+// #error "oh no"
+// #endif
+
 /*
  * ADC driver system settings.
  */

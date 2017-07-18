@@ -104,9 +104,9 @@ static THD_FUNCTION(Thread1, arg) {
     systime_t time;
 
     time = serusbcfg.usbp->state == USB_ACTIVE ? 250 : 500;
-    palClearLine(LINE_LED3_RED);
+    palClearLine(LINE_I2C1_SDA);
     chThdSleepMilliseconds(time);
-    palSetLine(LINE_LED3_RED);
+    palSetLine(LINE_I2C1_SDA);
     chThdSleepMilliseconds(time);
   }
 }
