@@ -73,7 +73,7 @@ static bool sdu_start_receive(SerialUSBDriver *sdup) {
 
   /* Buffer found, starting a new transaction.*/
   usbStartReceiveI(sdup->config->usbp, sdup->config->bulk_out,
-                   buf, SERIAL_USB_BUFFERS_SIZE);
+                   buf, sdup->ibqueue.bsize - sizeof(size_t));
 
   return false;
 }
