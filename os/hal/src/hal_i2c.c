@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2016 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 
 /**
- * @file    hal_i2c.c
+ * @file    i2c.c
  * @brief   I2C Driver code.
  *
  * @addtogroup I2C
@@ -74,8 +74,12 @@ void i2cObjectInit(I2CDriver *i2cp) {
   i2cp->config = NULL;
 
 #if I2C_USE_MUTUAL_EXCLUSION == TRUE
+#if CH_CFG_USE_MUTEXES
   osalMutexObjectInit(&i2cp->mutex);
-#endif
+#else
+  osalSemObjectInit(&i2cp->semaphore, 1);
+#endif /* CH_CFG_USE_MUTEXES */
+#endif /* I2C_USE_MUTUAL_EXCLUSION */
 
 #if defined(I2C_DRIVER_EXT_INIT_HOOK)
   I2C_DRIVER_EXT_INIT_HOOK(i2cp);
@@ -113,16 +117,12 @@ void i2cStart(I2CDriver *i2cp, const I2CConfig *config) {
 void i2cStop(I2CDriver *i2cp) {
 
   osalDbgCheck(i2cp != NULL);
-
-  osalSysLock();
-
   osalDbgAssert((i2cp->state == I2C_STOP) || (i2cp->state == I2C_READY) ||
                 (i2cp->state == I2C_LOCKED), "invalid state");
 
+  osalSysLock();
   i2c_lld_stop(i2cp);
-  i2cp->config = NULL;
-  i2cp->state  = I2C_STOP;
-
+  i2cp->state = I2C_STOP;
   osalSysUnlock();
 }
 
@@ -246,7 +246,190 @@ msg_t i2cMasterReceiveTimeout(I2CDriver *i2cp,
   return rdymsg;
 }
 
-#if (I2C_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
+
+#if HAL_USE_I2C_LOCK    /* I2C slave mode support */
+
+/**
+ * @brief   Lock I2C bus at the beginning of the next message sent
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] lockDuration   max number of ticks to hold bus locked
+ *                      - @a TIME_INFINITE no timeout.
+ *                      - @a TIME_IMMEDIATE unlock the bus immediately
+ *                      .
+ *
+ * @api
+ */
+void i2cLock(I2CDriver *i2cp, systime_t lockDuration)
+{
+  chDbgCheck((i2cp != NULL), "i2cLock");
+  chSysLock();
+  i2c_lld_lock(i2cp, lockDuration);
+  chSysUnlock();
+}
+
+/**
+ * @brief   Unlock I2C bus after the end of the next transaction
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @api
+ **/
+void i2cUnlock(I2CDriver *i2cp)
+{
+  chDbgCheck((i2cp != NULL), "i2cUnlock");
+  chSysLock();
+  i2c_lld_unlock(i2cp);
+  chSysUnlock();
+}
+#endif
+
+
+#if HAL_USE_I2C_SLAVE   /* I2C slave mode support */
+
+/**
+ * @brief   Reconfigure I2C channel to respond to indicated address
+ *          in addition to those already matched
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] i2cadr    I2C network address
+ *
+ * @return              Length of message OR the type of event received
+ * @retval I2C_OK       Success
+ * @retval I2C_ERROR    Cannot match address in addition of those already
+ *
+ * @details             MatchAddress calls are cumulative.
+ *                      Specify address zero to match I2C "all call"
+ *                      Does not support 10-bit addressing.
+ *
+ * @api
+ **/
+msg_t i2cMatchAddress(I2CDriver *i2cp, i2caddr_t  i2cadr)
+{
+  osalDbgCheck((i2cp != NULL));
+  chSysLock();
+  msg_t result = i2c_lld_matchAddress(i2cp, i2cadr);
+  chSysUnlock();
+  return result;
+}
+
+
+/**
+ * @brief   Configure to ignore messages directed to the given i2cadr
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] i2cadr    I2C bus address
+ *                      - @a 0 matches "all call"
+ *                      .
+ * @details A message being transferred that has already matched the
+ *          specified address will continue being processed.
+ *          Requests to unmatch an address that is not currently being matched
+ *          are ignored.
+ *
+ * @api
+ */
+void i2cUnmatchAddress(I2CDriver *i2cp, i2caddr_t  i2cadr)
+{
+  osalDbgCheck((i2cp != NULL));
+  chSysLock();
+  i2c_lld_unmatchAddress(i2cp, i2cadr);
+  chSysUnlock();
+}
+
+
+/**
+ * @brief   Reconfigure I2C channel to no longer match any address
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @details   Causes all subsequent messages to be ignored.
+ *            A message being transferred that has already matched a
+ *            slave address will continue being processed.
+ *
+ * @api
+ **/
+void i2cUnmatchAll(I2CDriver *i2cp)
+{
+  osalDbgCheck((i2cp != NULL));
+  chSysLock();
+  i2c_lld_unmatchAll(i2cp);
+  chSysUnlock();
+}
+
+
+/**
+ * @brief   Configure callbacks & buffers for message reception & query reply
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] rxMsg     @p I2CSlaveMsg struct for processing subsequent messages
+ * @param[in] replyMsg  @p I2CSlaveMsg struct for processing subsequent queries
+ *
+ * @details             Must be called from a thread
+ *                      Call i2cMatchAddress() after this to start processing
+ *     Enabling match addresses before installing handler callbacks can
+ *     result in locking the I2C bus when a master accesses those
+ *     unconfigured slave addresses
+ *
+ * @api
+ */
+void i2cSlaveConfigure(I2CDriver *i2cp,
+                   const I2CSlaveMsg *rxMsg, const I2CSlaveMsg *replyMsg)
+{
+  osalDbgCheck((i2cp != NULL));
+  chSysLock();
+  i2c_lld_slaveReceive(i2cp, rxMsg);
+  i2c_lld_slaveReply(i2cp, replyMsg);
+  chSysUnlock();
+}
+
+
+/**
+ * @brief   Configure callbacks & buffers for query reply
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] replyMsg  @p I2CSlaveMsg struct for processing subsequent queries
+ *
+ * @details             Call i2cMatchAddress() after this to start processing
+ *     Enabling match addresses before installing handler callbacks can
+ *     result in locking the I2C bus when a master accesses those
+ *     unconfigured slave addresses
+ *
+ * @api
+ */
+void i2cSlaveReceive(I2CDriver *i2cp, const I2CSlaveMsg *rxMsg)
+{
+  osalDbgCheck((i2cp != NULL && rxMsg != NULL));
+  chSysLock();
+  i2c_lld_slaveReceive(i2cp, rxMsg);
+  chSysUnlock();
+}
+
+
+/**
+ * @brief   Configure callbacks & buffers for query reply
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ * @param[in] replyMsg  @p I2CSlaveMsg struct for processing subsequent queries
+ *
+ * @details             Call i2cMatchAddress() after this to start processing
+ *     Enabling match addresses before installing handler callbacks can
+ *     result in locking the I2C bus when a master accesses those
+ *     unconfigured slave addresses
+ *
+ * @api
+ */
+void i2cSlaveReply(I2CDriver *i2cp, const I2CSlaveMsg *replyMsg)
+{
+  osalDbgCheck((i2cp != NULL && replyMsg != NULL));
+  chSysLock();
+  i2c_lld_slaveReply(i2cp, replyMsg);
+  chSysUnlock();
+}
+
+#endif /* HAL_USE_I2C_SLAVE */
+
+
+#if I2C_USE_MUTUAL_EXCLUSION == TRUE || defined(__DOXYGEN__)
 /**
  * @brief   Gains exclusive access to the I2C bus.
  * @details This function tries to gain ownership to the I2C bus, if the bus
@@ -262,8 +445,13 @@ void i2cAcquireBus(I2CDriver *i2cp) {
 
   osalDbgCheck(i2cp != NULL);
 
+#if CH_CFG_USE_MUTEXES
   osalMutexLock(&i2cp->mutex);
+#elif CH_CFG_USE_SEMAPHORES
+  osalSemWait(&i2cp->semaphore);
+#endif /* CH_CFG_USE_MUTEXES */
 }
+
 
 /**
  * @brief   Releases exclusive access to the I2C bus.
@@ -278,8 +466,13 @@ void i2cReleaseBus(I2CDriver *i2cp) {
 
   osalDbgCheck(i2cp != NULL);
 
+#if CH_CFG_USE_MUTEXES
   osalMutexUnlock(&i2cp->mutex);
+#elif CH_CFG_USE_SEMAPHORES
+  osalSemSignal(&i2cp->semaphore);
+#endif /* CH_CFG_USE_MUTEXES */
 }
+
 #endif /* I2C_USE_MUTUAL_EXCLUSION == TRUE */
 
 #endif /* HAL_USE_I2C == TRUE */

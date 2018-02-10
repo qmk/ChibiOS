@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2016 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
 */
 /*
    Concepts and parts of this file have been contributed by Uladzimir Pylinsky
-   aka barthess.
+   aka barthess.  I2C Slave API contributed by Brent Roman (brent@mbari.org)
  */
 
 /**
- * @file    I2Cv1/hal_i2c_lld.h
+ * @file    STM32/I2Cv1/i2c_lld.h
  * @brief   STM32 I2C subsystem low level driver header.
  *
  * @addtogroup I2C
  * @{
  */
 
-#ifndef HAL_I2C_LLD_H
-#define HAL_I2C_LLD_H
+#ifndef _I2C_LLD_H_
+#define _I2C_LLD_H_
 
 #if HAL_USE_I2C || defined(__DOXYGEN__)
 
@@ -39,6 +39,12 @@
  * @brief   Peripheral clock frequency.
  */
 #define I2C_CLK_FREQ  ((STM32_PCLK1) / 1000000)
+
+/**
+ * @brief   Invalid I2C bus address
+ */
+#define i2cInvalidAdr  ((i2caddr_t) -1)
+
 
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
@@ -54,7 +60,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(STM32_I2C_USE_I2C1) || defined(__DOXYGEN__)
-#define STM32_I2C_USE_I2C1                  FALSE
+#define STM32_I2C_USE_I2C1              FALSE
 #endif
 
 /**
@@ -63,7 +69,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(STM32_I2C_USE_I2C2) || defined(__DOXYGEN__)
-#define STM32_I2C_USE_I2C2                  FALSE
+#define STM32_I2C_USE_I2C2              FALSE
 #endif
 
 /**
@@ -72,8 +78,24 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(STM32_I2C_USE_I2C3) || defined(__DOXYGEN__)
-#define STM32_I2C_USE_I2C3                  FALSE
+#define STM32_I2C_USE_I2C3              FALSE
 #endif
+
+/**
+ *	@brief	Enables support for I2C slave mode operation
+ */
+#if !defined(HAL_USE_I2C_SLAVE) || defined(__DOXYGEN__)
+#define HAL_USE_I2C_SLAVE					FALSE
+#define HAL_USE_I2C_STARTFIX				FALSE
+#endif
+
+/**
+ *	@brief  Enables additional code needed with V1 I2C
+ */
+#if !defined(HAL_USE_I2C_STARTFIX) || defined(__DOXYGEN__)
+#define HAL_USE_I2C_STARTFIX				FALSE
+#endif
+
 
 /**
  * @brief   I2C timeout on busy condition in milliseconds.
@@ -86,21 +108,21 @@
  * @brief   I2C1 interrupt priority level setting.
  */
 #if !defined(STM32_I2C_I2C1_IRQ_PRIORITY) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C1_IRQ_PRIORITY         10
+#define STM32_I2C_I2C1_IRQ_PRIORITY     10
 #endif
 
 /**
  * @brief   I2C2 interrupt priority level setting.
  */
 #if !defined(STM32_I2C_I2C2_IRQ_PRIORITY) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C2_IRQ_PRIORITY         10
+#define STM32_I2C_I2C2_IRQ_PRIORITY     10
 #endif
 
 /**
  * @brief   I2C3 interrupt priority level setting.
  */
 #if !defined(STM32_I2C_I2C3_IRQ_PRIORITY) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C3_IRQ_PRIORITY         10
+#define STM32_I2C_I2C3_IRQ_PRIORITY     10
 #endif
 
 /**
@@ -149,7 +171,7 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C1_RX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 0)
+#define STM32_I2C_I2C1_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 0)
 #endif
 
 /**
@@ -157,7 +179,7 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C1_TX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
+#define STM32_I2C_I2C1_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 6)
 #endif
 
 /**
@@ -165,7 +187,7 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C2_RX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 2)
+#define STM32_I2C_I2C2_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 2)
 #endif
 
 /**
@@ -173,7 +195,7 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C2_TX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C2_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 7)
+#define STM32_I2C_I2C2_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 7)
 #endif
 
 /**
@@ -181,7 +203,7 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C3_RX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C3_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 2)
+#define STM32_I2C_I2C3_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 2)
 #endif
 
 /**
@@ -189,17 +211,17 @@
  * @note    This option is only available on platforms with enhanced DMA.
  */
 #if !defined(STM32_I2C_I2C3_TX_DMA_STREAM) || defined(__DOXYGEN__)
-#define STM32_I2C_I2C3_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 4)
+#define STM32_I2C_I2C3_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 4)
 #endif
 
 #else /* !STM32_ADVANCED_DMA */
 
 /* Fixed streams for platforms using the old DMA peripheral, the values are
    valid for both STM32F1xx and STM32L1xx.*/
-#define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 7)
-#define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
-#define STM32_I2C_I2C2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 5)
-#define STM32_I2C_I2C2_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 4)
+#define STM32_I2C_I2C1_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 7)
+#define STM32_I2C_I2C1_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 6)
+#define STM32_I2C_I2C2_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 5)
+#define STM32_I2C_I2C2_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 4)
 
 #endif /* !STM32_ADVANCED_DMA*/
 
@@ -385,25 +407,84 @@ typedef enum {
 } i2cdutycycle_t;
 
 /**
- * @brief   Type of I2C driver configuration structure.
+ * @brief   Type of a structure representing an I2C driver.
+ */
+typedef struct I2CDriver I2CDriver;
+
+/**
+ * @brief Driver configuration structure.
  */
 typedef struct {
-  /* End of the mandatory fields.*/
   i2copmode_t     op_mode;       /**< @brief Specifies the I2C mode.        */
   uint32_t        clock_speed;   /**< @brief Specifies the clock frequency.
                                       @note Must be set to a value lower
                                       than 400kHz.                          */
   i2cdutycycle_t  duty_cycle;    /**< @brief Specifies the I2C fast mode
                                       duty cycle.                           */
+#if HAL_USE_I2C_STARTFIX && HAL_USE_I2C_SLAVE
+  void (*armStartDetect)(void);   /**< @brief Arm Start Condition Detector    */
+  void (*disarmStartDetect)(void);/**< @brief Disarm Start Condition Detector */
+#endif
 } I2CConfig;
 
-/**
- * @brief   Type of a structure representing an I2C driver.
- */
-typedef struct I2CDriver I2CDriver;
+
+#if HAL_USE_I2C_SLAVE   /* I2C slave mode support */
+
+typedef struct I2CSlaveMsg I2CSlaveMsg;
+
+/*
+  returns the current I2C slave message receive configuration
+*/
+I2CSlaveMsg *i2cSlaveGetReceiveMsg(I2CDriver *i2cp);
+
+
+/*
+  returns the current I2C slave message reply configuration
+*/
+I2CSlaveMsg *i2cSlaveGetReplyMsg(I2CDriver *i2cp);
+
+
+/*
+  I2C Slave Message Call Back.
+  Invoked from interrupt context just after
+  the last byte of the message is transferred or slaveAdr is matched.
+
+  Use i2cSlaveReceiveMsg() or i2cSlaveReplyMsg() to access
+  the relevant message handling configuration
+*/
+typedef void I2CSlaveMsgCB(I2CDriver *i2cp);
+
+
+/*
+  I2CSlaveMsg message handling configurations are normally
+  stored in read-only memory.
+  They describe either a buffer to contain incoming messages from
+  a bus master and associated callback functions, or one
+  preloaded with an outgoing reply to a read request and its callbacks.
+*/
+
+struct I2CSlaveMsg {
+  size_t     size;     /* sizeof(body) -- zero if master must wait */
+  uint8_t   *body;     /* message contents -- or NULL if master must wait */
+  I2CSlaveMsgCB *adrMatched;  /* invoked when slave address matches */
+  I2CSlaveMsgCB *processMsg;  /* invoked after message is transferred */
+  I2CSlaveMsgCB *exception;   /* invoked if error or timeout during transfer */
+};
+
+
+I2CSlaveMsgCB I2CSlaveDummyCB;
+/*
+  dummy callback -- placeholder to ignore event
+*/
+
+  /* lock bus on receive or reply -- force master to wait */
+extern const I2CSlaveMsg I2CSlaveLockOnMsg;
+
+#endif  /* HAL_USE_I2C_SLAVE */
+
 
 /**
- * @brief   Structure representing an I2C driver.
+ * @brief Structure representing an I2C driver.
  */
 struct I2CDriver {
   /**
@@ -419,10 +500,14 @@ struct I2CDriver {
    */
   i2cflags_t                errors;
 #if I2C_USE_MUTUAL_EXCLUSION || defined(__DOXYGEN__)
+#if CH_CFG_USE_MUTEXES || defined(__DOXYGEN__)
   /**
    * @brief   Mutex protecting the bus.
    */
-  mutex_t                   mutex;
+  mutex_t                     mutex;
+#elif CH_CFG_USE_SEMAPHORES
+  semaphore_t                 semaphore;
+#endif
 #endif /* I2C_USE_MUTUAL_EXCLUSION */
 #if defined(I2C_DRIVER_EXT_FIELDS)
   I2C_DRIVER_EXT_FIELDS
@@ -436,6 +521,22 @@ struct I2CDriver {
    * @brief     Current slave address without R/W bit.
    */
   i2caddr_t                 addr;
+  /**
+   * @brief Master RX DMA buffer size.
+   */
+  uint16_t                  masterRxbytes;
+  /**
+   * @brief Master TX DMA buffer size.
+   */
+  uint16_t                  masterTxbytes;
+  /**
+   * @brief Master RX DMA buffer base.
+   */
+  uint8_t                   *masterRxbuf;
+  /**
+   * @brief Master TX DMA buffer base.
+   */
+  const uint8_t             *masterTxbuf;
   /**
    * @brief RX DMA mode bit mask.
    */
@@ -456,6 +557,72 @@ struct I2CDriver {
    * @brief     Pointer to the I2Cx registers block.
    */
   I2C_TypeDef               *i2c;
+
+  /**
+   * @brief     low level I2C interface / protocol state
+   */
+  enum i2cMode {
+    i2cIdle=1,          /* awaiting address or inactive */
+    i2cSlaveRxing,      /* receiving message */
+    i2cLockedRxing,     /* stretching clock before receiving message */
+    i2cSlaveReplying,   /* replying to query */
+    i2cLockedReplying,  /* stretching clock before replying to query */
+
+    i2cIsMaster=0x11,   /* sent start bit (mastering bus) */
+    i2cMasterStarted,   /* repeated start after write */
+    i2cMasterSelecting, /* sending slave address */
+    i2cMasterRxing,     /* receiving reply from slave */
+    i2cMasterTxing      /* sending message to slave */
+    }  mode;
+
+#if HAL_USE_I2C_LOCK || HAL_USE_I2C_SLAVE
+  /**
+   * @brief     I2C transaction timer
+   */
+  virtual_timer_t           timer;
+#endif
+#if HAL_USE_I2C_LOCK
+  /**
+   * @brief     I2C bus lock duration
+   */
+  systime_t                 lockDuration;
+#endif
+#if HAL_USE_I2C_SLAVE
+  /* additional fields to support I2C slave transactions */
+
+  /**
+   * @brief     slave address of message being processed
+   */
+  i2caddr_t                 targetAdr;
+  /**
+   * @brief     Error Mask for last slave message
+   */
+  i2cflags_t                slaveErrors;
+  /**
+   * @brief     Length of most recently transferred slave message
+   */
+  uint32_t                  slaveBytes;
+  /**
+   * @brief     Maximum # of ticks slave may stretch the I2C clock
+   */
+  systime_t                 slaveTimeout;
+  /**
+   * @brief     Pointer to slave message reception handler
+   */
+  const I2CSlaveMsg         *slaveRx;
+  /**
+   * @brief     Pointer to slave message Reply handler
+   */
+  const I2CSlaveMsg         *slaveReply;
+  /**
+   * @brief     Pointer to handler for next slave received message
+   */
+  const I2CSlaveMsg         *slaveNextRx;
+  /**
+   * @brief     Pointer to handler for next slave reply message
+   */
+  const I2CSlaveMsg         *slaveNextReply;
+#endif
 };
 
 /*===========================================================================*/
@@ -470,6 +637,86 @@ struct I2CDriver {
  * @notapi
  */
 #define i2c_lld_get_errors(i2cp) ((i2cp)->errors)
+
+
+#if HAL_USE_I2C_LOCK
+/**
+ * @brief   Unlock I2C bus after the end of the next transaction
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ **/
+#define i2c_lld_unlock(i2cp) (i2cp->lockDuration = TIME_IMMEDIATE)
+#endif
+
+
+#if HAL_USE_I2C_SLAVE   /* I2C slave mode support */
+/**
+ * @brief   Get slave errors from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveErrors(i2cp) ((i2cp)->slaveErrors)
+
+/**
+ * @brief   Get slave message bytes transferred from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveBytes(i2cp) ((i2cp)->slaveBytes)
+
+
+/**
+ * @brief   Get slave timeout in ticks from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveTimeout(i2cp) ((i2cp)->slaveTimeout)
+
+/**
+ * @brief   Set slave timeout in ticks for I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_set_slaveTimeout(i2cp,ticks) ((i2cp)->slaveTimeout=(ticks))
+
+/**
+ * @brief   Get slave target address from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveTargetAdr(i2cp) ((i2cp)->targetAdr)
+
+/**
+ * @brief   Get slave receive message descriptor from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveReceive(i2cp) ((i2cp)->slaveNextRx)
+
+/**
+ * @brief   Get slave reply message descriptor from I2C driver.
+ *
+ * @param[in] i2cp      pointer to the @p I2CDriver object
+ *
+ * @notapi
+ */
+#define i2c_lld_get_slaveReply(i2cp) ((i2cp)->slaveNextReply)
+
+#endif
 
 /*===========================================================================*/
 /* External declarations.                                                    */
@@ -502,12 +749,29 @@ extern "C" {
   msg_t i2c_lld_master_receive_timeout(I2CDriver *i2cp, i2caddr_t addr,
                                        uint8_t *rxbuf, size_t rxbytes,
                                        systime_t timeout);
+
+#if HAL_USE_I2C_LOCK    /* I2C slave mode support */
+  void i2c_lld_lock(I2CDriver *i2cp, systime_t lockDuration);
+#endif
+#if HAL_USE_I2C_SLAVE   /* I2C slave mode support */
+  msg_t i2c_lld_matchAddress(I2CDriver *i2cp, i2caddr_t  i2cadr);
+  void  i2c_lld_unmatchAddress(I2CDriver *i2cp, i2caddr_t  i2cadr);
+  void  i2c_lld_unmatchAll(I2CDriver *i2cp);
+  void  i2c_lld_slaveReceive(I2CDriver *i2cp, const I2CSlaveMsg *rxMsg);
+  void  i2c_lld_slaveReply(I2CDriver *i2cp, const I2CSlaveMsg *replyMsg);
+#if HAL_USE_I2C_STARTFIX
+  void  i2c_lld_startDetected(I2CDriver *i2cp);
+  void  i2c_lld_noStartDetector(void);
+#define i2cNoStartDetector  i2c_lld_noStartDetector
+#endif
+#endif /* HAL_USE_I2C_SLAVE */
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* HAL_USE_I2C  */
 
-#endif /* HAL_I2C_LLD_H */
+#endif /* _I2C_LLD_H_ */
 
 /** @} */
