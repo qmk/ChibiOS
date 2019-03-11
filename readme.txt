@@ -74,6 +74,8 @@
 *****************************************************************************
 
 *** 19.1.1 ***
+- LIB: Re-introduced missing chGuardedPoolGetCounterI() function to guarded
+       pools allocator.
 - NEW: Extra timer checks in STM32 ST driver.
 - FIX: Fixed wrong ADCSEL definitions in STM32H7 HAL (bug #1016).
 - FIX: Fixed chTimeIsInRangeX() failing under some configurations (bug #1015).
