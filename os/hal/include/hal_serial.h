@@ -245,7 +245,7 @@ struct hal_serial_driver {
  *
  * @iclass
  */
-#define sdReadI(sdp, b, n) iqReadI(&(sdp)->iqueue, b, n, TIME_INFINITE)
+#define sdReadI(sdp, b, n) iqReadI(&(sdp)->iqueue, b, n)
 
 /**
  * @brief   Direct blocking read from a @p SerialDriver.
