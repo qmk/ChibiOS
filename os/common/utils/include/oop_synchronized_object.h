@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2021 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2023 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
 #ifndef OOP_SYNCHRONIZED_OBJECT_H
 #define OOP_SYNCHRONIZED_OBJECT_H
 
-#include "ch.h"
+#include "osal.h"
 #include "oop_referenced_object.h"
 
 /**
@@ -86,7 +86,7 @@ static inline void *__synchronized_object_objinit_impl(void *ip, const void *vmt
   synchronized_object_c *objp = (synchronized_object_c *)ip;
 
   __referenced_object_objinit_impl(ip, vmt);
-  chMtxObjectInit(&objp->mutex);
+  osalMutexObjectInit(&objp->mutex);
 
   return ip;
 }
@@ -114,7 +114,7 @@ CC_FORCE_INLINE
 static inline void soLock(void *ip) {
   synchronized_object_c *objp = (synchronized_object_c *)ip;
 
-  chMtxLock(&objp->mutex);
+  osalMutexLock(&objp->mutex);
 }
 
 /**
@@ -126,7 +126,7 @@ CC_FORCE_INLINE
 static inline void soUnlock(void *ip) {
   synchronized_object_c *objp = (synchronized_object_c *)ip;
 
-  chMtxUnlock(&objp->mutex);
+  osalMutexUnlock(&objp->mutex);
 }
 
 #endif /* OOP_SYNCHRONIZED_OBJECT_H */

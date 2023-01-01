@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2018 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2023 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -37,13 +37,53 @@
 /* Driver constants.                                                         */
 /*===========================================================================*/
 
+/**
+ * @name    Common driver states
+ * @{
+ */
+#define HAL_DRV_STATE_UNINIT                0U
+#define HAL_DRV_STATE_STOPPED               1U
+#define HAL_DRV_STATE_READY                 2U
+#define HAL_DRV_STATE_ACTIVE                3U
+#define HAL_DRV_STATE_ERROR                 4U
+/** @} */
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
 
+/**
+ * @name    Common driver configuration options
+ * @{
+ */
+/**
+ * @brief   Enables the mutual exclusion APIs on driver instances.
+ * @note    Disabling this option saves both code and data space.
+ */
+#if !defined(HAL_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
+#define HAL_USE_MUTUAL_EXCLUSION            TRUE
+#endif
+
+/**
+ * @brief   Enables the HAL registry for drivers.
+ * @note    Disabling this option saves both code and data space.
+ */
+#if !defined(HAL_USE_REGISTRY) || defined(__DOXYGEN__)
+#define HAL_USE_REGISTRY                    TRUE
+#endif
+/** @} */
+
 /*===========================================================================*/
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
+
+#if (HAL_USE_MUTUAL_EXCLUSION != TRUE) && (HAL_USE_MUTUAL_EXCLUSION != FALSE)
+#error "invalid HAL_USE_MUTUAL_EXCLUSION value"
+#endif
+
+#if (HAL_USE_REGISTRY != TRUE) && (HAL_USE_REGISTRY != FALSE)
+#error "invalid HAL_USE_REGISTRY value"
+#endif
 
 /*===========================================================================*/
 /* Driver data structures and types.                                         */
@@ -63,19 +103,27 @@ typedef struct base_driver base_driver_c;
  * @brief   @p base_driver_c specific methods.
  */
 #define __base_driver_methods                                               \
-  __referenced_object_methods                                               \
-  void (*stop)(void *ip);                                                   \
-  void (*lock)(void *ip);                                                   \
-  void (*unlock)(void *ip);
+  __referenced_object_methods
 
+#if (HAL_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
 /**
  * @brief   @p base_driver_c specific data.
  */
 #define __base_driver_data                                                  \
   __referenced_object_data                                                  \
+  /* Driver state.*/                                                        \
   hal_driver_state_t                        state;                          \
+  /* Driver owner or NULL.*/                                                \
+  void                                      *owner;                         \
+  /* Mutual exclusion object.*/                                             \
   mutex_t                                   mutex;
 
+#else /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
+#define __base_driver_data                                                  \
+  __referenced_object_data                                                  \
+  hal_driver_state_t                        state;                          \
+  void                                      *owner;
+#endif /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
 
 /**
  * @brief   @p base_driver_c virtual methods table.
@@ -132,6 +180,7 @@ static inline void *__base_driver_objinit_impl(void *ip, const void *vmt) {
   base_driver_c *objp = (base_driver_c *)ip;
 
   __referenced_object_objinit_impl(objp, vmt);
+  objp->owner = NULL;
   osalMutexObjectInit(&objp->mutex);
 
   return ip;
@@ -153,9 +202,76 @@ static inline void __base_driver_dispose_impl(void *ip) {
 /** @} */
 
 /**
- * @brief   Object lock.
+ * @brief   Driver close.
+ * @details Releases a reference to the driver, when the count reaches zero
+ *          then the driver is physically uninitialized.
  *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @return              The number of references left.
+ */
+CC_FORCE_INLINE
+static inline oop_object_references_t drvClose(void *ip) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  return roRelease(objp);
+}
+
+/**
+ * @brief   Driver state get.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @return              The driver state.
+ */
+CC_FORCE_INLINE
+static inline hal_driver_state_t drvGetStateX(void *ip) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  return objp->state;
+}
+
+/**
+ * @brief   Driver state set.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @param[in] state     New driver state.
+ */
+CC_FORCE_INLINE
+static inline void drvSetStateX(void *ip, hal_driver_state_t state) {
+
+  ((base_driver_c *)ip)->state = state;
+}
+
+/**
+ * @brief   Driver owner get.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @return              The driver owner.
+ */
+CC_FORCE_INLINE
+static inline void *drvGetOwnerX(void *ip) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  return objp->owner;
+}
+
+/**
+ * @brief   Driver owner set.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @param[in] owner     New driver owner.
+ */
+CC_FORCE_INLINE
+static inline void drvSetOwnerX(void *ip, void *owner) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  objp->owner = owner;
+}
+
+#if (HAL_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
+/**
+ * @brief   Driver lock.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure to be
  *                      locked.
  */
 CC_FORCE_INLINE
@@ -166,9 +282,9 @@ static inline void drvLock(void *ip) {
 }
 
 /**
- * @brief   Object unlock.
+ * @brief   Driver unlock.
  *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
+ * @param[in] ip        Pointer to a @p base_driver_c structure to be
  *                      unlocked.
  */
 CC_FORCE_INLINE
@@ -177,6 +293,7 @@ static inline void drvUnlock(void *ip) {
 
   osalMutexUnlock(&objp->mutex);
 }
+#endif /* HAL_USE_MUTUAL_EXCLUSION == TRUE */
 
 #endif /* HAL_BASE_DRIVER */
 

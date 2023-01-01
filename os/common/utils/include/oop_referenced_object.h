@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2021 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2023 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -33,6 +33,11 @@
 #include "oop_base_object.h"
 
 /**
+ * @brief   Type of a references counter.
+ */
+typedef unsigned int oop_object_references_t;
+
+/**
  * @brief   Type of a referenced object class.
  */
 typedef struct referenced_object referenced_object_c;
@@ -50,7 +55,7 @@ typedef struct referenced_object referenced_object_c;
  */
 #define __referenced_object_data                                            \
   __base_object_data                                                        \
-  unsigned                                  references;
+  oop_object_references_t                   references;
 
 
 /**
@@ -88,7 +93,7 @@ static inline void *__referenced_object_objinit_impl(void *ip, const void *vmt) 
   referenced_object_c *objp = (referenced_object_c *)ip;
 
   __base_object_objinit_impl(ip, vmt);
-  objp->references = 1U;
+  objp->references = (oop_object_references_t)1;
 
   return ip;
 }
@@ -101,9 +106,11 @@ static inline void *__referenced_object_objinit_impl(void *ip, const void *vmt) 
  */
 CC_FORCE_INLINE
 static inline void __referenced_object_dispose_impl(void *ip) {
+  referenced_object_c *objp = (referenced_object_c *)ip;
 
-  /* TODO assertion */
-  __base_object_dispose_impl(ip);
+  osalDbgAssert(objp->references == (oop_object_references_t)0, "not zero");
+
+  __base_object_dispose_impl(objp);
 }
 
 /**
@@ -118,6 +125,8 @@ static inline void *__referenced_object_addref_impl(void *ip) {
 
   objp->references++;
 
+  osalDbgAssert(objp->references != (oop_object_references_t)0, "overflow");
+
   return ip;
 }
 
@@ -128,7 +137,7 @@ static inline void *__referenced_object_addref_impl(void *ip) {
  * @return              Remaining references.
  */
 CC_FORCE_INLINE
-static inline unsigned __referenced_object_getref_impl(void *ip) {
+static inline oop_object_references_t __referenced_object_getref_impl(void *ip) {
   referenced_object_c *objp = (referenced_object_c *)ip;
 
   return objp->references;
@@ -141,7 +150,7 @@ static inline unsigned __referenced_object_getref_impl(void *ip) {
  * @return              The number of references left.
  */
 CC_FORCE_INLINE
-static inline unsigned __referenced_object_release_impl(void *ip) {
+static inline oop_object_references_t __referenced_object_release_impl(void *ip) {
   referenced_object_c *objp = (referenced_object_c *)ip;
 
   osalDbgAssert(objp->references > 0U, "zero references");
@@ -174,7 +183,7 @@ static inline referenced_object_c *roAddRef(void *ip) {
  * @return              The number of references left.
  */
 CC_FORCE_INLINE
-static inline unsigned roRelease(void *ip) {
+static inline oop_object_references_t roRelease(void *ip) {
   referenced_object_c *objp = (referenced_object_c *)ip;
 
   return objp->vmt->release(ip);
