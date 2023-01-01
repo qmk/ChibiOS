@@ -52,17 +52,17 @@
 /**
  * @brief   HAL version string.
  */
-#define CH_HAL_VERSION          "8.4.0"
+#define CH_HAL_VERSION          "9.0.0"
 
 /**
  * @brief   HAL version major number.
  */
-#define CH_HAL_MAJOR            8
+#define CH_HAL_MAJOR            9
 
 /**
  * @brief   HAL version minor number.
  */
-#define CH_HAL_MINOR            4
+#define CH_HAL_MINOR            0
 
 /**
  * @brief   HAL version patch number.
@@ -288,6 +288,7 @@ static inline halfreq_t halClockGetPointX(halclkpt_t clkpt) {
 /*===========================================================================*/
 
 /* Abstract interfaces.*/
+#include "hal_base_driver.h"
 #include "hal_objects.h"
 #include "hal_streams.h"
 #include "hal_channels.h"

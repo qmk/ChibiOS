@@ -18,19 +18,19 @@
  * @file    oop_synchronized_object.h
  * @brief   Base class for objects supporting synchronization.
  * @details This header defines a base class for classes requiring a
- *          synchronization mechanism,
+ *          synchronization mechanism.
  *
  * @addtogroup OOP_SYNCHRONIZED_OBJECT
  * @details Base class for objects that require a synchronization mechanism.
- *          This class extends @p synchronized_object_c class.
+ *          This class extends @p referenced_object_c class.
  * @{
  */
 
 #ifndef OOP_SYNCHRONIZED_OBJECT_H
 #define OOP_SYNCHRONIZED_OBJECT_H
 
-#include "osal.h"
-#include "oop_synchronized_object.h"
+#include "ch.h"
+#include "oop_referenced_object.h"
 
 /**
  * @brief   Type of a synchronized object class.
@@ -39,7 +39,7 @@ typedef struct synchronized_object synchronized_object_c;
 
 /**
  * @brief   @p synchronized_object_c specific methods.
- * @note    This object defines no methods.
+ * @note    This object defines no virtual methods.
  */
 #define __synchronized_object_methods                                       \
   __referenced_object_methods
@@ -51,12 +51,11 @@ typedef struct synchronized_object synchronized_object_c;
   __referenced_object_data                                                  \
   mutex_t                                   mutex;
 
-
 /**
  * @brief   @p synchronized_object_c virtual methods table.
  */
-struct __synchronized_object_vmt {                                          \
-  __synchronized_object_methods                                             \
+struct __synchronized_object_vmt {
+  __synchronized_object_methods
 };
 
 /**
@@ -87,7 +86,7 @@ static inline void *__synchronized_object_objinit_impl(void *ip, const void *vmt
   synchronized_object_c *objp = (synchronized_object_c *)ip;
 
   __referenced_object_objinit_impl(ip, vmt);
-  osalMutexObjectInit(&objp->mutex);
+  chMtxObjectInit(&objp->mutex);
 
   return ip;
 }
@@ -101,60 +100,33 @@ static inline void *__synchronized_object_objinit_impl(void *ip, const void *vmt
 CC_FORCE_INLINE
 static inline void __synchronized_object_dispose_impl(void *ip) {
 
-  __referenced_object_dispose_impl(ip);
-  /* Nothing.*/
   /* TODO add RT objects disposing when available.*/
-}
-
-/**
- * @brief   Object lock implementation.
- *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
- *                      locked.
- */
-CC_FORCE_INLINE
-static inline void __synchronized_object_lock_impl(void *ip) {
-  synchronized_object_c *objp = (synchronized_object_c *)ip;
-
-  osalMutexLock(&objp->mutex);
-}
-
-/**
- * @brief   Object unlock implementation.
- *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
- *                      unlocked.
- */
-CC_FORCE_INLINE
-static inline void __synchronized_object_unlock_impl(void *ip) {
-  synchronized_object_c *objp = (synchronized_object_c *)ip;
-
-  osalMutexUnlock(&objp->mutex);
+  __referenced_object_dispose_impl(ip);
 }
 /** @} */
 
 /**
  * @brief   Object lock.
  *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
- *                      locked.
+ * @param[in] ip        A reference to the object.
  */
 CC_FORCE_INLINE
-static inline void soLock(synchronized_object_c *sop) {
+static inline void soLock(void *ip) {
+  synchronized_object_c *objp = (synchronized_object_c *)ip;
 
-  __synchronized_object_lock_impl(sop);
+  chMtxLock(&objp->mutex);
 }
 
 /**
  * @brief   Object unlock.
  *
- * @param[in] ip        Pointer to a @p synchronized_object_c structure to be
- *                      unlocked.
+ * @param[in] ip        A reference to the object.
  */
 CC_FORCE_INLINE
-static inline void soUnlock(synchronized_object_c *sop) {
+static inline void soUnlock(void *ip) {
+  synchronized_object_c *objp = (synchronized_object_c *)ip;
 
-  __synchronized_object_unlock_impl(sop);
+  chMtxUnlock(&objp->mutex);
 }
 
 #endif /* OOP_SYNCHRONIZED_OBJECT_H */

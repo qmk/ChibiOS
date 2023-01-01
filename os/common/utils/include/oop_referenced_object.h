@@ -23,6 +23,7 @@
  * @addtogroup OOP_REFERENCED_OBJECT
  * @details Base class for objects that implement a reference counter and
  *          are disposed when the number of references reaches zero.
+ *          This class extends @p base_object_c class.
  * @{
  */
 
@@ -38,7 +39,6 @@ typedef struct referenced_object referenced_object_c;
 
 /**
  * @brief   @p referenced_object_c specific methods.
- * @note    This object defines no methods.
  */
 #define __referenced_object_methods                                         \
   __base_object_methods                                                     \
@@ -56,8 +56,8 @@ typedef struct referenced_object referenced_object_c;
 /**
  * @brief   @p referenced_object_c virtual methods table.
  */
-struct __referenced_object_vmt {                                            \
-  __referenced_object_methods                                               \
+struct __referenced_object_vmt {
+  __referenced_object_methods
 };
 
 /**
@@ -102,8 +102,8 @@ static inline void *__referenced_object_objinit_impl(void *ip, const void *vmt) 
 CC_FORCE_INLINE
 static inline void __referenced_object_dispose_impl(void *ip) {
 
+  /* TODO assertion */
   __base_object_dispose_impl(ip);
-  /* Nothing.*/
 }
 
 /**
