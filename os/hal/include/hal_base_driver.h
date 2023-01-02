@@ -20,8 +20,11 @@
  * @details HAL drivers all share a common set of functionalities:
  *          - A common set of methods.
  *          - A state variable and a common set of driver states.
- *          - Ability to be handled as reference-counted objects.
+ *          - An "owner" attribute able to link the driver to an upper layer
+ *            object.
  *          - Ability to handle mutual exclusion on the driver instance.
+ *          - Ability to count how many entities hold a reference to the
+ *            driver.
  *          .
  *
  * @addtogroup HAL_BASE_DRIVER
@@ -31,7 +34,7 @@
 #ifndef HAL_BASE_DRIVER_H
 #define HAL_BASE_DRIVER_H
 
-#include "oop_referenced_object.h"
+#include "oop_base_object.h"
 
 /*===========================================================================*/
 /* Driver constants.                                                         */
@@ -103,16 +106,18 @@ typedef struct base_driver base_driver_c;
  * @brief   @p base_driver_c specific methods.
  */
 #define __base_driver_methods                                               \
-  __referenced_object_methods
+  __base_object_methods
 
 #if (HAL_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
 /**
  * @brief   @p base_driver_c specific data.
  */
 #define __base_driver_data                                                  \
-  __referenced_object_data                                                  \
+  __base_object_data                                                        \
   /* Driver state.*/                                                        \
   hal_driver_state_t                        state;                          \
+  /* Driver references.*/                                                   \
+  unsigned int                              opencnt;                        \
   /* Driver owner or NULL.*/                                                \
   void                                      *owner;                         \
   /* Mutual exclusion object.*/                                             \
@@ -129,7 +134,10 @@ typedef struct base_driver base_driver_c;
  * @brief   @p base_driver_c virtual methods table.
  */
 struct __base_driver_vmt {
-  __base_driver_methods
+  __base_driver_methods                                                     \
+  msg_t (*start)(void *ip);                                                 \
+  void (*stop)(void *ip);                                                   \
+  msg_t (*configure)(void *ip, const void *config);
 };
 
 /**
@@ -170,7 +178,7 @@ extern "C" {
 /**
  * @brief   Object creation implementation.
  *
- * @param[in] ip        Pointer to a @p base_driver_c structure to be
+ * @param[out] ip       Pointer to a @p base_driver_c structure to be
  *                      initialized.
  * @param[in] vmt       VMT pointer for the new object.
  * @return              A new reference to the object.
@@ -179,8 +187,9 @@ CC_FORCE_INLINE
 static inline void *__base_driver_objinit_impl(void *ip, const void *vmt) {
   base_driver_c *objp = (base_driver_c *)ip;
 
-  __referenced_object_objinit_impl(objp, vmt);
-  objp->owner = NULL;
+  __base_object_objinit_impl(objp, vmt);
+  objp->opencnt = 0U;
+  objp->owner   = NULL;
   osalMutexObjectInit(&objp->mutex);
 
   return ip;
@@ -196,24 +205,74 @@ CC_FORCE_INLINE
 static inline void __base_driver_dispose_impl(void *ip) {
   base_driver_c *objp = (base_driver_c *)ip;
 
+  osalDbgAssert(objp->opencnt == 0U, "still opened");
+
   /* TODO mutex dispose (missing in OSAL) */
-  __referenced_object_dispose_impl(objp);
+  __base_object_dispose_impl(objp);
 }
 /** @} */
 
 /**
- * @brief   Driver close.
- * @details Releases a reference to the driver, when the count reaches zero
- *          then the driver is physically uninitialized.
+ * @brief   Driver open.
+ * @details Returns a reference to the driver, on the 1st open the peripheral
+ *          is physically initialized. An implementation-dependent default
+ *          configuration is used for initialization.
  *
  * @param[in] ip        Pointer to a @p base_driver_c structure.
- * @return              The number of references left.
+ * @return              The operation status.
  */
 CC_FORCE_INLINE
-static inline oop_object_references_t drvClose(void *ip) {
+static inline msg_t drvOpen(void *ip) {
   base_driver_c *objp = (base_driver_c *)ip;
 
-  return roRelease(objp);
+  if (objp->opencnt++ == 0U) {
+    return objp->vmt->start(ip);
+  }
+
+  return HAL_RET_SUCCESS;
+}
+
+/**
+ * @brief   Driver close.
+ * @details Releases a reference to the driver, when the count reaches zero
+ *          then the peripheral is physically uninitialized.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ *
+ * @api
+ */
+CC_FORCE_INLINE
+static inline void drvClose(void *ip) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  osalDbgAssert(objp->opencnt > 0U, "not opened");
+
+  if (--objp->opencnt == 0U) {
+    objp->vmt->stop(ip);
+  }
+}
+
+/**
+ * @brief   Driver configure.
+ * @details Applies a new configuration to the driver. The configuration
+ *          structure is architecture-dependent.
+ * @note    Applying a configuration should be done while the peripheral
+ *          is not actively operating, this function can fail depending
+ *          on the driver implementation and current state.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @param[in] config    Pointer to a constant configuration structure.
+ * @return              The operation status.
+ *
+ * @api
+ */
+CC_FORCE_INLINE
+static inline msg_t drvConfigure(void *ip, const void *config) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  osalDbgAssert(objp->opencnt > 0U, "not opened");
+
+  return objp->vmt->configure(ip, config);
 }
 
 /**
