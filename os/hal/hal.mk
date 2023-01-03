@@ -126,7 +126,8 @@ HALSRC = $(CHIBIOS)/os/hal/src/hal.c \
 endif
 
 # Required include directories
-HALINC = $(CHIBIOS)/os/hal/include
+HALINC = $(CHIBIOS)/os/common/utils/include $(CHIBIOS)/os/common/utils/include \
+         $(CHIBIOS)/os/hal/include
 
 # Shared variables
 ALLCSRC += $(HALSRC)
