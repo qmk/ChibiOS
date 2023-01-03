@@ -95,7 +95,7 @@
 /**
  * @brief   Type of a driver state variable.
  */
-typedef unsigned int hal_driver_state_t;
+typedef unsigned int driver_state_t;
 
 /**
  * @brief   Type of a base driver class.
@@ -115,7 +115,7 @@ typedef struct base_driver base_driver_c;
 #define __base_driver_data                                                  \
   __base_object_data                                                        \
   /* Driver state.*/                                                        \
-  hal_driver_state_t                        state;                          \
+  driver_state_t                            state;                          \
   /* Driver references.*/                                                   \
   unsigned int                              opencnt;                        \
   /* Driver owner or NULL.*/                                                \
@@ -126,7 +126,8 @@ typedef struct base_driver base_driver_c;
 #else /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
 #define __base_driver_data                                                  \
   __referenced_object_data                                                  \
-  hal_driver_state_t                        state;                          \
+  driver_state_t                            state;                          \
+  unsigned int                              opencnt;                        \
   void                                      *owner;
 #endif /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
 
@@ -134,9 +135,9 @@ typedef struct base_driver base_driver_c;
  * @brief   @p base_driver_c virtual methods table.
  */
 struct __base_driver_vmt {
-  __base_driver_methods                                                     \
-  msg_t (*start)(void *ip);                                                 \
-  void (*stop)(void *ip);                                                   \
+  __base_driver_methods
+  msg_t (*start)(void *ip);
+  void (*stop)(void *ip);
   msg_t (*configure)(void *ip, const void *config);
 };
 
@@ -282,7 +283,7 @@ static inline msg_t drvConfigure(void *ip, const void *config) {
  * @return              The driver state.
  */
 CC_FORCE_INLINE
-static inline hal_driver_state_t drvGetStateX(void *ip) {
+static inline driver_state_t drvGetStateX(void *ip) {
   base_driver_c *objp = (base_driver_c *)ip;
 
   return objp->state;
@@ -295,7 +296,7 @@ static inline hal_driver_state_t drvGetStateX(void *ip) {
  * @param[in] state     New driver state.
  */
 CC_FORCE_INLINE
-static inline void drvSetStateX(void *ip, hal_driver_state_t state) {
+static inline void drvSetStateX(void *ip, driver_state_t state) {
 
   ((base_driver_c *)ip)->state = state;
 }
