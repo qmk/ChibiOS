@@ -93,7 +93,7 @@ typedef struct base_object base_object_c;
 /**
  * @brief   @p base_object_c virtual methods table.
  */
-struct __base_object_vmt {
+struct base_object_vmt {
   __base_object_methods
 };
 
@@ -104,7 +104,7 @@ struct base_object {
   /**
    * @brief   Virtual Methods Table.
    */
-  const struct __base_object_vmt *vmt;
+  const struct base_object_vmt              *vmt;
   __base_object_data
 };
 
@@ -124,7 +124,7 @@ CC_FORCE_INLINE
 static inline void *__base_object_objinit_impl(void *ip, const void *vmt) {
   base_object_c *objp = (base_object_c *)ip;
 
-  objp->vmt = (struct __base_object_vmt *)vmt;
+  objp->vmt = (struct base_object_vmt *)vmt;
 
   return ip;
 }

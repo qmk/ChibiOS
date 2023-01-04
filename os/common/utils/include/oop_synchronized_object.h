@@ -54,7 +54,7 @@ typedef struct synchronized_object synchronized_object_c;
 /**
  * @brief   @p synchronized_object_c virtual methods table.
  */
-struct __synchronized_object_vmt {
+struct synchronized_object_vmt {
   __synchronized_object_methods
 };
 
@@ -65,7 +65,7 @@ struct synchronized_object {
   /**
    * @brief   Virtual Methods Table.
    */
-  const struct __synchronized_object_vmt    *vmt;
+  const struct synchronized_object_vmt      *vmt;
   __synchronized_object_data
 };
 

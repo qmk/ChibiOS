@@ -18,7 +18,7 @@
  * @file    hal_sio.h
  * @brief   SIO Driver macros and structures.
  *
- * @addtogroup SIO
+ * @addtogroup HAL_SIO
  * @{
  */
 
@@ -149,11 +149,11 @@ typedef void (*siocb_t)(SIODriver *siop);
 /**
  * @brief   Driver state machine possible states.
  */
-typedef enum {
-  SIO_UNINIT = 0,                   /**< Not initialized.                   */
-  SIO_STOP = 1,                     /**< Stopped.                           */
-  SIO_READY = 2,                    /**< Ready.                             */
-} siostate_t;
+//typedef enum {
+//  SIO_UNINIT = 0,                   /**< Not initialized.                   */
+//  SIO_STOP = 1,                     /**< Stopped.                           */
+//  SIO_READY = 2,                    /**< Ready.                             */
+//} siostate_t;
 
 #include "hal_sio_lld.h"
 
@@ -173,8 +173,8 @@ struct hal_sio_config {
 /**
  * @brief   @p SIODriver specific methods.
  */
-#define _sio_driver_methods                                                 \
-  _base_channel_methods
+#define __sio_driver_methods                                                \
+  __base_driver_methods
 
 /**
  * @extends BaseChannelVMT
@@ -182,7 +182,7 @@ struct hal_sio_config {
  * @brief   @p SIODriver virtual methods table.
  */
 struct sio_driver_vmt {
-  _sio_driver_methods
+  __sio_driver_methods
 };
 
 /**
@@ -191,20 +191,23 @@ struct sio_driver_vmt {
  *          architecture dependent, fields.
  */
 struct hal_sio_driver {
+  const struct __base_driver_vmt            *vmt;
+  __base_driver_data
 #if (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
   /**
    * @brief   Virtual Methods Table.
    */
-  const struct sio_driver_vmt *vmt;
+//  const struct sio_driver_vmt *vmt;
+  base_sequential_stream_c  stream;
 #endif
   /**
    * @brief   Driver state.
    */
-  siostate_t                state;
+//  siostate_t                state;
   /**
    * @brief   Current configuration data.
    */
-  const SIOConfig           *config;
+//  const SIOConfig           *config;
   /**
    * @brief   Enabled event flags.
    */
@@ -218,7 +221,7 @@ struct hal_sio_driver {
    * @brief   User argument.
    * @note    Can be retrieved through the @p siop argument of the callback.
    */
-  void                      *arg;
+//  void                      *arg;
 #if (SIO_USE_SYNCHRONIZATION == TRUE) || defined(__DOXYGEN__)
   /**
    * @brief   Synchronization point for RX.

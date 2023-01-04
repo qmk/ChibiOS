@@ -39,6 +39,8 @@ static THD_FUNCTION(Thread1, arg) {
  * Application entry point.
  */
 int main(void) {
+  msg_t msg;
+  base_sequential_stream_c *stream;
 
   /*
    * System initializations.
@@ -53,7 +55,11 @@ int main(void) {
   /*
    * Activates the Serial or SIO driver using the default configuration.
    */
-  sioStart(&LPSIOD1, NULL);
+  msg = drvOpen(&LPSIOD1);
+  if (msg != HAL_RET_SUCCESS) {
+    chSysHalt("SIO failure");
+  }
+  stream = drvGetInterfaceX(&LPSIOD1);
 
   /*
    * Creates the blinker thread.
@@ -66,8 +72,8 @@ int main(void) {
    */
   while (true) {
    if (palReadLine(LINE_BUTTON)) {
-      test_execute((BaseSequentialStream *)&LPSIOD1, &rt_test_suite);
-      test_execute((BaseSequentialStream *)&LPSIOD1, &oslib_test_suite);
+      test_execute((BaseSequentialStream *)stream, &rt_test_suite);
+      test_execute((BaseSequentialStream *)stream, &oslib_test_suite);
     }
     chThdSleepMilliseconds(500);
   }

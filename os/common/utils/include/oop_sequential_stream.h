@@ -69,7 +69,7 @@ typedef struct base_sequential_stream base_sequential_stream_c;
 /**
  * @brief   @p base_sequential_stream_c virtual methods table.
  */
-struct __base_sequential_stream_vmt {
+struct base_sequential_stream_vmt {
   __base_sequential_stream_methods
 };
 
@@ -80,7 +80,7 @@ struct base_sequential_stream {
   /**
    * @brief   Virtual Methods Table.
    */
-  const struct __base_sequential_stream_vmt *vmt;
+  const struct base_sequential_stream_vmt   *vmt;
   __base_sequential_stream_data
 };
 
@@ -101,7 +101,7 @@ static inline void *__base_sequential_stream_objinit_impl(void *ip,
                                                           const void *vmt) {
   base_sequential_stream_c *objp = (base_sequential_stream_c *)ip;
 
-  objp->vmt = (struct __base_sequential_stream_vmt *)vmt;
+  objp->vmt = (struct base_sequential_stream_vmt *)vmt;
 
   return ip;
 }

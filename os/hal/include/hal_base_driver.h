@@ -45,7 +45,7 @@
  * @{
  */
 #define HAL_DRV_STATE_UNINIT                0U
-#define HAL_DRV_STATE_STOPPED               1U
+#define HAL_DRV_STATE_STOP                  1U
 #define HAL_DRV_STATE_READY                 2U
 #define HAL_DRV_STATE_ACTIVE                3U
 #define HAL_DRV_STATE_ERROR                 4U
@@ -106,7 +106,11 @@ typedef struct base_driver base_driver_c;
  * @brief   @p base_driver_c specific methods.
  */
 #define __base_driver_methods                                               \
-  __base_object_methods
+  __base_object_methods                                                     \
+  msg_t (*start)(void *ip);                                                 \
+  void (*stop)(void *ip);                                                   \
+  msg_t (*configure)(void *ip, const void *config);                         \
+  void * (*getif)(void *ip);
 
 #if (HAL_USE_REGISTRY == TRUE) || defined(__DOXYGEN__)
 #define __base_driver_data_registry                                         \
@@ -147,10 +151,6 @@ typedef struct base_driver base_driver_c;
  */
 struct __base_driver_vmt {
   __base_driver_methods
-  msg_t (*start)(void *ip);
-  void (*stop)(void *ip);
-  msg_t (*configure)(void *ip, const void *config);
-  void * (*getif)(void *ip);
 };
 
 /**
@@ -175,7 +175,8 @@ struct base_driver {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+  msg_t drvOpen(void *ip);
+  void drvClose(void *ip);
 #ifdef __cplusplus
 }
 #endif
@@ -201,6 +202,7 @@ static inline void *__base_driver_objinit_impl(void *ip, const void *vmt) {
   base_driver_c *objp = (base_driver_c *)ip;
 
   __base_object_objinit_impl(objp, vmt);
+  objp->state   = HAL_DRV_STATE_STOP;
   objp->opencnt = 0U;
   objp->owner   = NULL;
   osalMutexObjectInit(&objp->mutex);
@@ -222,6 +224,8 @@ static inline void __base_driver_dispose_impl(void *ip) {
 
   osalDbgAssert(objp->opencnt == 0U, "still opened");
 
+  objp->state = HAL_DRV_STATE_UNINIT;
+
   /* TODO mutex dispose (missing in OSAL) */
   __base_object_dispose_impl(objp);
 }
@@ -240,46 +244,6 @@ static inline void *__base_driver_get_interface_impl(void *ip) {
   return NULL;
 }
 /** @} */
-
-/**
- * @brief   Driver open.
- * @details Returns a reference to the driver, on the 1st open the peripheral
- *          is physically initialized. An implementation-dependent default
- *          configuration is used for initialization.
- *
- * @param[in] ip        Pointer to a @p base_driver_c structure.
- * @return              The operation status.
- */
-CC_FORCE_INLINE
-static inline msg_t drvOpen(void *ip) {
-  base_driver_c *objp = (base_driver_c *)ip;
-
-  if (objp->opencnt++ == 0U) {
-    return objp->vmt->start(ip);
-  }
-
-  return HAL_RET_SUCCESS;
-}
-
-/**
- * @brief   Driver close.
- * @details Releases a reference to the driver, when the count reaches zero
- *          then the peripheral is physically uninitialized.
- *
- * @param[in] ip        Pointer to a @p base_driver_c structure.
- *
- * @api
- */
-CC_FORCE_INLINE
-static inline void drvClose(void *ip) {
-  base_driver_c *objp = (base_driver_c *)ip;
-
-  osalDbgAssert(objp->opencnt > 0U, "not opened");
-
-  if (--objp->opencnt == 0U) {
-    objp->vmt->stop(ip);
-  }
-}
 
 /**
  * @brief   Driver configure.

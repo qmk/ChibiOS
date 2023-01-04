@@ -18,7 +18,7 @@
  * @file    hal_sio.c
  * @brief   SIO Driver code.
  *
- * @addtogroup SIO
+ * @addtogroup HAL_SIO
  * @{
  */
 
@@ -42,7 +42,7 @@
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 
-#if (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
+#if 0// (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
 static size_t sync_write(void *ip, const uint8_t *bp, size_t n,
                          sysinterval_t timeout) {
   SIODriver *siop = (SIODriver *)ip;
@@ -190,6 +190,24 @@ static const struct sio_driver_vmt vmt = {
 };
 #endif /* SIO_USE_STREAMS_INTERFACE */
 
+static const struct sio_driver_vmt drv_vmt = {
+  .instance_offset = (size_t)0,
+  .start           = NULL,
+  .stop            = NULL,
+  .configure       = NULL,
+  .getif           = NULL
+};
+
+#if (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
+static const struct base_sequential_stream_vmt stream_vmt = {
+  .instance_offset = (size_t)0,
+  .write           = NULL,
+  .read            = NULL,
+  .put             = NULL,
+  .get             = NULL
+};
+#endif /* SIO_USE_STREAMS_INTERFACE == TRUE */
+
 /*===========================================================================*/
 /* Driver exported functions.                                                */
 /*===========================================================================*/
@@ -215,14 +233,17 @@ void sioInit(void) {
  */
 void sioObjectInit(SIODriver *siop) {
 
+  __base_driver_objinit_impl(siop, &drv_vmt);
+
 #if SIO_USE_STREAMS_INTERFACE == TRUE
-  siop->vmt         = &vmt;
+//  siop->vmt         = &vmt;
+  __base_sequential_stream_objinit_impl(&siop->stream, &stream_vmt);
 #endif
-  siop->state       = SIO_STOP;
-  siop->config      = NULL;
+//  siop->state       = SIO_STOP;
+//  siop->config      = NULL;
   siop->enabled     = (sioevents_t)0;
   siop->cb          = NULL;
-  siop->arg         = NULL;
+//  siop->arg         = NULL;
 #if SIO_USE_SYNCHRONIZATION == TRUE
   siop->sync_rx     = NULL;
   siop->sync_rxidle = NULL;
@@ -246,6 +267,7 @@ void sioObjectInit(SIODriver *siop) {
  *
  * @api
  */
+#if 0
 msg_t sioStart(SIODriver *siop, const SIOConfig *config) {
   msg_t msg;
 
@@ -277,6 +299,7 @@ msg_t sioStart(SIODriver *siop, const SIOConfig *config) {
 
   return msg;
 }
+#endif
 
 /**
  * @brief   Deactivates the SIO peripheral.
@@ -285,6 +308,7 @@ msg_t sioStart(SIODriver *siop, const SIOConfig *config) {
  *
  * @api
  */
+#if 0
 void sioStop(SIODriver *siop) {
 
   osalDbgCheck(siop != NULL);
@@ -311,6 +335,7 @@ void sioStop(SIODriver *siop) {
 
   osalSysUnlock();
 }
+#endif
 
 /**
  * @brief   Writes the enabled events flags mask.
@@ -326,7 +351,8 @@ void sioWriteEnableFlags(SIODriver *siop, sioevents_t mask) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   sioWriteEnableFlagsX(siop, mask);
 
@@ -347,7 +373,8 @@ void sioSetEnableFlags(SIODriver *siop, sioevents_t mask) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   sioSetEnableFlagsX(siop, mask);
 
@@ -368,7 +395,8 @@ void sioClearEnableFlags(SIODriver *siop, sioevents_t mask) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   sioClearEnableFlagsX(siop, mask);
 
@@ -390,7 +418,8 @@ sioevents_t sioGetAndClearErrors(SIODriver *siop) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   errors = sioGetAndClearErrorsX(siop);
 
@@ -414,7 +443,8 @@ sioevents_t sioGetAndClearEvents(SIODriver *siop) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   events = sioGetAndClearEventsX(siop);
 
@@ -438,7 +468,8 @@ sioevents_t sioGetEvents(SIODriver *siop) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   events = sioGetEventsX(siop);
 
@@ -467,7 +498,8 @@ size_t sioAsyncRead(SIODriver *siop, uint8_t *buffer, size_t n) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   n = sioAsyncReadX(siop, buffer, n);
 
@@ -496,7 +528,8 @@ size_t sioAsyncWrite(SIODriver *siop, const uint8_t *buffer, size_t n) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   n = sioAsyncWriteX(siop, buffer, n);
 
@@ -529,7 +562,8 @@ msg_t sioSynchronizeRX(SIODriver *siop, sysinterval_t timeout) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   /* Checking for errors before going to sleep.*/
   if (sioHasRXErrorsX(siop)) {
@@ -574,7 +608,8 @@ msg_t sioSynchronizeRXIdle(SIODriver *siop, sysinterval_t timeout) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   /* Checking for errors before going to sleep.*/
   if (sioHasRXErrorsX(siop)) {
@@ -621,7 +656,8 @@ msg_t sioSynchronizeTX(SIODriver *siop, sysinterval_t timeout) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   msg = MSG_OK;
   /*lint -save -e506 -e681 [2.1] Silencing this error because it is
@@ -659,7 +695,8 @@ msg_t sioSynchronizeTXEnd(SIODriver *siop, sysinterval_t timeout) {
 
   osalSysLock();
 
-  osalDbgAssert(siop->state == SIO_READY, "invalid state");
+  osalDbgAssert(drvGetStateX(siop) == HAL_DRV_STATE_READY,
+                "invalid state");
 
   /*lint -save -e506 -e774 [2.1, 14.3] Silencing this error because
     it is tested with a template implementation of sio_lld_is_tx_ongoing()

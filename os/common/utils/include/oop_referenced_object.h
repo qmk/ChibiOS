@@ -61,7 +61,7 @@ typedef struct referenced_object referenced_object_c;
 /**
  * @brief   @p referenced_object_c virtual methods table.
  */
-struct __referenced_object_vmt {
+struct referenced_object_vmt {
   __referenced_object_methods
 };
 
@@ -72,7 +72,7 @@ struct referenced_object {
   /**
    * @brief   Virtual Methods Table.
    */
-  const struct __referenced_object_vmt      *vmt;
+  const struct referenced_object_vmt        *vmt;
   __referenced_object_data
 };
 
