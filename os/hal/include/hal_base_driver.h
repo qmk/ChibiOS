@@ -72,7 +72,7 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(HAL_USE_REGISTRY) || defined(__DOXYGEN__)
-#define HAL_USE_REGISTRY                    TRUE
+#define HAL_USE_REGISTRY                    FALSE
 #endif
 /** @} */
 
@@ -108,6 +108,15 @@ typedef struct base_driver base_driver_c;
 #define __base_driver_methods                                               \
   __base_object_methods
 
+#if (HAL_USE_REGISTRY == TRUE) || defined(__DOXYGEN__)
+#define __base_driver_data_registry                                         \
+  /* HAL driver type identifier.*/                                          \
+  /*hal_driver_id_t*/unsigned                           id;
+
+#else
+#define __base_driver_data_registry
+#endif
+
 #if (HAL_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
 /**
  * @brief   @p base_driver_c specific data.
@@ -121,14 +130,16 @@ typedef struct base_driver base_driver_c;
   /* Driver owner or NULL.*/                                                \
   void                                      *owner;                         \
   /* Mutual exclusion object.*/                                             \
-  mutex_t                                   mutex;
+  mutex_t                                   mutex;                          \
+  __base_driver_data_registry
 
 #else /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
 #define __base_driver_data                                                  \
   __referenced_object_data                                                  \
   driver_state_t                            state;                          \
   unsigned int                              opencnt;                        \
-  void                                      *owner;
+  void                                      *owner;                         \
+  __base_driver_data_registry
 #endif /* HAL_USE_MUTUAL_EXCLUSION != TRUE */
 
 /**
@@ -139,6 +150,7 @@ struct __base_driver_vmt {
   msg_t (*start)(void *ip);
   void (*stop)(void *ip);
   msg_t (*configure)(void *ip, const void *config);
+  void * (*getif)(void *ip);
 };
 
 /**
@@ -192,7 +204,9 @@ static inline void *__base_driver_objinit_impl(void *ip, const void *vmt) {
   objp->opencnt = 0U;
   objp->owner   = NULL;
   osalMutexObjectInit(&objp->mutex);
-
+#if HAL_USE_REGISTRY == TRUE
+  objp->id      = 0U;
+#endif
   return ip;
 }
 
@@ -210,6 +224,20 @@ static inline void __base_driver_dispose_impl(void *ip) {
 
   /* TODO mutex dispose (missing in OSAL) */
   __base_object_dispose_impl(objp);
+}
+
+/**
+ * @brief   Driver interface get implementation.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @return              The driver interface or @p NULL if none.
+ */
+CC_FORCE_INLINE
+static inline void *__base_driver_get_interface_impl(void *ip) {
+
+  (void)ip;
+
+  return NULL;
 }
 /** @} */
 
@@ -268,12 +296,27 @@ static inline void drvClose(void *ip) {
  * @api
  */
 CC_FORCE_INLINE
-static inline msg_t drvConfigure(void *ip, const void *config) {
+static inline msg_t drvConfigureX(void *ip, const void *config) {
   base_driver_c *objp = (base_driver_c *)ip;
 
   osalDbgAssert(objp->opencnt > 0U, "not opened");
 
   return objp->vmt->configure(ip, config);
+}
+
+/**
+ * @brief   Driver interface get.
+ *
+ * @param[in] ip        Pointer to a @p base_driver_c structure.
+ * @return              The driver interface or @p NULL if none.
+ *
+ * @api
+ */
+CC_FORCE_INLINE
+static inline void *drvGetInterfaceX(void *ip) {
+  base_driver_c *objp = (base_driver_c *)ip;
+
+  return objp->vmt->getif(objp);
 }
 
 /**
