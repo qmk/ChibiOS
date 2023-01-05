@@ -1,0 +1,15 @@
+sourceRoot: ../../../../../os/test/ftl/processors/oop
+outputRoot: source
+dataRoot: .
+
+freemarkerLinks: {
+    ftllibs: ../../../../../os/test/ftl/libs
+}
+
+data : {
+  xml:xml (
+    classes.xml
+    {
+    }
+  )
+}
