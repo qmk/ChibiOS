@@ -126,7 +126,7 @@ static inline void *__base_object_objinit_impl(void *ip, const void *vmt) {
 
   objp->vmt = (struct base_object_vmt *)vmt;
 
-  return ip;
+  return objp;
 }
 
 /**
@@ -158,13 +158,13 @@ static inline void __base_object_dispose_impl(void *ip) {
  *          This is done by leveraging the offset field into each VMT table.
  *
  * @param[in] c     The class type of the object.
- * @param[in] ip    A pointer to one of the object composing classes or
+ * @param[in] p     A pointer to one of the object composing classes or
  *                  interfaces.
- * @return          A pointer to an object of type @p type implementing
- *                  the interface @p ip.
+ * @return          A pointer to an object of type @p c implementing
+ *                  the interface/class @p p.
  */
-#define oopGetInstance(c, ip)                                               \
-  (c)(((size_t)(ip)) - (ip)->vmt->instance_offset)
+#define oopGetInstance(c, p)                                               \
+  (c)(((size_t)(ip)) - (**(size_t **)(p)))
 /** @} */
 
 #endif /* OOP_BASE_OBJECT_H */

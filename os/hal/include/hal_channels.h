@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2018 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2023 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,16 +20,9 @@
  * @details This header defines an abstract interface useful to access generic
  *          I/O serial devices in a standardized way.
  *
- * @addtogroup IO_CHANNEL
+ * @addtogroup HAL_IO_CHANNEL
  * @details This module defines an abstract interface for I/O channels by
- *          extending the @p BaseSequentialStream interface.<br>
- *          Note that no code is present, I/O channels are just abstract
- *          interface like structures, you should look at the systems as
- *          to a set of abstract C++ classes (even if written in C).
- *          Specific device drivers can use/extend the interface and
- *          implement them.<br>
- *          This system has the advantage to make the access to channels
- *          independent from the implementation logic.
+ *          extending the @p base_sequential_stream_c interface.
  * @{
  */
 
@@ -46,55 +39,97 @@
 /** @} */
 
 /**
- * @brief   @p BaseChannel specific methods.
+ * @brief   Type of a base channel class.
  */
-#define _base_channel_methods                                               \
-  _base_sequential_stream_methods                                           \
-  /* Channel put method with timeout specification.*/                       \
-  msg_t (*putt)(void *instance, uint8_t b, sysinterval_t time);             \
-  /* Channel get method with timeout specification.*/                       \
-  msg_t (*gett)(void *instance, sysinterval_t time);                        \
-  /* Channel write method with timeout specification.*/                     \
+typedef struct base_channel base_channel_c;
+
+/**
+ * @brief   Type of a legacy base channel class.
+ * @deprecated
+ */
+typedef base_channel_c BaseChannel;
+
+/**
+ * @brief   @p base_channel_c specific methods.
+ */
+#define __base_channel_methods                                              \
+  __base_sequential_stream_methods                                          \
   size_t (*writet)(void *instance, const uint8_t *bp,                       \
                    size_t n, sysinterval_t time);                           \
   /* Channel read method with timeout specification.*/                      \
   size_t (*readt)(void *instance, uint8_t *bp, size_t n,                    \
                   sysinterval_t time);                                      \
+  /* Channel put method with timeout specification.*/                       \
+  msg_t (*putt)(void *instance, uint8_t b, sysinterval_t time);             \
+  /* Channel get method with timeout specification.*/                       \
+  msg_t (*gett)(void *instance, sysinterval_t time);                        \
+  /* Channel write method with timeout specification.*/                     \
   /* Channel control method.*/                                              \
   msg_t (*ctl)(void *instance, unsigned int operation, void *arg);
 
 /**
- * @brief   @p BaseChannel specific data.
+ * @brief   @p base_channel_c specific data.
  * @note    It is empty because @p BaseChannel is only an interface without
  *          implementation.
  */
-#define _base_channel_data                                                  \
-  _base_sequential_stream_data
+#define __base_channel_data                                                 \
+  __base_sequential_stream_data
 
 /**
- * @extends BaseSequentialStreamVMT
- *
- * @brief   @p BaseChannel virtual methods table.
+ * @brief   @p base_channel_c virtual methods table.
  */
-struct BaseChannelVMT {
-  _base_channel_methods
+struct base_channel_vmt {
+  __base_channel_methods
 };
 
 /**
- * @extends BaseSequentialStream
- *
- * @brief   Base channel class.
- * @details This class represents a generic, byte-wide, I/O channel. This class
- *          introduces generic I/O primitives with timeout specification.
+ * @brief   Structure representing a base channel class.
  */
-typedef struct {
-  /** @brief Virtual Methods Table.*/
-  const struct BaseChannelVMT *vmt;
-  _base_channel_data
-} BaseChannel;
+struct base_channel {
+  /**
+   * @brief   Virtual Methods Table.
+   */
+  const struct base_channel_vmt *vmt;
+  __base_channel_data
+};
 
 /**
- * @name    Macro Functions (BaseChannel)
+ * @name    Methods implementations (base_channel_c)
+ * @{
+ */
+/**
+ * @brief   Object creation implementation.
+ *
+ * @param[out] ip       Pointer to a @p base_channel_c structure
+ *                      to be initialized.
+ * @param[in] vmt       VMT pointer for the new object.
+ * @return              A new reference to the object.
+ */
+CC_FORCE_INLINE
+static inline void *__base_channel_objinit_impl(void *ip, const void *vmt) {
+  base_channel_c *objp = (base_channel_c *)ip;
+
+  __base_sequential_stream_objinit_impl(objp, vmt);
+
+  return objp;
+}
+
+/**
+ * @brief   Object finalization implementation.
+ *
+ * @param[in] ip        Pointer to a @p base_channel_c structure
+ *                      to be disposed.
+ */
+CC_FORCE_INLINE
+static inline void __base_channel_dispose_impl(void *ip) {
+  base_channel_c *objp = (base_channel_c *)ip;
+
+  __base_object_dispose_impl(objp);
+}
+/** @} */
+
+/**
+ * @name    Macro Functions (base_channel_c)
  * @{
  */
 /**
@@ -256,43 +291,86 @@ typedef struct {
 /** @} */
 
 /**
- * @brief   @p BaseAsynchronousChannel specific methods.
+ * @brief   Type of a base asynchronous channel class.
  */
-#define _base_asynchronous_channel_methods                                  \
-  _base_channel_methods                                                     \
+typedef struct base_asynchronous_channel base_asynchronous_channel_c;
 
 /**
- * @brief   @p BaseAsynchronousChannel specific data.
+ * @brief   Type of a legacy base asynchronous channel class.
+ * @deprecated
  */
-#define _base_asynchronous_channel_data                                     \
-  _base_channel_data                                                        \
+typedef base_asynchronous_channel_c BaseAsynchronousChannel;
+
+/**
+ * @brief   @p base_asynchronous_channel_c specific methods.
+ */
+#define __base_asynchronous_channel_methods                                 \
+  __base_channel_methods
+
+/**
+ * @brief   @p base_asynchronous_channel_c specific data.
+ */
+#define __base_asynchronous_channel_data                                    \
+  __base_channel_data                                                       \
   /* I/O condition event source.*/                                          \
-  event_source_t        event;
+  event_source_t                event;
 
 /**
- * @extends BaseChannelVMT
- *
- * @brief   @p BaseAsynchronousChannel virtual methods table.
+ * @brief   @p base_asynchronous_channel_c virtual methods table.
  */
-struct BaseAsynchronousChannelVMT {
-  _base_asynchronous_channel_methods
+struct base_asynchronous_channel_vmt {
+  __base_asynchronous_channel_methods
 };
 
 /**
- * @extends BaseChannel
- *
- * @brief   Base asynchronous channel class.
- * @details This class extends @p BaseChannel by adding event sources fields
- *          for asynchronous I/O for use in an event-driven environment.
+ * @brief   Structure representing a base asynchronous channel class.
  */
-typedef struct {
-  /** @brief Virtual Methods Table.*/
-  const struct BaseAsynchronousChannelVMT *vmt;
-  _base_asynchronous_channel_data
-} BaseAsynchronousChannel;
+struct base_asynchronous_channel {
+  /**
+   * @brief   Virtual Methods Table.
+   */
+  const struct base_asynchronous_channel_vmt *vmt;
+  __base_asynchronous_channel_data
+};
 
 /**
- * @name    Macro Functions (BaseAsynchronousChannel)
+ * @name    Methods implementations (base_asynchronous_channel_c)
+ * @{
+ */
+/**
+ * @brief   Object creation implementation.
+ *
+ * @param[out] ip       Pointer to a @p base_asynchronous_channel_c structure
+ *                      to be initialized.
+ * @param[in] vmt       VMT pointer for the new object.
+ * @return              A new reference to the object.
+ */
+CC_FORCE_INLINE
+static inline void *__base_asynchronous_channel_objinit_impl(void *ip,
+                                                             const void *vmt) {
+  base_asynchronous_channel_c *objp = (base_asynchronous_channel_c *)ip;
+
+  __base_channel_objinit_impl(objp, vmt);
+
+  return objp;
+}
+
+/**
+ * @brief   Object finalization implementation.
+ *
+ * @param[in] ip        Pointer to a @p base_asynchronous_channel_c structure
+ *                      to be disposed.
+ */
+CC_FORCE_INLINE
+static inline void __base_asynchronous_channel_dispose_impl(void *ip) {
+  base_asynchronous_channel_c *objp = (base_asynchronous_channel_c *)ip;
+
+  __base_channel_dispose_impl(objp);
+}
+/** @} */
+
+/**
+ * @name    Macro Functions (base_asynchronous_channel_c)
  * @{
  */
 /**

@@ -444,7 +444,7 @@ void sio_lld_stop(SIODriver *siop) {
   }
 }
 
-void sio_lld_configure(SIODriver *siop, const SIOConfig *config) {
+msg_t sio_lld_configure(SIODriver *siop, const SIOConfig *config) {
   USART_TypeDef *u = siop->usart;
   uint32_t presc, brr, clock;
 
@@ -489,6 +489,8 @@ void sio_lld_configure(SIODriver *siop, const SIOConfig *config) {
   /* Starting operations.*/
   u->ICR   = u->ISR;
   u->CR1  |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE;
+
+  return HAL_RET_SUCCESS;
 }
 
 /**

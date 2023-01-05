@@ -85,10 +85,10 @@ CC_FORCE_INLINE
 static inline void *__synchronized_object_objinit_impl(void *ip, const void *vmt) {
   synchronized_object_c *objp = (synchronized_object_c *)ip;
 
-  __referenced_object_objinit_impl(ip, vmt);
+  __referenced_object_objinit_impl(objp, vmt);
   osalMutexObjectInit(&objp->mutex);
 
-  return ip;
+  return objp;
 }
 
 /**

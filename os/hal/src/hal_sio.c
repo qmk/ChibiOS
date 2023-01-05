@@ -22,6 +22,8 @@
  * @{
  */
 
+#include <stddef.h>
+
 #include "hal.h"
 
 #if (HAL_USE_SIO == TRUE) || defined(__DOXYGEN__)
@@ -42,10 +44,59 @@
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 
-#if 0// (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
-static size_t sync_write(void *ip, const uint8_t *bp, size_t n,
-                         sysinterval_t timeout) {
+static msg_t __sio_start(void *ip) {
   SIODriver *siop = (SIODriver *)ip;
+  msg_t msg;
+
+  msg = sio_lld_start(siop);
+  if (msg == HAL_RET_SUCCESS) {
+#if SIO_USE_SYNCHRONIZATION == TRUE
+    /* If synchronization is enabled then all events by default.*/
+    sioWriteEnableFlagsX(siop, SIO_EV_ALL_EVENTS);
+#else
+    /* If synchronization is disabled then no events by default.*/
+    sioWriteEnableFlagsX(siop, SIO_EV_NONE);
+#endif
+  }
+
+  return msg;
+}
+
+static void __sio_stop(void *ip) {
+  SIODriver *siop = (SIODriver *)ip;
+
+  sio_lld_stop(siop);
+  siop->cb      = NULL;
+  siop->enabled = (sioevents_t)0;
+}
+
+static msg_t __sio_configure(void *ip, const void *config) {
+  SIODriver *siop = (SIODriver *)ip;
+
+  return sio_lld_configure(siop, (const SIOConfig *)config);
+}
+
+static void *__sio_getif(void *ip) {
+  SIODriver *siop = (SIODriver *)ip;
+
+#if SIO_USE_STREAMS_INTERFACE == TRUE
+  return (void *)&siop->channel;
+#else
+  return __base_driver_get_interface_impl(siop);
+#endif
+}
+
+static const struct sio_driver_vmt drv_vmt = {
+  .instance_offset = (size_t)offsetof(SIODriver, vmt),
+  .start           = __sio_start,
+  .stop            = __sio_stop,
+  .configure       = __sio_configure,
+  .getif           = __sio_getif
+};
+
+#if (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
+static size_t sync_write(SIODriver *siop, const uint8_t *bp, size_t n,
+                         sysinterval_t timeout) {
   size_t i;
 
   i = 0U;
@@ -65,9 +116,8 @@ static size_t sync_write(void *ip, const uint8_t *bp, size_t n,
   return i;
 }
 
-static size_t sync_read(void *ip, uint8_t *bp, size_t n,
+static size_t sync_read(SIODriver *siop, uint8_t *bp, size_t n,
                         sysinterval_t timeout) {
-  SIODriver *siop = (SIODriver *)ip;
   size_t i;
 
   i = 0U;
@@ -92,18 +142,20 @@ static size_t sync_read(void *ip, uint8_t *bp, size_t n,
  * queue-level function or macro.
  */
 
-static size_t __write(void *ip, const uint8_t *bp, size_t n) {
+static size_t __sio_write(void *ip, const uint8_t *bp, size_t n) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
 
-  return sync_write(ip, bp, n, TIME_INFINITE);
+  return sync_write(siop, bp, n, TIME_INFINITE);
 }
 
-static size_t __read(void *ip, uint8_t *bp, size_t n) {
+static size_t __sio_read(void *ip, uint8_t *bp, size_t n) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
 
-  return sync_read(ip, bp, n, TIME_INFINITE);
+  return sync_read(siop, bp, n, TIME_INFINITE);
 }
 
-static msg_t __put(void *ip, uint8_t b) {
-  SIODriver *siop = (SIODriver *)ip;
+static msg_t __sio_put(void *ip, uint8_t b) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
   msg_t msg;
 
   msg = sioSynchronizeTX(siop, TIME_INFINITE);
@@ -115,8 +167,8 @@ static msg_t __put(void *ip, uint8_t b) {
   return MSG_OK;
 }
 
-static msg_t __get(void *ip) {
-  SIODriver *siop = (SIODriver *)ip;
+static msg_t __sio_get(void *ip) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
   msg_t msg;
 
   msg = sioSynchronizeRX(siop, TIME_INFINITE);
@@ -127,8 +179,22 @@ static msg_t __get(void *ip) {
   return sioGetX(siop);
 }
 
+static size_t __writet(void *ip, const uint8_t *bp, size_t n,
+                       sysinterval_t timeout) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
+
+  return sync_write(siop, bp, n, timeout);
+}
+
+static size_t __readt(void *ip, uint8_t *bp, size_t n,
+                      sysinterval_t timeout) {
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
+
+  return sync_read(siop, bp, n, timeout);
+}
+
 static msg_t __putt(void *ip, uint8_t b, sysinterval_t timeout) {
-  SIODriver *siop = (SIODriver *)ip;
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
   msg_t msg;
 
   msg = sioSynchronizeTX(siop, timeout);
@@ -141,7 +207,7 @@ static msg_t __putt(void *ip, uint8_t b, sysinterval_t timeout) {
 }
 
 static msg_t __gett(void *ip, sysinterval_t timeout) {
-  SIODriver *siop = (SIODriver *)ip;
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
   msg_t msg;
 
   msg = sioSynchronizeRX(siop, timeout);
@@ -152,20 +218,8 @@ static msg_t __gett(void *ip, sysinterval_t timeout) {
   return sioGetX(siop);
 }
 
-static size_t __writet(void *ip, const uint8_t *bp, size_t n,
-                       sysinterval_t timeout) {
-
-  return sync_write(ip, bp, n, timeout);
-}
-
-static size_t __readt(void *ip, uint8_t *bp, size_t n,
-                      sysinterval_t timeout) {
-
-  return sync_read(ip, bp, n, timeout);
-}
-
 static msg_t __ctl(void *ip, unsigned int operation, void *arg) {
-  SIODriver *siop = (SIODriver *)ip;
+  SIODriver *siop = oopGetInstance(SIODriver *, ip);
 
   osalDbgCheck(siop != NULL);
 
@@ -182,29 +236,17 @@ static msg_t __ctl(void *ip, unsigned int operation, void *arg) {
   return HAL_RET_SUCCESS;
 }
 
-static const struct sio_driver_vmt vmt = {
-  (size_t)0,
-  __write, __read, __put,    __get,
-  __putt,  __gett, __writet, __readt,
-  __ctl
-};
-#endif /* SIO_USE_STREAMS_INTERFACE */
-
-static const struct sio_driver_vmt drv_vmt = {
-  .instance_offset = (size_t)0,
-  .start           = NULL,
-  .stop            = NULL,
-  .configure       = NULL,
-  .getif           = NULL
-};
-
-#if (SIO_USE_STREAMS_INTERFACE == TRUE) || defined(__DOXYGEN__)
-static const struct base_sequential_stream_vmt stream_vmt = {
-  .instance_offset = (size_t)0,
-  .write           = NULL,
-  .read            = NULL,
-  .put             = NULL,
-  .get             = NULL
+static const struct base_asynchronous_channel_vmt channel_vmt = {
+  .instance_offset = (size_t)offsetof(SIODriver, channel.vmt),
+  .write           = __sio_write,
+  .read            = __sio_read,
+  .put             = __sio_put,
+  .get             = __sio_get,
+  .writet          = __writet,
+  .readt           = __readt,
+  .putt            = __putt,
+  .gett            = __gett,
+  .ctl             = __ctl
 };
 #endif /* SIO_USE_STREAMS_INTERFACE == TRUE */
 
@@ -236,14 +278,10 @@ void sioObjectInit(SIODriver *siop) {
   __base_driver_objinit_impl(siop, &drv_vmt);
 
 #if SIO_USE_STREAMS_INTERFACE == TRUE
-//  siop->vmt         = &vmt;
-  __base_sequential_stream_objinit_impl(&siop->stream, &stream_vmt);
+  __base_asynchronous_channel_objinit_impl(&siop->channel, &channel_vmt);
 #endif
-//  siop->state       = SIO_STOP;
-//  siop->config      = NULL;
   siop->enabled     = (sioevents_t)0;
   siop->cb          = NULL;
-//  siop->arg         = NULL;
 #if SIO_USE_SYNCHRONIZATION == TRUE
   siop->sync_rx     = NULL;
   siop->sync_rxidle = NULL;
@@ -256,86 +294,6 @@ void sioObjectInit(SIODriver *siop) {
   SIO_DRIVER_EXT_INIT_HOOK(siop);
 #endif
 }
-
-/**
- * @brief   Configures and activates the SIO peripheral.
- *
- * @param[in] siop      pointer to the @p SIODriver object
- * @param[in] config    pointer to the @p SIOConfig object, can be @p NULL
- *                      if the default configuration is desired
- * @return              The operation status.
- *
- * @api
- */
-#if 0
-msg_t sioStart(SIODriver *siop, const SIOConfig *config) {
-  msg_t msg;
-
-  osalDbgCheck(siop != NULL);
-
-  osalSysLock();
-
-  osalDbgAssert((siop->state == SIO_STOP) || (siop->state == SIO_READY),
-                "invalid state");
-  siop->config = config;
-
-  msg = sio_lld_start(siop);
-  if (msg == HAL_RET_SUCCESS) {
-    siop->state = SIO_READY;
-  }
-  else {
-    siop->state = SIO_STOP;
-  }
-
-#if SIO_USE_SYNCHRONIZATION == TRUE
-  /* If synchronization is enabled then all events by default.*/
-  sioWriteEnableFlagsX(siop, SIO_EV_ALL_EVENTS);
-#else
-  /* If synchronization is disabled then no events by default.*/
-  sioWriteEnableFlagsX(siop, SIO_EV_NONE);
-#endif
-
-  osalSysUnlock();
-
-  return msg;
-}
-#endif
-
-/**
- * @brief   Deactivates the SIO peripheral.
- *
- * @param[in] siop      pointer to the @p SIODriver object
- *
- * @api
- */
-#if 0
-void sioStop(SIODriver *siop) {
-
-  osalDbgCheck(siop != NULL);
-
-  osalSysLock();
-
-  osalDbgAssert((siop->state == SIO_STOP) || (siop->state == SIO_READY),
-                "invalid state");
-
-  sio_lld_stop(siop);
-  siop->state   = SIO_STOP;
-  siop->config  = NULL;
-  siop->cb      = NULL;
-  siop->arg     = NULL;
-
-#if SIO_USE_SYNCHRONIZATION == TRUE
-    /* Informing waiting threads, if any.*/
-    osalThreadResumeI(&siop->sync_rx, MSG_RESET);
-    osalThreadResumeI(&siop->sync_rxidle, MSG_RESET);
-    osalThreadResumeI(&siop->sync_tx, MSG_RESET);
-    osalThreadResumeI(&siop->sync_txend, MSG_RESET);
-    osalOsRescheduleS();
-#endif
-
-  osalSysUnlock();
-}
-#endif
 
 /**
  * @brief   Writes the enabled events flags mask.

@@ -71,7 +71,7 @@ typedef struct hal_buffered_serial BufferedSerial;
  * @brief   @p BufferedSerial specific methods.
  */
 #define __buffered_serial_methods                                           \
-  _base_asynchronous_channel_methods
+  __base_asynchronous_channel_methods
 
 /**
  * @extends BaseAsynchronousChannelVMT
@@ -86,7 +86,7 @@ struct BufferedSerialVMT {
  * @brief   @p BufferedSerial specific data.
  */
 #define __buffered_serial_data                                              \
-  _base_asynchronous_channel_data                                           \
+  __base_asynchronous_channel_data                                          \
   /* Driver state.*/                                                        \
   bsstate_t                 state;                                          \
   /* Input queue.*/                                                         \

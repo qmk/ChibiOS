@@ -92,10 +92,10 @@ CC_FORCE_INLINE
 static inline void *__referenced_object_objinit_impl(void *ip, const void *vmt) {
   referenced_object_c *objp = (referenced_object_c *)ip;
 
-  __base_object_objinit_impl(ip, vmt);
+  __base_object_objinit_impl(objp, vmt);
   objp->references = (oop_object_references_t)1;
 
-  return ip;
+  return objp;
 }
 
 /**

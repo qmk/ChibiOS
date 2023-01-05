@@ -101,9 +101,9 @@ static inline void *__base_sequential_stream_objinit_impl(void *ip,
                                                           const void *vmt) {
   base_sequential_stream_c *objp = (base_sequential_stream_c *)ip;
 
-  objp->vmt = (struct base_sequential_stream_vmt *)vmt;
+  __base_object_objinit_impl(objp, vmt);
 
-  return ip;
+  return objp;
 }
 
 /**
@@ -114,10 +114,9 @@ static inline void *__base_sequential_stream_objinit_impl(void *ip,
  */
 CC_FORCE_INLINE
 static inline void __base_sequential_stream_dispose_impl(void *ip) {
+  base_sequential_stream_c *objp = (base_sequential_stream_c *)ip;
 
-  (void) ip;
-
-  /* Nothing.*/
+  __base_object_dispose_impl(objp);
 }
 /** @} */
 

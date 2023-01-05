@@ -57,6 +57,10 @@ msg_t drvOpen(void *ip) {
   base_driver_c *objp = (base_driver_c *)ip;
   msg_t msg;
 
+  osalDbgCheck(objp != NULL);
+
+  osalSysLock();
+
   if (objp->opencnt == 0U) {
     /* Physically starting the peripheral.*/
     msg = objp->vmt->start(objp);
@@ -71,6 +75,8 @@ msg_t drvOpen(void *ip) {
   else {
     msg = HAL_RET_SUCCESS;
   }
+
+  osalSysUnlock();
 
   return msg;
 }
@@ -87,12 +93,18 @@ msg_t drvOpen(void *ip) {
 void drvClose(void *ip) {
   base_driver_c *objp = (base_driver_c *)ip;
 
+  osalDbgCheck(objp != NULL);
+
+  osalSysLock();
+
   osalDbgAssert(objp->opencnt > 0U, "not opened");
 
   if (--objp->opencnt == 0U) {
     objp->state = HAL_DRV_STATE_STOP;
     objp->vmt->stop(ip);
   }
+
+  osalSysUnlock();
 }
 
 /** @} */

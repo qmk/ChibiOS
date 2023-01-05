@@ -146,15 +146,6 @@ typedef struct hal_sio_config SIOConfig;
  */
 typedef void (*siocb_t)(SIODriver *siop);
 
-/**
- * @brief   Driver state machine possible states.
- */
-//typedef enum {
-//  SIO_UNINIT = 0,                   /**< Not initialized.                   */
-//  SIO_STOP = 1,                     /**< Stopped.                           */
-//  SIO_READY = 2,                    /**< Ready.                             */
-//} siostate_t;
-
 #include "hal_sio_lld.h"
 
 /**
@@ -197,48 +188,34 @@ struct hal_sio_driver {
   /**
    * @brief   Virtual Methods Table.
    */
-//  const struct sio_driver_vmt *vmt;
-  base_sequential_stream_c  stream;
+  base_asynchronous_channel_c               channel;
 #endif
-  /**
-   * @brief   Driver state.
-   */
-//  siostate_t                state;
-  /**
-   * @brief   Current configuration data.
-   */
-//  const SIOConfig           *config;
   /**
    * @brief   Enabled event flags.
    */
-  sioevents_t               enabled;
+  sioevents_t                               enabled;
   /**
    * @brief   Events callback.
    * @note    Can be @p NULL.
    */
-  siocb_t                   cb;
-  /**
-   * @brief   User argument.
-   * @note    Can be retrieved through the @p siop argument of the callback.
-   */
-//  void                      *arg;
+  siocb_t                                   cb;
 #if (SIO_USE_SYNCHRONIZATION == TRUE) || defined(__DOXYGEN__)
   /**
    * @brief   Synchronization point for RX.
    */
-  thread_reference_t        sync_rx;
+  thread_reference_t                        sync_rx;
   /**
    * @brief   Synchronization point for RX idle.
    */
-  thread_reference_t        sync_rxidle;
+  thread_reference_t                        sync_rxidle;
   /**
    * @brief   Synchronization point for TX.
    */
-  thread_reference_t        sync_tx;
+  thread_reference_t                        sync_tx;
   /**
    * @brief   Synchronization point for TX-end.
    */
-  thread_reference_t        sync_txend;
+  thread_reference_t                        sync_txend;
 #endif /* SIO_USE_SYNCHRONIZATION == TRUE */
 #if defined(SIO_DRIVER_EXT_FIELS)
   SIO_DRIVER_EXT_FIELDS
