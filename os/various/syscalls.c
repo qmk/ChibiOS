@@ -65,6 +65,18 @@
 #include "hal.h"
 #endif
 
+#ifdef __PICOLIBC__
+
+void
+_exit(int status)
+{
+  (void) status;
+  chSysHalt("exit");
+  for(;;);
+}
+
+#else
+
 /***************************************************************************/
 
 __attribute__((used))
@@ -219,5 +231,7 @@ int _getpid(void) {
 void __cxa_pure_virtual(void) {
   chSysHalt("pure virtual");
 }
+
+#endif /* ifndef __PICOLIBC__ */
 
 /*** EOF ***/
