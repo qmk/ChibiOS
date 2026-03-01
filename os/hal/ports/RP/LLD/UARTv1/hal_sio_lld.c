@@ -125,14 +125,15 @@ __STATIC_INLINE void uart_init(SIODriver *siop) {
   siop->uart->UARTIBRD = idiv;
   siop->uart->UARTFBRD = fdiv;
 
+  uint32_t cr = siop->config->UARTCR & ~UART_CR_CFG_FORBIDDEN;
+
   /* Registers settings, the LCR_H write also latches dividers values.*/
   siop->uart->UARTLCR_H = siop->config->UARTLCR_H & ~UART_LCRH_CFG_FORBIDDEN;
-  siop->uart->UARTCR    = siop->config->UARTCR    & ~UART_CR_CFG_FORBIDDEN;
+  siop->uart->UARTCR    = cr;
 
   /* Setting up the operation.*/
   siop->uart->UARTICR   = siop->uart->UARTRIS;
-  siop->uart->UARTCR    = siop->config->UARTCR |
-                          UART_UARTCR_RXE | UART_UARTCR_TXE | UART_UARTCR_UARTEN;
+  siop->uart->UARTCR    = cr | UART_UARTCR_RXE | UART_UARTCR_TXE | UART_UARTCR_UARTEN;
 }
 
 /*===========================================================================*/
