@@ -120,7 +120,7 @@ void rtc_lld_init(void) {
 
   /* Get clock parameters. */
   uint32_t clock = hal_lld_get_clock_point(RP_CLK_RTC);
-  osalDbgAssert((clock > 0U) || (clock - 1 <= RTC_CLKDIV_M1), "bad clock");
+  osalDbgAssert((clock > 0U) && (clock - 1 <= RTC_CLKDIV_M1), "bad clock");
 
   /* Take RTC out of reset. */
   hal_lld_peripheral_unreset(RESETS_ALLREG_RTC);
