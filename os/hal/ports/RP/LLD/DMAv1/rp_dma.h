@@ -38,7 +38,7 @@
  * @retval true         correct DMA channel.
  */
 #define RP_DMA_IS_VALID_CHANNEL(chn)    (((chn) >= 0U) &&                   \
-                                         ((id) <= (RP_DMA_NUM_CHANNELS + 1U)))
+                                         ((chn) <= RP_DMA_NUM_CHANNELS))
 
 /**
  * @brief   Checks if a DMA priority is within the valid range.
