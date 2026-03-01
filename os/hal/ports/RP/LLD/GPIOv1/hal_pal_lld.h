@@ -222,7 +222,7 @@
  * @note    In this driver the pad number is encoded in the lower 4 bits of
  *          the GPIO address which are guaranteed to be zero.
  */
-#define PAL_LINE(port, pad)             ((pad), (port))
+#define PAL_LINE(port, pad)             ((port), (pad))
 
 /**
  * @brief   Decodes a port identifier from a line identifier.
