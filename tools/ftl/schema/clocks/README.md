@@ -28,8 +28,9 @@ jar.
 ## Current XML Model
 
 - `settings/prefixes` provides clock point, macro, and configuration prefixes.
-- `settings/suffixes` provides frequency, value, bits, selector, enable, and
-  derived enabled-state suffixes.
+- `settings/suffixes` provides frequency, current-clock, value, bits, selector,
+  enable, and derived enabled-state suffixes. The current-clock suffix is
+  optional and defaults to `_CLOCK`.
 - `settings/configs/config` provides arbitrary pre-compile settings emitted in
   XML order.
 - Generic configurations currently support `bool`, `value`, `set`, and `raw`
@@ -92,6 +93,9 @@ before clocks:
 - an `<POINT>_BITS` macro;
 - an `<POINT><frequency-suffix>` macro, with disabled clocks producing zero
   frequency;
+- an `<POINT><current-clock-suffix>` macro. For dynamic clock points this uses
+  `hal_lld_get_clock_point(CLK_<POINT>)`; the static-mode getter macro resolves
+  that expression to the static frequency macro when dynamic mode is disabled;
 - compile-time value checks for generated configuration settings;
 - grouped state-specific frequency limit definitions and one selected final
   limit block where a limit model is declared;

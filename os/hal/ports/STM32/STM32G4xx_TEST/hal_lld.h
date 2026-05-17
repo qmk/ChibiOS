@@ -433,56 +433,26 @@
  * tree generator owns the actual model; this block is only the compatibility
  * boundary exported by hal_lld.h.
  */
-#define STM32_CLOCK_DYNAMIC                 STM32_CFG_CLOCK_DYNAMIC
-
-#define CLK_PLLPCLK                         CLK_PLLP
-#define CLK_PLLQCLK                         CLK_PLLQ
-#define CLK_PLLRCLK                         CLK_PLLR
-
-#define STM32_HSI16CLK                      STM32_HSI16_FREQ
-#define STM32_HSI48CLK                      STM32_HSI48_FREQ
-
-#define STM32_PLLCLKIN                      STM32_PLLIN_FREQ
-#define STM32_PLLVCO                        STM32_PLLVCO_FREQ
-#define STM32_PLL_P_CLKOUT                  STM32_PLLP_FREQ
-#define STM32_PLL_Q_CLKOUT                  STM32_PLLQ_FREQ
-#define STM32_PLL_R_CLKOUT                  STM32_PLLR_FREQ
-
-#define STM32_SYSCLK                        STM32_SYSCLK_FREQ
-#define STM32_HCLK                          STM32_HCLK_FREQ
-#define STM32_PCLK1                         STM32_PCLK1_FREQ
-#define STM32_PCLK2                         STM32_PCLK2_FREQ
-#define STM32_TIMP1CLK                      hal_lld_get_clock_point(CLK_PCLK1TIM)
-#define STM32_TIMP2CLK                      hal_lld_get_clock_point(CLK_PCLK2TIM)
-#define STM32_MCODIVCLK                     STM32_MCODIV_FREQ
-#define STM32_MCOCLK                        STM32_MCO_FREQ
+#define STM32_SYSCLK                        STM32_SYSCLK_CLOCK
+#define STM32_HCLK                          STM32_HCLK_CLOCK
+#define STM32_PCLK1                         STM32_PCLK1_CLOCK
 #define STM32_LSCOSEL                       STM32_LSCO_BITS
-#define STM32_RTCCLK                        STM32_RTC_FREQ
+#define STM32_RTCCLK                        STM32_RTC_CLOCK
 #define STM32_RTCSEL                        STM32_RTC_BITS
 
-#define STM32_USART1CLK                     STM32_USART1_FREQ
-#define STM32_USART2CLK                     STM32_USART2_FREQ
-#define STM32_USART3CLK                     STM32_USART3_FREQ
-#define STM32_UART4CLK                      STM32_UART4_FREQ
-#define STM32_UART5CLK                      STM32_UART5_FREQ
-#define STM32_LPUART1CLK                    STM32_LPUART1_FREQ
+#define STM32_USART1CLK                     STM32_USART1_CLOCK
+#define STM32_USART2CLK                     STM32_USART2_CLOCK
+#define STM32_USART3CLK                     STM32_USART3_CLOCK
+#define STM32_UART4CLK                      STM32_UART4_CLOCK
+#define STM32_UART5CLK                      STM32_UART5_CLOCK
+#define STM32_LPUART1CLK                    STM32_LPUART1_CLOCK
 
-#define STM32_I2C1CLK                       STM32_I2C1_FREQ
-#define STM32_I2C2CLK                       STM32_I2C2_FREQ
-#define STM32_I2C3CLK                       STM32_I2C3_FREQ
-#define STM32_I2C4CLK                       STM32_I2C4_FREQ
-
-#define STM32_LPTIM1CLK                     STM32_LPTIM1_FREQ
-#define STM32_SAI1CLK                       STM32_SAI1_FREQ
-#define STM32_I2S23CLK                      STM32_I2S23_FREQ
-#define STM32_FDCANCLK                      STM32_FDCAN_FREQ
-#define STM32_48CLK                         STM32_CLK48_FREQ
-#define STM32_ADC12CLK                      STM32_ADC12_FREQ
-#define STM32_ADC345CLK                     STM32_ADC345_FREQ
-#define STM32_TIMCLK1                       hal_lld_get_clock_point(CLK_PCLK1TIM)
-#define STM32_TIMCLK2                       hal_lld_get_clock_point(CLK_PCLK2TIM)
-#define STM32_RNGCLK                        STM32_RNG_FREQ
-#define STM32_USBCLK                        STM32_USB_FREQ
+#define STM32_ADC12CLK                      STM32_ADC12_CLOCK
+#define STM32_ADC345CLK                     STM32_ADC345_CLOCK
+#define STM32_TIMCLK1                       STM32_PCLK1TIM_CLOCK
+#define STM32_TIMCLK2                       STM32_PCLK2TIM_CLOCK
+#define STM32_RNGCLK                        STM32_RNG_CLOCK
+#define STM32_USBCLK                        STM32_USB_CLOCK
 
 /*===========================================================================*/
 /* Driver data structures and types.                                         */

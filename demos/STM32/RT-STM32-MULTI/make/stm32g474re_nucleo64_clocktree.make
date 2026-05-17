@@ -90,7 +90,7 @@ MCU  = cortex-m4
 
 # Imported source files and paths.
 CHIBIOS  := ../../..
-CONFDIR  := ./cfg/stm32g474re_nucleo64
+CONFDIR  := ./cfg/stm32g474re_nucleo64_clocktree
 BUILDDIR := ./build/stm32g474re_nucleo64_clocktree
 DEPDIR   := ./.dep/stm32g474re_nucleo64_clocktree
 

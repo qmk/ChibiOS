@@ -1,0 +1,4 @@
+# Current clock macros use the runtime getter for dynamic points.
+Current clock point values
+#define TST_LOWOSC_CLOCK                 TST_LOWOSC_FREQ
+#define TST_SYSCLK_CLOCK                 hal_lld_get_clock_point(TCLK_SYSCLK)

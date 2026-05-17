@@ -22,6 +22,7 @@ prename = doc1.clocktree.settings.prefixes.@clock_points[0]?string
 premacro = doc1.clocktree.settings.prefixes.@macros[0]?string
 precfg = doc1.clocktree.settings.prefixes.@cfgs[0]?string
 postclocks = doc1.clocktree.settings.suffixes.@frequency[0]?string
+postclock = (doc1.clocktree.settings.suffixes.@clock[0]!"_CLOCK")?string
 postvalues = doc1.clocktree.settings.suffixes.@values[0]?string
 postbits = doc1.clocktree.settings.suffixes.@bits[0]?string
 postchoices = doc1.clocktree.settings.suffixes.@selector[0]?string
@@ -837,9 +838,8 @@ macro EmitStaticClockPointGetter()
       else
         local prefix = "   "
       endif
-      emit """
-${(prefix + "(clkpt) == " + clkmacro)?right_pad(30) + " ? " + freqmacro?right_pad(24) + " :                       \\"}
-"""
+      local line = (prefix + "(clkpt) == " + clkmacro)?right_pad(30) + " ? " + freqmacro?right_pad(24) + " :"
+      ppcode.EmitPPLogicalLine(text=line, continued=true)
     endlist
     emit """
    0U)
@@ -862,6 +862,11 @@ endfunction
 /* Returns a generated clock point frequency macro name.*/
 function GetClockFrequencyMacro(name)
   return premacro + name + postclocks
+endfunction
+
+/* Returns a generated current clock point macro name.*/
+function GetClockCurrentMacro(name)
+  return premacro + name + postclock
 endfunction
 
 /* Returns a generated dynamic clock point index macro name.*/
@@ -924,6 +929,31 @@ function UsesRuntimeInputExpressions(point)
 
   return true
 endfunction
+
+/* Emits current clock point values in static or dynamic form as configured.*/
+macro EmitCurrentClockDefinitions()
+  local points = model["clocks"]
+  if points?size > 0
+    emit """
+/**
+ * @name    Current clock point values
+ * @{
+ */
+"""
+    list points as point
+      local clockmacro = GetClockCurrentMacro(point["name"])
+      local freqmacro = GetClockFrequencyMacro(point["name"])
+      if point["dynamic"] == "yes"
+        ppcode.EmitPPDefineAt(name=clockmacro, value=GetRuntimeFrequencyExpression(point["name"]), level=0)
+      else
+        ppcode.EmitPPDefineAt(name=clockmacro, value=freqmacro, level=0)
+      endif
+    endlist
+    emit """
+/** @} */
+"""
+  endif
+endmacro
 
 /* Returns the downstream demand conditions for a clock point.*/
 function GetDemandConditions(point)
