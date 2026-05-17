@@ -23,7 +23,6 @@
  */
 
 #include "hal.h"
-#include "clocktree.h"
 
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
@@ -77,7 +76,7 @@ const halclkcfg_t hal_clkcfg_reset = {
  * @note    This is the configuration defined in mcuconf.h.
  */
 const halclkcfg_t hal_clkcfg_default = {
-  .pwr_vosr             = STM32_PWR_VOSR
+  .pwr_vosr             = STM32_CFG_PWR_VOSR
 #if STM32_BOOSTER_ENABLED == TRUE
                         | PWR_VOSR_BOOSTEN
 #endif
@@ -154,20 +153,20 @@ typedef struct {
  * @brief   System limits for range 1.
  */
 static const system_limits_t vos_range1 = {
-  .sysclk_max           = STM32_RANGE1_SYSCLK_MAX,
-  .flash_thresholds     = {STM32_RANGE1_0WS_THRESHOLD, STM32_RANGE1_1WS_THRESHOLD,
-                           STM32_RANGE1_2WS_THRESHOLD, STM32_RANGE1_3WS_THRESHOLD,
-                           STM32_RANGE1_4WS_THRESHOLD}
+  .sysclk_max           = STM32_VOS1_SYSCLK_MAX,
+  .flash_thresholds     = {STM32_VOS1_FLASH_0WS_MAX, STM32_VOS1_FLASH_1WS_MAX,
+                           STM32_VOS1_FLASH_2WS_MAX, STM32_VOS1_FLASH_3WS_MAX,
+                           STM32_VOS1_FLASH_4WS_MAX}
 };
 
 /**
  * @brief   System limits for range 2.
  */
 static const system_limits_t vos_range2 = {
-  .sysclk_max           = STM32_RANGE2_SYSCLK_MAX,
-  .flash_thresholds     = {STM32_RANGE2_0WS_THRESHOLD, STM32_RANGE2_1WS_THRESHOLD,
-                           STM32_RANGE2_2WS_THRESHOLD, STM32_RANGE2_3WS_THRESHOLD,
-                           STM32_RANGE2_4WS_THRESHOLD}
+  .sysclk_max           = STM32_VOS2_SYSCLK_MAX,
+  .flash_thresholds     = {STM32_VOS2_FLASH_0WS_MAX, STM32_VOS2_FLASH_1WS_MAX,
+                           STM32_VOS2_FLASH_2WS_MAX, STM32_VOS2_FLASH_3WS_MAX,
+                           STM32_VOS2_FLASH_4WS_MAX}
 };
 #endif /* defined(HAL_LLD_USE_CLOCK_MANAGEMENT) */
 
