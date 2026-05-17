@@ -119,21 +119,9 @@ const halclkcfg_t hal_clkcfg_default = {
  * @brief   Dynamic clock points for this device.
  */
 static halfreq_t clock_points[CLK_ARRAY_SIZE] = {
-#if STM32_HSI16_ENABLED == TRUE
   [CLK_HSI16]           = STM32_HSI16_FREQ,
-#else
-  [CLK_HSI16]           = 0U,
-#endif
-#if STM32_HSI48_ENABLED == TRUE
   [CLK_HSI48]           = STM32_HSI48_FREQ,
-#else
-  [CLK_HSI48]           = 0U,
-#endif
-#if STM32_HSE_ENABLED == TRUE
   [CLK_HSE]             = STM32_HSE_FREQ,
-#else
-  [CLK_HSE]             = 0U,
-#endif
   [CLK_SYSCLK]          = STM32_SYSCLK_FREQ,
   [CLK_PLLP]            = STM32_PLLP_FREQ,
   [CLK_PLLQ]            = STM32_PLLQ_FREQ,
@@ -339,7 +327,7 @@ static bool hal_lld_clock_configure(const halclkcfg_t *ccp) {
   }
 
   /* Updating the current system clock setting value.*/
-  hal_lld_set_coreclock(STM32_HSI16_FREQ);
+  hal_lld_set_coreclock(STM32_HSI16_SOURCE_FREQ);
 
   /* Finally resetting FLASH_ACR, CR, CFGR and CRRCR.*/
   halRegWrite32X(&RCC->CR, STM32_RCC_CR_RESET, true);
@@ -498,17 +486,17 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
 
   /* HSI16 clock.*/
   if ((ccp->rcc_cr & RCC_CR_HSION) != 0U) {
-    hsi16clk = STM32_HSI16_FREQ;
+    hsi16clk = STM32_HSI16_SOURCE_FREQ;
   }
 
   /* HSI48 clock after divider.*/
   if ((ccp->rcc_crrcr & RCC_CRRCR_HSI48ON) != 0U) {
-    hsi48clk = STM32_HSI48_FREQ;
+    hsi48clk = STM32_HSI48_SOURCE_FREQ;
   }
 
   /* HSE clock.*/
   if ((ccp->rcc_cr & RCC_CR_HSEON) != 0U) {
-    hseclk = STM32_HSE_FREQ;
+    hseclk = STM32_HSE_SOURCE_FREQ;
   }
 
   /* PLL MUX clock.*/
@@ -646,13 +634,13 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
     mcoclk = pllrclk;
     break;
   case STM32_MCOSEL_LSI:
-    mcoclk = STM32_LSI_FREQ;
+    mcoclk = STM32_LSI_SOURCE_FREQ;
     break;
   case STM32_MCOSEL_LSE:
-    mcoclk = STM32_LSE_FREQ;
+    mcoclk = STM32_LSE_SOURCE_FREQ;
     break;
   case STM32_MCOSEL_HSI48:
-    mcoclk = STM32_HSI48_FREQ;
+    mcoclk = hsi48clk;
     break;
   default:
     mcoclk = 0U;
@@ -709,7 +697,7 @@ void hal_lld_init(void) {
 
   /* Frequency after applying the default configuration or ->assumed<- set
      by the bootloader in case of NO_INIT.*/
-  hal_lld_set_coreclock(STM32_HCLK_FREQ);
+  hal_lld_set_coreclock(STM32_HCLK_CLOCK);
 
   /* DMA subsystems initialization.*/
 #if defined(STM32_DMA_REQUIRED)
@@ -738,7 +726,7 @@ void stm32_clock_init(void) {
 
 #if !STM32_NO_INIT
   /* Assuming HSI16 as initial clock.*/
-  hal_lld_set_coreclock(STM32_HSI16_FREQ);
+  hal_lld_set_coreclock(STM32_HSI16_SOURCE_FREQ);
 
   /* Reset of all peripherals.
      Note, GPIOs are not reset because initialized before this point in
@@ -808,7 +796,7 @@ bool hal_lld_clock_switch_mode(const halclkcfg_t *ccp) {
   }
 
   /* Updating the current system clock setting value.*/
-  hal_lld_set_coreclock(hal_lld_get_clock_point(CLK_HCLK));
+  hal_lld_set_coreclock(STM32_HCLK_CLOCK);
 
   return false;
 }

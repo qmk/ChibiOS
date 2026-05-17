@@ -1,4 +1,5 @@
 # Top-level sources participate in the same clock point model.
+TST_OSC_SOURCE_FREQ
 TST_OSC_FREQ
 TST_SYSCLK_FREQ
 TST_CFG_SYSCLK_SEL

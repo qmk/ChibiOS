@@ -23,6 +23,7 @@ premacro = doc1.clocktree.settings.prefixes.@macros[0]?string
 precfg = doc1.clocktree.settings.prefixes.@cfgs[0]?string
 postclocks = doc1.clocktree.settings.suffixes.@frequency[0]?string
 postclock = (doc1.clocktree.settings.suffixes.@clock[0]!"_CLOCK")?string
+postnominal = (doc1.clocktree.settings.suffixes.@nominal[0]!"_SOURCE_FREQ")?string
 postvalues = doc1.clocktree.settings.suffixes.@values[0]?string
 postbits = doc1.clocktree.settings.suffixes.@bits[0]?string
 postchoices = doc1.clocktree.settings.suffixes.@selector[0]?string
@@ -620,10 +621,10 @@ function ParseClockPoint(clock, sourceonly)
       if clockinput != ""
         stop ">>>> Conditional frequency " + kind?lower_case + " clock point '" + clockname + "' cannot use an input clock"
       endif
-      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":""}
+      return {"type":"source", "subtype":"frequencies", "sourceonly":sourceonly, "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":""}
     else
       local clockfreq = node.@frequency[0]?string
-      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput}
+      return {"type":"source", "subtype":"fixed", "sourceonly":sourceonly, "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput}
     endif
 
   elseif clock.mux[0]??
@@ -864,6 +865,11 @@ function GetClockFrequencyMacro(name)
   return premacro + name + postclocks
 endfunction
 
+/* Returns a generated nominal source frequency macro name.*/
+function GetClockNominalFrequencyMacro(name)
+  return premacro + name + postnominal
+endfunction
+
 /* Returns a generated current clock point macro name.*/
 function GetClockCurrentMacro(name)
   return premacro + name + postclock
@@ -888,46 +894,6 @@ function GetRuntimeFrequencyExpression(name)
   endif
 
   return GetClockFrequencyMacro(name)
-endfunction
-
-/* Returns true if a clock point is directly consumed by a dynamic point.*/
-function IsConsumedByDynamicPoint(name)
-  list model["clocks"] as point
-    if point["dynamic"] == "yes"
-      if point["type"] == "source"
-        if point["input"] == name
-          return true
-        endif
-      elseif point["type"] == "mux"
-        list point["inputs"] as input
-          if input["point"] == name
-            return true
-          endif
-        endlist
-      elseif point["type"] == "divider" || point["type"] == "multiplier"
-        if point["input"] == name
-          return true
-        endif
-      endif
-    endif
-  endlist
-
-  return false
-endfunction
-
-/* Returns true if frequency macros should reference runtime input clocks.*/
-function UsesRuntimeInputExpressions(point)
-  if point["dynamic"] == "yes"
-    return false
-  endif
-  if point["enable"] != "always"
-    return false
-  endif
-  if IsConsumedByDynamicPoint(point["name"])
-    return false
-  endif
-
-  return true
 endfunction
 
 /* Emits current clock point values in static or dynamic form as configured.*/
@@ -1746,6 +1712,44 @@ macro EmitClockChecks(point)
   endif
 endmacro
 
+/* Returns the nominal source frequency expression for a source-style point.*/
+function GetNominalFrequencyExpression(point)
+  if point["type"] != "source" || !(point["sourceonly"]!false)
+    return ""
+  endif
+
+  if point["subtype"] == "frequencies"
+    list point["frequencies"] as frequency
+      if frequency["when"] == ""
+        return frequency["value"]
+      endif
+    endlist
+
+    stop ">>>> Missing default nominal frequency for clock point '" + point["name"] + "'"
+  endif
+
+  local frequency = point["frequency"]
+  if point["input"] != ""
+    local inputfreq = GetDefaultFrequencyExpression(point["input"])
+    local frequency = frequency?replace("%I%", inputfreq)
+  endif
+
+  return frequency
+endfunction
+
+/* Emits the nominal source frequency for one source-style point.*/
+macro EmitNominalFrequency(point)
+  local frequency = GetNominalFrequencyExpression(point)
+  if frequency != ""
+    emit """
+/**
+ * @brief   ${point["name"]} nominal source frequency.
+ */
+"""
+    ppcode.EmitPPDefine(name=GetClockNominalFrequencyMacro(point["name"]), value=frequency)
+  endif
+endmacro
+
 /* Returns true if a clock point has frequency checks.*/
 function HasClockFrequencyChecks(point)
   return point["limits"]?size > 0
@@ -2064,14 +2068,14 @@ macro EmitClockFrequency(point)
         ppcode.EmitPPEndifAt(level=0)
       endif
     else
-      local frequency = point["frequency"]
-      if point["input"] != ""
-        if UsesRuntimeInputExpressions(point)
-          local inputfreq = GetRuntimeFrequencyExpression(point["input"])
-        else
+      if point["sourceonly"]
+        local frequency = GetClockNominalFrequencyMacro(point["name"])
+      else
+        local frequency = point["frequency"]
+        if point["input"] != ""
           local inputfreq = GetDefaultFrequencyExpression(point["input"])
+          local frequency = frequency?replace("%I%", inputfreq)
         endif
-        local frequency = frequency?replace("%I%", inputfreq)
       endif
       EmitFrequencyDefinition(point=point, frequency=frequency)
     endif
@@ -2086,11 +2090,7 @@ macro EmitClockFrequency(point)
       else
         EmitStateCondition(keyword="#elif", expression=condition, doxygen=false)
       endif
-      if UsesRuntimeInputExpressions(point)
-        local inputfreq = GetRuntimeFrequencyExpression(input["point"])
-      else
-        local inputfreq = GetDefaultFrequencyExpression(input["point"])
-      endif
+      local inputfreq = GetDefaultFrequencyExpression(input["point"])
       ppcode.EmitPPDefineAt(name=freqmacro, value=inputfreq, level=1)
     endlist
     ppcode.EmitPPElseAt(level=0)
@@ -2098,20 +2098,12 @@ macro EmitClockFrequency(point)
     ppcode.EmitPPEndifAt(level=0)
   elseif point["type"] == "divider"
     local valmacro = precfg + point["name"] + postvalues
-    if UsesRuntimeInputExpressions(point)
-      local inputfreq = GetRuntimeFrequencyExpression(point["input"])
-    else
-      local inputfreq = GetDefaultFrequencyExpression(point["input"])
-    endif
+    local inputfreq = GetDefaultFrequencyExpression(point["input"])
     local frequency = "(" + inputfreq + " / " + valmacro + ")"
     EmitFrequencyDefinition(point=point, frequency=frequency)
   elseif point["type"] == "multiplier"
     local valmacro = precfg + point["name"] + postvalues
-    if UsesRuntimeInputExpressions(point)
-      local inputfreq = GetRuntimeFrequencyExpression(point["input"])
-    else
-      local inputfreq = GetDefaultFrequencyExpression(point["input"])
-    endif
+    local inputfreq = GetDefaultFrequencyExpression(point["input"])
     local frequency = "(" + inputfreq + " * " + valmacro + ")"
     EmitFrequencyDefinition(point=point, frequency=frequency)
   endif
@@ -2147,6 +2139,10 @@ macro EmitDerivedConstants()
     endif
     EmitSourceDependencyChecks(point=point)
     if HasSourceDependencyChecks(point)
+      emit "\e"
+    endif
+    EmitNominalFrequency(point=point)
+    if point["type"] == "source" && (point["sourceonly"]!false)
       emit "\e"
     endif
     EmitClockBits(point=point)

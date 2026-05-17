@@ -145,7 +145,7 @@
       <bits enabled="RCC_BDCR_LSEON" disabled="0U" />
       <limits ref="LSECLK" />
     </source>
-    <source point="LSI" enable="manual" dynamic="no" frequency="STM32_LSICLK">
+    <source point="LSI" enable="manual" dynamic="no" frequency="32000U">
       <description>low frequency internal oscillator</description>
       <bits enabled="RCC_CSR_LSION" disabled="0U" />
     </source>

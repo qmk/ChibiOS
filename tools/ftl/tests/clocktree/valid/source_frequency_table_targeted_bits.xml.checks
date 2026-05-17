@@ -8,6 +8,8 @@ OSC_FAST_BITS
 OSC_SLOW_BITS
 
 # Conditional frequency table values are emitted.
+# The nominal source frequency is the default/post-reset table value.
+#define TST_TABLEOSC_SOURCE_FREQ            12000000U
 #define TST_TABLEOSC_FREQ
 #if ((TST_CFG_OSC_MODE == OSC_FAST) && \
      (TST_CFG_OSC_FINE == TRUE)) || \

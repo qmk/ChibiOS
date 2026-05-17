@@ -28,9 +28,10 @@ jar.
 ## Current XML Model
 
 - `settings/prefixes` provides clock point, macro, and configuration prefixes.
-- `settings/suffixes` provides frequency, current-clock, value, bits, selector,
-  enable, and derived enabled-state suffixes. The current-clock suffix is
-  optional and defaults to `_CLOCK`.
+- `settings/suffixes` provides frequency, nominal source frequency,
+  current-clock, value, bits, selector, enable, and derived enabled-state
+  suffixes. The current-clock suffix is optional and defaults to `_CLOCK`; the
+  nominal source frequency suffix is optional and defaults to `_SOURCE_FREQ`.
 - `settings/configs/config` provides arbitrary pre-compile settings emitted in
   XML order.
 - Generic configurations currently support `bool`, `value`, `set`, and `raw`
@@ -47,6 +48,10 @@ jar.
   A source emits one clock point but has no upstream input; it can still use
   a fixed `frequency` attribute or conditional `<frequencies>` table, enable
   modes, bits, and limits. Source points cannot use an input clock.
+- Source-style points emit a nominal source-frequency macro, independent from
+  the enable state. Fixed sources use their fixed expression. Conditional
+  `<frequencies>` sources use the fallback/default frequency, representing the
+  post-reset value for complex sources.
 - Formula or pass-through clock points under `clocks` use `<derived>`. A
   derived point can specify an optional `input` plus a fixed `frequency`
   expression or conditional `<frequencies>` table.
