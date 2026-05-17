@@ -23,6 +23,7 @@
  */
 
 #include "hal.h"
+#include "clocktree.h"
 
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
@@ -81,39 +82,28 @@ const halclkcfg_t hal_clkcfg_default = {
                         | PWR_VOSR_BOOSTEN
 #endif
                           ,
-  .rcc_cr               = STM32_MSIPLL0FAST | STM32_MSIPLL1FAST
-                        | STM32_MSIPLL0EN   | STM32_MSIPLL1EN
+  .rcc_cr               = STM32_CR_MSIRC0_BITS | STM32_CR_MSIRC1_BITS
+                        | STM32_HSE_BITS       | STM32_HSI48_BITS
+                        | STM32_HSI16_BITS     | STM32_CR_MSIS_BITS
+                        | STM32_CR_MSIK_BITS
 #if STM32_HSE_ENABLED == TRUE
-                        | RCC_CR_HSEON
-#endif
 #if defined(STM32_HSE_BYPASS)
                         | RCC_CR_HSEBYP
 #endif
-#if STM32_HSI48_ENABLED == TRUE
-                        | RCC_CR_HSI48ON
-#endif
-#if STM32_HSI16_ENABLED == TRUE
-                        | RCC_CR_HSION | RCC_CR_HSIKERON
-#endif
-#if STM32_ACTIVATE_MSIS == TRUE
-                        | RCC_CR_MSISON
-#endif
-#if STM32_ACTIVATE_MSIK == TRUE
-                        | RCC_CR_MSIKON | RCC_CR_MSIKERON
 #endif
                           ,
-  .rcc_icscr1           = STM32_MSISSEL     | STM32_MSISDIV     |
-                          STM32_MSIKSEL     | STM32_MSIKDIV     |
-                          STM32_MSIPLL1N    | STM32_MSIBIAS     |
-                          STM32_MSIPLL0SEL  | STM32_MSIPLL1SEL  |
-                          STM32_MSIHSINDIV  |
+  .rcc_icscr1           = STM32_ICSCR1_MSIS_BITS   |
+                          STM32_ICSCR1_MSIK_BITS   |
+                          STM32_ICSCR1_MSIRC0_BITS |
+                          STM32_ICSCR1_MSIRC1_BITS |
+                          STM32_CFG_MSIBIAS        |
                           RCC_ICSCR1_MSIRGSEL_ICSCR1, /* Note, enforced.*/
-  .rcc_cfgr1            = STM32_MCO2PRE     | STM32_MCO2SEL     |
-                          STM32_MCO1PRE     | STM32_MCO1SEL     |
-                          STM32_STOPKERWUCK | STM32_STOPWUCK,
-  .rcc_cfgr2            = STM32_PPRE2       | STM32_PPRE1       |
-                          STM32_HPRE,
-  .rcc_cfgr3            = STM32_PPRE3,
+  .rcc_cfgr1            = STM32_MCO2_BITS    | STM32_MCO2DIV_BITS |
+                          STM32_MCO1_BITS    | STM32_MCO1DIV_BITS |
+                          STM32_CFG_STOPKERWUCK | STM32_CFG_STOPWUCK,
+  .rcc_cfgr2            = STM32_PCLK2_BITS   | STM32_PCLK1_BITS   |
+                          STM32_HCLK_BITS,
+  .rcc_cfgr3            = STM32_PCLK3_BITS,
   .rcc_cfgr4            = 0U
 #if STM32_BOOSTER_ENABLED == TRUE
                         | STM32_BOOSTDIV    | STM32_BOOSTSEL
@@ -136,40 +126,20 @@ const halclkcfg_t hal_clkcfg_default = {
  *          overwrite it.
  */
 static halfreq_t clock_points[CLK_ARRAY_SIZE] = {
-#if STM32_HSI16_ENABLED
-  [CLK_HSI16]           = STM32_HSI16CLK,
-#else
-  [CLK_HSI16]           = 0U,
-#endif
-#if STM32_HSI48_ENABLED
-  [CLK_HSI48]           = STM32_HSI48CLK,
-#else
-  [CLK_HSI48]           = 0U,
-#endif
-#if STM32_HSE_ENABLED
-  [CLK_HSE]             = STM32_HSECLK,
-#else
-  [CLK_HSE]             = 0U,
-#endif
-#if STM32_ACTIVATE_MSIS
-  [CLK_MSIS]            = STM32_MSISCLK,
-#else
-  [CLK_MSIS]            = 0U,
-#endif
-#if STM32_ACTIVATE_MSIK
-  [CLK_MSIK]            = STM32_MSIKCLK,
-#else
-  [CLK_MSIK]            = 0U,
-#endif
-  [CLK_SYSCLK]          = STM32_SYSCLK,
-  [CLK_HCLK]            = STM32_HCLK,
-  [CLK_PCLK1]           = STM32_PCLK1,
-  [CLK_PCLK1TIM]        = STM32_TIMP1CLK,
-  [CLK_PCLK2]           = STM32_PCLK2,
-  [CLK_PCLK2TIM]        = STM32_TIMP2CLK,
-  [CLK_PCLK3]           = STM32_PCLK3,
-  [CLK_MCO1]            = STM32_MCO1CLK,
-  [CLK_MCO2]            = STM32_MCO2CLK
+  [CLK_HSI16]           = STM32_HSI16_FREQ,
+  [CLK_HSI48]           = STM32_HSI48_FREQ,
+  [CLK_HSE]             = STM32_HSE_FREQ,
+  [CLK_MSIS]            = STM32_MSIS_FREQ,
+  [CLK_MSIK]            = STM32_MSIK_FREQ,
+  [CLK_SYSCLK]          = STM32_SYSCLK_FREQ,
+  [CLK_HCLK]            = STM32_HCLK_FREQ,
+  [CLK_PCLK1]           = STM32_PCLK1_FREQ,
+  [CLK_PCLK1TIM]        = STM32_PCLK1TIM_FREQ,
+  [CLK_PCLK2]           = STM32_PCLK2_FREQ,
+  [CLK_PCLK2TIM]        = STM32_PCLK2TIM_FREQ,
+  [CLK_PCLK3]           = STM32_PCLK3_FREQ,
+  [CLK_MCO1]            = STM32_MCO1_FREQ,
+  [CLK_MCO2]            = STM32_MCO2_FREQ
 };
 
 /**
@@ -261,33 +231,24 @@ __STATIC_INLINE void hal_lld_set_static_clocks(void) {
 
   /* CCIPR registers initialization, note.*/
   halRegWrite32X(&RCC->CCIPR1,
-                 STM32_TIMICSEL    | STM32_USB1SEL     |
-                 STM32_ICLKSEL     |
-#if STM32_FDCAN1SEL != RCC_CCIPR1_FDCAN1SEL_IGNORE
-                 STM32_FDCAN1SEL   |
-#endif
-                 STM32_SYSTICKSEL  | STM32_SPI1SEL     |
-                 STM32_LPTIM2SEL   | STM32_SPI2SEL     |
-                 STM32_I3C2SEL     | STM32_I2C2SEL     |
-                 STM32_I2C1SEL     | STM32_I3C1SEL     |
-                 STM32_UART5SEL    | STM32_UART4SEL    |
-                 STM32_USART3SEL   | STM32_USART1SEL,
+                 STM32_CFG_TIMICSEL | STM32_USB_BITS    |
+                 STM32_ICLK_BITS    | STM32_FDCAN1_BITS |
+                 STM32_SYSTICK_BITS | STM32_SPI1_BITS   |
+                 STM32_LPTIM2_BITS  | STM32_SPI2_BITS   |
+                 STM32_I3C2_BITS    | STM32_I2C2_BITS   |
+                 STM32_I2C1_BITS    | STM32_I3C1_BITS   |
+                 STM32_UART5_BITS   | STM32_UART4_BITS  |
+                 STM32_USART3_BITS  | STM32_USART1_BITS,
                  true);
   halRegWrite32X(&RCC->CCIPR2,
-                 STM32_OCTOSPISEL  |
-#if STM32_DAC1SHSEL != RCC_CCIPR2_DAC1SHSEL_IGNORE
-                 STM32_DAC1SHSEL   |
-#endif
-                 STM32_ADCDACSEL   | STM32_ADCDACPRE   |
-#if STM32_RNGSEL != RCC_CCIPR2_RNGSEL_IGNORE
-                 STM32_RNGSEL      |
-#endif
-                 STM32_SAI1SEL     | STM32_SPI3SEL     |
-                 STM32_ADF1SEL,
+                 STM32_OCTOSPI_BITS | STM32_DAC1SH_BITS |
+                 STM32_ADCDAC_BITS  | STM32_RNG_BITS    |
+                 STM32_SAI1_BITS    | STM32_SPI3_BITS   |
+                 STM32_ADF1_BITS,
                  true);
   halRegWrite32X(&RCC->CCIPR3,
-                 STM32_LPTIM1SEL   | STM32_LPTIM34SEL  |
-                 STM32_I2C3SEL     | STM32_LPUART1SEL,
+                 STM32_LPTIM1_BITS  | STM32_LPTIM34_BITS |
+                 STM32_I2C3_BITS    | STM32_LPUART1_BITS,
                  true);
 }
 
@@ -449,22 +410,22 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
 
   /* HSE clock.*/
   if ((ccp->rcc_cr & RCC_CR_HSEON) != 0U) {
-    hseclk = STM32_HSECLK;
+    hseclk = STM32_HSE_SOURCE_FREQ;
   }
 
   /* HSI16 clock.*/
   if ((ccp->rcc_cr & RCC_CR_HSION) != 0U) {
-    hsi16clk = STM32_HSI16CLK;
+    hsi16clk = STM32_HSI16_SOURCE_FREQ;
   }
 
   /* HSI48 clock.*/
   if ((ccp->rcc_cr & RCC_CR_HSI48ON) != 0U) {
-    hsi48clk = STM32_HSI48CLK;
+    hsi48clk = STM32_HSI48_SOURCE_FREQ;
   }
 
   /* MSIRC0 base clock depending on MSIPLL0 mode. */
   if ((ccp->rcc_cr & RCC_CR_MSIPLL0EN) == 0U) {
-    msirc0clk = 96000000U;
+    msirc0clk = STM32_MSIRC0_SOURCE_FREQ;
   }
   else {
     uint32_t sel0 = (ccp->rcc_icscr1 & RCC_ICSCR1_MSIPLL0SEL_Msk) >> RCC_ICSCR1_MSIPLL0SEL_Pos;
@@ -483,7 +444,7 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
 
   /* MSIRC1 base clock depending on MSIPLL1 mode. */
   if ((ccp->rcc_cr & RCC_CR_MSIPLL1EN) == 0U) {
-    msirc1clk = 24000000U;
+    msirc1clk = STM32_MSIRC1_SOURCE_FREQ;
   }
   else {
     uint32_t sel1 = (ccp->rcc_icscr1 & RCC_ICSCR1_MSIPLL1SEL_Msk) >> RCC_ICSCR1_MSIPLL1SEL_Pos;
@@ -623,13 +584,13 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
     mco1clk = hseclk;
     break;
   case RCC_CFGR1_MCO1SEL_LSI:
-    mco1clk = STM32_LSICLK;
+    mco1clk = STM32_LSI_SOURCE_FREQ;
     break;
   case RCC_CFGR1_MCO1SEL_LSE:
-    mco1clk = STM32_LSECLK;
+    mco1clk = STM32_LSE_SOURCE_FREQ;
     break;
   case RCC_CFGR1_MCO1SEL_HSI48:
-    mco1clk = STM32_HSI48CLK;
+    mco1clk = hsi48clk;
     break;
   case RCC_CFGR1_MCO1SEL_MSIK:
     mco1clk = msikclk;
@@ -655,13 +616,13 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
     mco2clk = hseclk;
     break;
   case RCC_CFGR1_MCO2SEL_LSI:
-    mco2clk = STM32_LSICLK;
+    mco2clk = STM32_LSI_SOURCE_FREQ;
     break;
   case RCC_CFGR1_MCO2SEL_LSE:
-    mco2clk = STM32_LSECLK;
+    mco2clk = STM32_LSE_SOURCE_FREQ;
     break;
   case RCC_CFGR1_MCO2SEL_HSI48:
-    mco2clk = STM32_HSI48CLK;
+    mco2clk = hsi48clk;
     break;
   case RCC_CFGR1_MCO2SEL_MSIK:
     mco2clk = msikclk;
@@ -718,7 +679,7 @@ void hal_lld_init(void) {
 
   /* Frequency after applying the default configuration or ->assumed<- set
      by the bootloader in case of NO_INIT.*/
-  hal_lld_set_coreclock(STM32_HCLK);
+  hal_lld_set_coreclock(STM32_HCLK_CLOCK);
 
   /* DMA subsystems initialization.*/
 #if defined(STM32_DMA3_REQUIRED)
@@ -811,7 +772,7 @@ bool hal_lld_clock_switch_mode(const halclkcfg_t *ccp) {
   }
 
   /* Updating the current system clock setting value.*/
-  hal_lld_set_coreclock(hal_lld_get_clock_point(CLK_HCLK));
+  hal_lld_set_coreclock(STM32_HCLK_CLOCK);
 
   return false;
 }

@@ -1,4 +1,4 @@
 # Nested frequency selections can merge non-overlapping fields for one target.
-#define TST_OSC_CFGR_BITS                 (OSC_RANGE_FAST | OSC_TRIM_FINE)
-#define TST_OSC_CFGR_BITS                 (OSC_RANGE_FAST | OSC_TRIM_DEFAULT)
-#define TST_OSC_CFGR_BITS                 OSC_RANGE_SLOW
+#define TST_CFGR_OSC_BITS                 (OSC_RANGE_FAST | OSC_TRIM_FINE)
+#define TST_CFGR_OSC_BITS                 (OSC_RANGE_FAST | OSC_TRIM_DEFAULT)
+#define TST_CFGR_OSC_BITS                 OSC_RANGE_SLOW

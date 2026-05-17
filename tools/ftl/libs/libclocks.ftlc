@@ -1490,7 +1490,7 @@ function GetBitsMacro(point, target)
     return premacro + point["name"] + postbits
   endif
 
-  return premacro + point["name"] + "_" + target + postbits
+  return premacro + target + "_" + point["name"] + postbits
 endfunction
 
 /* Returns indentation for nested preprocessor directives.*/
