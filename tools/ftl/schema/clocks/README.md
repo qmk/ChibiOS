@@ -73,6 +73,9 @@ jar.
   are not range-checked.
 - Mux inputs and scaler choices use nested `<bits value="..."/>` elements, not
   bits attributes.
+- Bits elements can specify optional `mask` metadata. The generator uses masks
+  to reject nested selections that OR two fields for the same target and mask.
+  Masks are required when a target can receive bits from multiple XML levels.
 - Divider and multiplier nodes must specify their input clock point.
 - Mux, divider, and multiplier inputs are checked against the declared clock
   points.

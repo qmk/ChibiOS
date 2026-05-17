@@ -127,9 +127,6 @@
         <xs:element name="limits" type="clockLimitType" maxOccurs="1"
           minOccurs="0">
         </xs:element>
-        <xs:element name="complex" type="xs:string" maxOccurs="1"
-          minOccurs="0">
-        </xs:element>
         <xs:element name="frequencies" type="frequenciesType" maxOccurs="1"
           minOccurs="0">
         </xs:element>
@@ -247,9 +244,6 @@
 
     <xs:complexType name="derivedType">
       <xs:sequence>
-        <xs:element name="complex" type="xs:string" maxOccurs="1"
-          minOccurs="0">
-        </xs:element>
         <xs:element name="frequencies" type="frequenciesType" maxOccurs="1"
           minOccurs="0">
         </xs:element>
@@ -485,6 +479,14 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="mask" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="boolBitsType">
@@ -508,6 +510,14 @@
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="1"></xs:minLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="mask" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

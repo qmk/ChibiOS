@@ -63,19 +63,45 @@ endfunction
 function ParseValueBits(node, context)
   local bits = []
   list node.bits as bit
-    local bits = bits + [{"target":(bit.@target[0]!"")?string, "value":bit.@value[0]?string}]
+    local mask = (bit.@mask[0]!"")?string
+    if mask == ""
+      local masks = []
+    else
+      local masks = [mask]
+    endif
+    local bits = bits + [{"target":(bit.@target[0]!"")?string, "value":bit.@value[0]?string, "masks":masks}]
   endlist
 
   return ValidateBitTargets(bits, context)
 endfunction
 
+/* Checks that two bit groups do not reuse the same mask on one target.*/
+function CheckBitMaskOverlap(inherited, localbits)
+  list inherited["masks"] as inheritedmask
+    list localbits["masks"] as localmask
+      if inheritedmask == localmask
+        return inheritedmask
+      endif
+    endlist
+  endlist
+
+  return ""
+endfunction
+
 /* Combines inherited and local value bits expressions by target.*/
-function MergeValueBits(inherited, localbits)
+function MergeValueBits(inherited, localbits, context)
   local merged = []
   list inherited as bit
-    local localvalue = GetValueBitsExpression(localbits, bit["target"])
-    if localvalue != ""
-      local merged = merged + [{"target":bit["target"], "value":"(" + bit["value"] + " | " + localvalue + ")"}]
+    local localbit = GetValueBits(localbits, bit["target"])
+    if localbit?size > 0
+      if bit["masks"]?size == 0 || localbit["masks"]?size == 0
+        stop ">>>> Missing bits mask for merged target '" + bit["target"] + "' in " + context
+      endif
+      local overlap = CheckBitMaskOverlap(bit, localbit)
+      if overlap != ""
+        stop ">>>> Overlapping bits mask '" + overlap + "' for target '" + bit["target"] + "' in " + context
+      endif
+      local merged = merged + [{"target":bit["target"], "value":"(" + bit["value"] + " | " + localbit["value"] + ")", "masks":bit["masks"] + localbit["masks"]}]
     else
       local merged = merged + [bit]
     endif
@@ -94,7 +120,13 @@ endfunction
 function ParseBoolBits(node, context)
   local bits = []
   list node.bits as bit
-    local bits = bits + [{"target":(bit.@target[0]!"")?string, "enabled":bit.@enabled[0]?string, "disabled":bit.@disabled[0]?string}]
+    local mask = (bit.@mask[0]!"")?string
+    if mask == ""
+      local masks = []
+    else
+      local masks = [mask]
+    endif
+    local bits = bits + [{"target":(bit.@target[0]!"")?string, "enabled":bit.@enabled[0]?string, "disabled":bit.@disabled[0]?string, "masks":masks}]
   endlist
 
   return ValidateBitTargets(bits, context)
@@ -164,7 +196,7 @@ function ParseConditionalValueSelect(select, conditions, bits, context)
   local cases = []
   list select.when as when
     local branchconditions = conditions + [when.@condition[0]?string]
-    local branchbits = MergeValueBits(bits, ParseValueBits(when, context + " conditional branch"))
+    local branchbits = MergeValueBits(bits, ParseValueBits(when, context + " conditional branch"), context + " conditional branch")
     local hasvalue = when.@value[0]??
     local hasselect = when.select[0]??
 
@@ -187,7 +219,7 @@ function ParseConditionalValueSelect(select, conditions, bits, context)
   endif
 
   local otherwise = select.otherwise[0]
-  local branchbits = MergeValueBits(bits, ParseValueBits(otherwise, context + " conditional otherwise"))
+  local branchbits = MergeValueBits(bits, ParseValueBits(otherwise, context + " conditional otherwise"), context + " conditional otherwise")
   local hasvalue = otherwise.@value[0]??
   local hasselect = otherwise.select[0]??
 
@@ -583,19 +615,14 @@ function ParseClockPoint(clock, sourceonly)
     if sourceonly && clockinput != ""
       stop ">>>> Source clock point '" + clockname + "' cannot use an input clock"
     endif
-    if node.complex[0]??
-      local clockcomplex = node.complex[0]?string?trim
-    else
-      local clockcomplex = ""
-    endif
     if hasfrequencies
       if clockinput != ""
         stop ">>>> Conditional frequency " + kind?lower_case + " clock point '" + clockname + "' cannot use an input clock"
       endif
-      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":"", "complex":clockcomplex}
+      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":""}
     else
       local clockfreq = node.@frequency[0]?string
-      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput, "complex":clockcomplex}
+      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput}
     endif
 
   elseif clock.mux[0]??
@@ -1505,6 +1532,17 @@ function GetValueBitsExpression(valuebits, target)
   endlist
 
   return ""
+endfunction
+
+/* Returns the value bits object for one target.*/
+function GetValueBits(valuebits, target)
+  list valuebits as bit
+    if bit["target"] == target
+      return bit
+    endif
+  endlist
+
+  return {}
 endfunction
 
 /* Returns true if value bits contain one target.*/

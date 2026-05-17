@@ -1,0 +1,41 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="FAST" type="bool" default="TRUE">
+        <description>Selects fast mode.</description>
+      </config>
+    </configs>
+  </settings>
+  <sources>
+    <source point="OSC" enable="always" dynamic="no">
+      <description>source with unmasked merged targeted bits</description>
+      <frequencies>
+        <select>
+          <when condition="TST_CFG_FAST == TRUE">
+            <bits target="CFGR" value="OSC_RANGE_FAST" />
+            <select>
+              <when condition="TST_CFG_FAST == TRUE" value="48000000U">
+                <bits target="CFGR" value="OSC_TRIM_DEFAULT" mask="OSC_TRIM_Msk" />
+              </when>
+              <otherwise value="44000000U" />
+            </select>
+          </when>
+          <otherwise value="12000000U" />
+        </select>
+      </frequencies>
+    </source>
+  </sources>
+  <clocks>
+    <clock point="ROOT" enable="always" dynamic="no">
+      <description>root clock</description>
+      <derived input="OSC" frequency="%I%" />
+    </clock>
+  </clocks>
+</clocktree>
