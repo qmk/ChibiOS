@@ -39,7 +39,7 @@
     <clock point="CORE" enable="always" dynamic="no">
       <description>clock with conditional limits</description>
       <limits ref="CORE" />
-      <source frequency="32000000U" />
+      <derived frequency="32000000U" />
     </clock>
   </clocks>
 </clocktree>

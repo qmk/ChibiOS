@@ -11,9 +11,17 @@
     </configs>
   </settings>
   <clocks>
-    <clock point="OSC" enable="always" dynamic="no">
-      <description>source without a frequency definition</description>
-      <source />
+    <clock point="BASE" enable="always" dynamic="no">
+      <description>base clock</description>
+      <derived frequency="1000000U" />
     </clock>
   </clocks>
+  <sinks>
+    <sink name="DRIVER" input="BASE">
+      <description>first sink</description>
+    </sink>
+    <sink name="DRIVER" input="BASE">
+      <description>second sink with the same name</description>
+    </sink>
+  </sinks>
 </clocktree>

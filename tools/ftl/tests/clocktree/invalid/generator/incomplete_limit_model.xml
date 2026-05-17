@@ -17,7 +17,7 @@
     <clock point="CORE" enable="always" dynamic="no">
       <description>clock with incomplete limit model</description>
       <limits ref="CORE" />
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
   </clocks>
 </clocktree>

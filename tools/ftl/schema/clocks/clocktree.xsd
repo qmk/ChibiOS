@@ -4,7 +4,7 @@
 
     <xs:element name="clocktree" type="clocktreeType">
       <xs:key name="clockPointKey">
-        <xs:selector xpath="clocks/clock"></xs:selector>
+        <xs:selector xpath="sources/source | clocks/clock"></xs:selector>
         <xs:field xpath="@point"></xs:field>
       </xs:key>
       <xs:key name="stateNameKey">
@@ -24,19 +24,19 @@
         <xs:field xpath="@state"></xs:field>
       </xs:keyref>
       <xs:keyref name="clockLimitRef" refer="limitNameKey">
-        <xs:selector xpath="clocks/clock/limits"></xs:selector>
+        <xs:selector xpath="sources/source/limits | clocks/clock/limits"></xs:selector>
         <xs:field xpath="@ref"></xs:field>
       </xs:keyref>
       <xs:keyref name="stateLimitRef" refer="limitNameKey">
         <xs:selector xpath="settings/limit-values/state-values/limit"></xs:selector>
         <xs:field xpath="@name"></xs:field>
       </xs:keyref>
-      <xs:keyref name="consumerInputRef" refer="clockPointKey">
-        <xs:selector xpath="consumers/consumer"></xs:selector>
+      <xs:keyref name="sinkInputRef" refer="clockPointKey">
+        <xs:selector xpath="sinks/sink"></xs:selector>
         <xs:field xpath="@input"></xs:field>
       </xs:keyref>
-      <xs:keyref name="consumerLimitRef" refer="limitNameKey">
-        <xs:selector xpath="consumers/consumer/limits"></xs:selector>
+      <xs:keyref name="sinkLimitRef" refer="limitNameKey">
+        <xs:selector xpath="sinks/sink/limits"></xs:selector>
         <xs:field xpath="@ref"></xs:field>
       </xs:keyref>
     </xs:element>
@@ -44,11 +44,22 @@
     <xs:complexType name="clocktreeType">
       <xs:sequence>
             <xs:element name="settings" type="settingsType" maxOccurs="1" minOccurs="1"></xs:element>
+        <xs:element name="sources" type="sourcesType" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
             <xs:element name="clocks" type="clocksType" maxOccurs="1"
           minOccurs="1">
         </xs:element>
-        <xs:element name="consumers" type="consumersType" maxOccurs="1"
+        <xs:element name="sinks" type="sinksType" maxOccurs="1"
           minOccurs="0">
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="sourcesType">
+      <xs:sequence>
+        <xs:element name="source" type="sourcePointType" maxOccurs="unbounded"
+          minOccurs="1">
         </xs:element>
       </xs:sequence>
     </xs:complexType>
@@ -59,15 +70,15 @@
       </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="consumersType">
+    <xs:complexType name="sinksType">
       <xs:sequence>
-        <xs:element name="consumer" type="consumerType" maxOccurs="unbounded"
+        <xs:element name="sink" type="sinkType" maxOccurs="unbounded"
           minOccurs="1">
         </xs:element>
       </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="consumerType">
+    <xs:complexType name="sinkType">
       <xs:sequence>
         <xs:element name="description" type="xs:string" maxOccurs="1"
           minOccurs="0">
@@ -105,6 +116,58 @@
     </xs:complexType>
     
 
+    <xs:complexType name="sourcePointType">
+      <xs:sequence>
+        <xs:element name="description" type="xs:string" maxOccurs="1"
+          minOccurs="1">
+        </xs:element>
+        <xs:element name="bits" type="boolBitsType" maxOccurs="unbounded"
+          minOccurs="0">
+        </xs:element>
+        <xs:element name="limits" type="clockLimitType" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
+        <xs:element name="complex" type="xs:string" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
+        <xs:element name="frequencies" type="frequenciesType" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="point" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="enable" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="always"></xs:enumeration>
+            <xs:enumeration value="manual"></xs:enumeration>
+            <xs:enumeration value="auto"></xs:enumeration>
+            <xs:enumeration value="never"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="dynamic" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="yes"></xs:enumeration>
+            <xs:enumeration value="no"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="frequency" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+
     <xs:complexType name="clockType">
       <xs:sequence>
         <xs:element name="description" type="xs:string" maxOccurs="1"
@@ -117,7 +180,7 @@
           minOccurs="0">
         </xs:element>
         <xs:choice maxOccurs="1" minOccurs="1">
-          <xs:element name="source" type="sourceType" maxOccurs="1"
+          <xs:element name="derived" type="derivedType" maxOccurs="1"
             minOccurs="1">
           </xs:element>
           <xs:element name="mux" type="muxType" maxOccurs="1" minOccurs="1"></xs:element>
@@ -166,7 +229,7 @@
       </xs:attribute>
     </xs:complexType>
 
-    <xs:complexType name="sourceType">
+    <xs:complexType name="derivedType">
       <xs:sequence>
         <xs:element name="complex" type="xs:string" maxOccurs="1"
           minOccurs="0">

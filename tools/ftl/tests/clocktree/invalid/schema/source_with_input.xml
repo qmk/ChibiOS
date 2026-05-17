@@ -10,18 +10,16 @@
       </config>
     </configs>
   </settings>
+  <sources>
+    <source point="BAD_SOURCE" enable="always" dynamic="no"
+            input="OTHER" frequency="%I%">
+      <description>source elements cannot depend on an upstream clock</description>
+    </source>
+  </sources>
   <clocks>
-    <clock point="BASE" enable="always" dynamic="no">
-      <description>base clock</description>
-      <source frequency="1000000U" />
+    <clock point="OTHER" enable="always" dynamic="no">
+      <description>ordinary fixed clock</description>
+      <derived frequency="16000000U" />
     </clock>
   </clocks>
-  <consumers>
-    <consumer name="DRIVER" input="BASE">
-      <description>first consumer</description>
-    </consumer>
-    <consumer name="DRIVER" input="BASE">
-      <description>second consumer with the same name</description>
-    </consumer>
-  </consumers>
 </clocktree>

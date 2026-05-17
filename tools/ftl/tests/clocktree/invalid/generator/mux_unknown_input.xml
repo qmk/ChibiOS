@@ -13,7 +13,7 @@
   <clocks>
     <clock point="A" enable="always" dynamic="no">
       <description>source A</description>
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
     <clock point="MUXED" enable="always" dynamic="no">
       <description>mux references missing input point</description>

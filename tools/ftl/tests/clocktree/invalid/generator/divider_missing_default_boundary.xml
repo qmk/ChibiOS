@@ -13,7 +13,7 @@
   <clocks>
     <clock point="BASE" enable="always" dynamic="no">
       <description>base clock</description>
-      <source frequency="8000000U" />
+      <derived frequency="8000000U" />
     </clock>
     <clock point="DIV" enable="always" dynamic="no">
       <description>divider with no default and no lower boundary</description>

@@ -11,9 +11,12 @@
     </configs>
   </settings>
   <clocks>
-    <clock point="OSC" enable="manual" dynamic="yes">
-      <description>manual clock without enable bits</description>
+    <clock point="OSC" enable="always" dynamic="no">
+      <description>root oscillator</description>
       <derived frequency="16000000U" />
     </clock>
   </clocks>
+  <consumers>
+    <consumer name="DRIVER" input="OSC" />
+  </consumers>
 </clocktree>

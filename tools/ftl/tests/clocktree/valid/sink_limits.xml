@@ -24,13 +24,13 @@
   <clocks>
     <clock point="USB" enable="auto" dynamic="no">
       <description>USB peripheral clock</description>
-      <source frequency="48000000U" />
+      <derived frequency="48000000U" />
     </clock>
   </clocks>
-  <consumers>
-    <consumer name="USB_DRIVER" input="USB" condition="HAL_USE_USB == TRUE">
+  <sinks>
+    <sink name="USB_DRIVER" input="USB" condition="HAL_USE_USB == TRUE">
       <description>USB driver demands the USB clock when enabled.</description>
       <limits ref="USBCLK" />
-    </consumer>
-  </consumers>
+    </sink>
+  </sinks>
 </clocktree>

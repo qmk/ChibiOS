@@ -15,7 +15,7 @@
       <description>clock with duplicated targeted bits</description>
       <bits target="CR" enabled="OSC_ON" disabled="0U" />
       <bits target="CR" enabled="OSC_READY" disabled="0U" />
-      <source frequency="16000000U" />
+      <derived frequency="16000000U" />
     </clock>
   </clocks>
 </clocktree>

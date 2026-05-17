@@ -13,7 +13,7 @@
   <clocks>
     <clock point="A" enable="always" dynamic="no">
       <description>input source</description>
-      <source frequency="16000000U" />
+      <derived frequency="16000000U" />
     </clock>
     <clock point="B" enable="always" dynamic="no">
       <description>mux with unsupported targeted selection bits</description>

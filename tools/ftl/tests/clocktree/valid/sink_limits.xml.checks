@@ -1,5 +1,5 @@
-# Consumer-specific limits emit conditional range checks.
-Consumer-specific frequency checks.
+# Sink-specific limits emit conditional range checks.
+Sink-specific frequency checks.
 TST_USB_FREQ below minimum frequency for USB_DRIVER
 TST_USB_FREQ above maximum frequency for USB_DRIVER
 !(HAL_USE_USB == TRUE) || (TST_USB_FREQ >= TST_USBCLK_MIN)

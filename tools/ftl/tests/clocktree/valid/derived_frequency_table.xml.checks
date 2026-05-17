@@ -1,0 +1,7 @@
+# Clock-local derived elements support frequency tables and targeted bits.
+#define TST_DERIVED_FREQ
+#define TST_DERIVED_CFGR_BITS
+DERIVED_FAST_BITS
+DERIVED_SLOW_BITS
+32000000U
+16000000U

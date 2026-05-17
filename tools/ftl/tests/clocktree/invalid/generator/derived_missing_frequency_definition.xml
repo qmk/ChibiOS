@@ -11,9 +11,9 @@
     </configs>
   </settings>
   <clocks>
-    <clock point="OSC" enable="manual" dynamic="yes">
-      <description>manual clock without enable bits</description>
-      <derived frequency="16000000U" />
+    <clock point="OSC" enable="always" dynamic="no">
+      <description>source without a frequency definition</description>
+      <derived />
     </clock>
   </clocks>
 </clocktree>

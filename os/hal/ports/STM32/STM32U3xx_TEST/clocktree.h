@@ -4954,7 +4954,7 @@
 #endif
 
 /*
- * Consumer-specific frequency checks.
+ * Sink-specific frequency checks.
  */
 #if !(!((HAL_USE_USB == TRUE) && (STM32_USB_USE_USB1 == TRUE)) ||           \
      (STM32_USB_FREQ >= STM32_USBCLK_MIN)) && !defined(__DOXYGEN__)

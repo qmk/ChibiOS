@@ -13,7 +13,7 @@
   <clocks>
     <clock point="BASE" enable="sometimes" dynamic="no">
       <description>clock with invalid enable mode</description>
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
   </clocks>
 </clocktree>

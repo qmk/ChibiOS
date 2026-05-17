@@ -25,7 +25,7 @@
     <clock point="CORE" enable="always" dynamic="no">
       <description>clock with unexpected minimum limit value</description>
       <limits ref="CORE" />
-      <source frequency="8000000U" />
+      <derived frequency="8000000U" />
     </clock>
   </clocks>
 </clocktree>

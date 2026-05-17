@@ -13,11 +13,11 @@
   <clocks>
     <clock point="A" enable="always" dynamic="no">
       <description>source A</description>
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
     <clock point="B" enable="always" dynamic="no">
       <description>source B</description>
-      <source frequency="2000000U" />
+      <derived frequency="2000000U" />
     </clock>
     <clock point="MUXED" enable="always" dynamic="no">
       <description>mux without a default input</description>

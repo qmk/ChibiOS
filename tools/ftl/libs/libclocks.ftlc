@@ -507,37 +507,125 @@ function ParseConfigurations()
   return configs
 endfunction
 
-/* Parses terminal clock consumers.*/
-function ParseConsumers(clocknames)
+/* Parses terminal clock sinks.*/
+function ParseSinks(clocknames)
   local names = []
-  local consumers = []
+  local sinks = []
 
-  if doc1.clocktree.consumers[0]??
-    list doc1.clocktree.consumers.consumer as consumer
-      local name = consumer.@name[0]?string
-      local input = consumer.@input[0]?string
-      local condition = (consumer.@condition[0]!"TRUE")?string
-      if consumer.description[0]??
-        local description = consumer.description[0]?string?word_list?join(" ")
+  if doc1.clocktree.sinks[0]??
+    list doc1.clocktree.sinks.sink as sink
+      local name = sink.@name[0]?string
+      local input = sink.@input[0]?string
+      local condition = (sink.@condition[0]!"TRUE")?string
+      if sink.description[0]??
+        local description = sink.description[0]?string?word_list?join(" ")
       else
         local description = "no description"
       endif
-      local limits = ParseClockLimits(consumer)
+      local limits = ParseClockLimits(sink)
 
       if names?seq_contains(name)
-        stop ">>>> Duplicate clock consumer '" + name + "'"
+        stop ">>>> Duplicate clock sink '" + name + "'"
       endif
       local names = names + [name]
 
       if clocknames?seq_contains(input) == false
-        stop ">>>> Unknown clock point '" + input + "' referenced by consumer '" + name + "'"
+        stop ">>>> Unknown clock point '" + input + "' referenced by sink '" + name + "'"
       endif
 
-      local consumers = consumers + [{"name":name, "input":input, "condition":condition, "description":description, "limits":limits}]
+      local sinks = sinks + [{"name":name, "input":input, "condition":condition, "description":description, "limits":limits}]
     endlist
   endif
 
-  return consumers
+  return sinks
+endfunction
+
+/* Parses one source or clock point.*/
+function ParseClockPoint(clock, sourceonly)
+  /* Clock information.*/
+  local clockname = clock.@point[0]
+  local clockenable = clock.@enable[0]?string
+  local clockdynamic = clock.@dynamic[0]?string
+  if clock.description[0]??
+    local clockdescr = clock.description[0]?string?word_list?join(" ")
+  else
+    local clockdescr = "no description"
+  endif
+  local clockbits = ParseBoolBits(clock, "clock point '" + clockname + "'")
+  local clocklimits = ParseClockLimits(clock)
+  if clockenable == "manual" && clockbits?size == 0
+    stop ">>>> Missing enable bits for manually enabled clock point '" + clockname + "'"
+  endif
+
+  /* Determining the type of the clock point by looking at the child element.*/
+  if sourceonly || clock.derived[0]??
+    if sourceonly
+      local node = clock
+      local kind = "Source"
+    else
+      local node = clock.derived[0]
+      local kind = "Derived"
+    endif
+
+    local hasfrequency = node.@frequency[0]??
+    local hasfrequencies = node.frequencies[0]??
+    if hasfrequency && hasfrequencies
+      stop ">>>> " + kind + " clock point '" + clockname + "' mixes fixed and conditional frequencies"
+    endif
+    if !hasfrequency && !hasfrequencies
+      stop ">>>> " + kind + " clock point '" + clockname + "' has no frequency definition"
+    endif
+    local clockinput = (node.@input[0]!"")?string
+    if sourceonly && clockinput != ""
+      stop ">>>> Source clock point '" + clockname + "' cannot use an input clock"
+    endif
+    if node.complex[0]??
+      local clockcomplex = node.complex[0]?string?trim
+    else
+      local clockcomplex = ""
+    endif
+    if hasfrequencies
+      if clockinput != ""
+        stop ">>>> Conditional frequency " + kind?lower_case + " clock point '" + clockname + "' cannot use an input clock"
+      endif
+      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":"", "complex":clockcomplex}
+    else
+      local clockfreq = node.@frequency[0]?string
+      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput, "complex":clockcomplex}
+    endif
+
+  elseif clock.mux[0]??
+    /* It is a muxed clock.*/
+    local muxname = clock.mux[0].@name[0]
+    local muxinputs = []
+    local muxdefault = ""
+    list clock.mux.input as input
+      local inputpoint = input.@point[0]
+      local inputbits = GetBitsValue(input)
+      local inputdefault = (input.@default[0]!"no")?string
+      if inputdefault == "yes"
+        local muxdefault = inputbits
+      endif
+      local muxinputs = muxinputs + [{"point":inputpoint, "bits":inputbits, "default":inputdefault}]
+    endlist
+    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "default":muxdefault, "description":clockdescr, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+
+  elseif clock.divider[0]??
+    /* It is a divided clock.*/
+    local divname = clock.divider[0].@name[0]
+    local divinput = clock.divider[0].@input[0]?string
+    local divparsed = ParseScaler(clock.divider[0])
+    return {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "kind":divparsed["kind"], "data":divparsed["data"]}
+
+  elseif clock.multiplier[0]??
+    /* It is a multiplied clock.*/
+    local mulname = clock.multiplier[0].@name[0]
+    local mulinput = clock.multiplier[0].@input[0]?string
+    local mulparsed = ParseScaler(clock.multiplier[0])
+    return {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "kind":mulparsed["kind"], "data":mulparsed["data"]}
+  endif
+
+  stop ">>>> Unknown clock point type for '" + clockname + "'"
 endfunction
 
 /* Initializes the parsed clock tree data model.*/
@@ -551,90 +639,32 @@ function Initialize()
   local dividers = []
   local multipliers = []
 
-  /* Scanning clock points, gathering data.*/
-  list doc1.clocktree.clocks.clock as clock
-
-    /* Clock information.*/
-    local clockname = clock.@point[0]
-    local clocknames = clocknames + [clockname]
-    local clockenable = clock.@enable[0]?string
-    local clockdynamic = clock.@dynamic[0]?string
-    if clock.description[0]??
-      local clockdescr = clock.description[0]?string?word_list?join(" ")
-    else
-      local clockdescr = "no description"
-    endif
-    local clockbits = ParseBoolBits(clock, "clock point '" + clockname + "'")
-    local clocklimits = ParseClockLimits(clock)
-    if clockenable == "manual" && clockbits?size == 0
-      stop ">>>> Missing enable bits for manually enabled clock point '" + clockname + "'"
-    endif
-
-    /* Determining the type of the clock point by looking at the child element.*/
-    if clock.source[0]??
-      /* It is a fixed clock.*/
-      local hasfrequency = clock.source[0].@frequency[0]??
-      local hasfrequencies = clock.source[0].frequencies[0]??
-      if hasfrequency && hasfrequencies
-        stop ">>>> Source clock point '" + clockname + "' mixes fixed and conditional frequencies"
-      endif
-      if !hasfrequency && !hasfrequencies
-        stop ">>>> Source clock point '" + clockname + "' has no frequency definition"
-      endif
-      local clockinput = (clock.source[0].@input[0]!"")?string
-      if clock.source[0].complex[0]??
-        local clockcomplex = clock.source[0].complex[0]?string?trim
-      else
-        local clockcomplex = ""
-      endif
-      if hasfrequencies
-        if clockinput != ""
-          stop ">>>> Conditional frequency source clock point '" + clockname + "' cannot use an input clock"
-        endif
-        local clockpoint = {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(clock.source[0], clockname), "input":"", "complex":clockcomplex}
-      else
-        local clockfreq = clock.source[0].@frequency[0]?string
-        local clockpoint = {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput, "complex":clockcomplex}
-      endif
+  /* Scanning explicit source clock points, gathering data.*/
+  if doc1.clocktree.sources[0]??
+    list doc1.clocktree.sources.source as source
+      local clockpoint = ParseClockPoint(source, true)
+      local clockname = clockpoint["name"]
+      local clocknames = clocknames + [clockname]
       local points = points + [clockpoint]
       local clocks = clocks + [clockpoint]
+    endlist
+  endif
 
-    elseif clock.mux[0]??
-      /* It is a muxed clock.*/
-      local muxname = clock.mux[0].@name[0]
-      local muxinputs = []
-      local muxdefault = ""
-      list clock.mux.input as input
-        local inputpoint = input.@point[0]
-        local inputbits = GetBitsValue(input)
-        local inputdefault = (input.@default[0]!"no")?string
-        if inputdefault == "yes"
-          local muxdefault = inputbits
-        endif
-        local muxinputs = muxinputs + [{"point":inputpoint, "bits":inputbits, "default":inputdefault}]
-      endlist
-      local clockpoint = {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "default":muxdefault, "description":clockdescr, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+  /* Scanning clock points, gathering data.*/
+  list doc1.clocktree.clocks.clock as clock
+    local clockpoint = ParseClockPoint(clock, false)
+    local clockname = clockpoint["name"]
+    local clocknames = clocknames + [clockname]
+    if clockpoint["type"] == "source"
+      local points = points + [clockpoint]
+    elseif clockpoint["type"] == "mux"
       local muxes = muxes + [clockpoint]
-      local clocks = clocks + [clockpoint]
-
-    elseif clock.divider[0]??
-      /* It is a divided clock.*/
-      local divname = clock.divider[0].@name[0]
-      local divinput = clock.divider[0].@input[0]?string
-      local divparsed = ParseScaler(clock.divider[0])
-      local clockpoint = {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "kind":divparsed["kind"], "data":divparsed["data"]}
+    elseif clockpoint["type"] == "divider"
       local dividers = dividers + [clockpoint]
-      local clocks = clocks + [clockpoint]
-
-    elseif clock.multiplier[0]??
-      /* It is a multiplied clock.*/
-      local mulname = clock.multiplier[0].@name[0]
-      local mulinput = clock.multiplier[0].@input[0]?string
-      local mulparsed = ParseScaler(clock.multiplier[0])
-      local clockpoint = {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "kind":mulparsed["kind"], "data":mulparsed["data"]}
+    elseif clockpoint["type"] == "multiplier"
       local multipliers = multipliers + [clockpoint]
-      local clocks = clocks + [clockpoint]
     endif
+    local clocks = clocks + [clockpoint]
   endlist
 
   /* Validating references.*/
@@ -675,17 +705,17 @@ function Initialize()
     endif
   endlist
 
-  local consumers = ParseConsumers(clocknames)
-  list consumers as consumer
-    if consumer["limits"]?size > 0
-      local limit = GetLimitDeclaration(limitmodel["limits"], consumer["limits"]["ref"])
+  local sinks = ParseSinks(clocknames)
+  list sinks as sink
+    if sink["limits"]?size > 0
+      local limit = GetLimitDeclaration(limitmodel["limits"], sink["limits"]["ref"])
       if limit?size == 0
-        stop ">>>> Unknown clock limit '" + consumer["limits"]["ref"] + "' referenced by clock consumer '" + consumer["name"] + "'"
+        stop ">>>> Unknown clock limit '" + sink["limits"]["ref"] + "' referenced by clock sink '" + sink["name"] + "'"
       endif
     endif
   endlist
 
-  return {"configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "consumers":consumers}
+  return {"configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "sinks":sinks}
 endfunction
 
 /* Static data parsed at startup.*/
@@ -864,32 +894,32 @@ function UsesRuntimeInputExpressions(point)
   return true
 endfunction
 
-/* Returns the downstream use conditions for a clock point.*/
-function GetConsumerConditions(point)
+/* Returns the downstream demand conditions for a clock point.*/
+function GetDemandConditions(point)
   local conditions = []
-  list model["consumers"] as consumer
-    if consumer["input"] == point["name"]
-      local conditions = conditions + [{"consumer":consumer["name"], "terms":SplitAndCondition(consumer["condition"]), "requires":[]}]
+  list model["sinks"] as sink
+    if sink["input"] == point["name"]
+      local conditions = conditions + [{"demander":sink["name"], "terms":SplitAndCondition(sink["condition"]), "requires":[]}]
     endif
   endlist
-  list model["clocks"] as consumer
-    if consumer["type"] == "source"
-      if consumer["input"] == point["name"]
-        local enmacro = GetEnableMacro(consumer)
-        local conditions = conditions + [{"consumer":consumer["name"], "terms":[enmacro + " == TRUE"], "requires":[enmacro, "TRUE"]}]
+  list model["clocks"] as downstream
+    if downstream["type"] == "source"
+      if downstream["input"] == point["name"]
+        local enmacro = GetEnableMacro(downstream)
+        local conditions = conditions + [{"demander":downstream["name"], "terms":[enmacro + " == TRUE"], "requires":[enmacro, "TRUE"]}]
       endif
-    elseif consumer["type"] == "mux"
-      local enmacro = GetEnableMacro(consumer)
-      local selmacro = precfg + consumer["name"] + postchoices
-      list consumer["inputs"] as input
+    elseif downstream["type"] == "mux"
+      local enmacro = GetEnableMacro(downstream)
+      local selmacro = precfg + downstream["name"] + postchoices
+      list downstream["inputs"] as input
         if input["point"] == point["name"]
-          local conditions = conditions + [{"consumer":consumer["name"], "terms":[enmacro + " == TRUE", selmacro + " == " + input["bits"]], "requires":AddExternalMacroRequirements(["TRUE"], [input["bits"]])}]
+          local conditions = conditions + [{"demander":downstream["name"], "terms":[enmacro + " == TRUE", selmacro + " == " + input["bits"]], "requires":AddExternalMacroRequirements(["TRUE"], [input["bits"]])}]
         endif
       endlist
-    elseif consumer["type"] == "divider" || consumer["type"] == "multiplier"
-      if consumer["input"] == point["name"]
-        local enmacro = GetEnableMacro(consumer)
-        local conditions = conditions + [{"consumer":consumer["name"], "terms":[enmacro + " == TRUE"], "requires":[enmacro, "TRUE"]}]
+    elseif downstream["type"] == "divider" || downstream["type"] == "multiplier"
+      if downstream["input"] == point["name"]
+        local enmacro = GetEnableMacro(downstream)
+        local conditions = conditions + [{"demander":downstream["name"], "terms":[enmacro + " == TRUE"], "requires":[enmacro, "TRUE"]}]
       endif
     endif
   endlist
@@ -1396,7 +1426,7 @@ macro EmitEnableDefinitions()
     if point["enable"] == "manual"
       local expression = precfg + point["name"] + postenable
     elseif point["enable"] == "auto"
-      local conditions = GetConsumerConditions(point)
+      local conditions = GetDemandConditions(point)
       if conditions?size > 0
         if conditions?size == 1 && conditions[0]["terms"]?size == 1
           local expression = "((" + conditions[0]["terms"][0] + "))"
@@ -1711,15 +1741,15 @@ macro EmitClockFrequencyChecks(point)
   endif
 endmacro
 
-/* Returns true if a consumer has frequency checks.*/
-function HasConsumerFrequencyChecks(consumer)
-  return consumer["limits"]?size > 0
+/* Returns true if a sink has frequency checks.*/
+function HasSinkFrequencyChecks(sink)
+  return sink["limits"]?size > 0
 endfunction
 
-/* Returns true if any consumer has frequency checks.*/
-function HasAnyConsumerFrequencyChecks()
-  list model["consumers"] as consumer
-    if HasConsumerFrequencyChecks(consumer)
+/* Returns true if any sink has frequency checks.*/
+function HasAnySinkFrequencyChecks()
+  list model["sinks"] as sink
+    if HasSinkFrequencyChecks(sink)
       return true
     endif
   endlist
@@ -1727,12 +1757,12 @@ function HasAnyConsumerFrequencyChecks()
   return false
 endfunction
 
-/* Emits frequency range checks for one consumer.*/
-macro EmitOneConsumerFrequencyChecks(consumer)
-  if HasConsumerFrequencyChecks(consumer)
-    local freqmacro = premacro + consumer["input"] + postclocks
-    local active = consumer["condition"]
-    local limit = GetLimitDeclaration(model["limits"]["limits"], consumer["limits"]["ref"])
+/* Emits frequency range checks for one sink.*/
+macro EmitOneSinkFrequencyChecks(sink)
+  if HasSinkFrequencyChecks(sink)
+    local freqmacro = premacro + sink["input"] + postclocks
+    local active = sink["condition"]
+    local limit = GetLimitDeclaration(model["limits"]["limits"], sink["limits"]["ref"])
     if limit["min"] == "yes"
       local minval = GetLimitMacro(limit, "min")
     else
@@ -1747,7 +1777,7 @@ macro EmitOneConsumerFrequencyChecks(consumer)
     if minval != ""
       ppcode.EmitPPAssert(
         expression="!(" + active + ") || (" + freqmacro + " >= " + minval + ")",
-        message="\"" + freqmacro + " below minimum frequency for " + consumer["name"] + "\"")
+        message="\"" + freqmacro + " below minimum frequency for " + sink["name"] + "\"")
     endif
 
     if minval != "" && maxval != ""
@@ -1757,26 +1787,26 @@ macro EmitOneConsumerFrequencyChecks(consumer)
     if maxval != ""
       ppcode.EmitPPAssert(
         expression="!(" + active + ") || (" + freqmacro + " <= " + maxval + ")",
-        message="\"" + freqmacro + " above maximum frequency for " + consumer["name"] + "\"")
+        message="\"" + freqmacro + " above maximum frequency for " + sink["name"] + "\"")
     endif
   endif
 endmacro
 
-/* Emits frequency range checks for consumers.*/
-macro EmitConsumerFrequencyChecks()
-  if HasAnyConsumerFrequencyChecks()
+/* Emits frequency range checks for sinks.*/
+macro EmitSinkFrequencyChecks()
+  if HasAnySinkFrequencyChecks()
     emit """
 /*
- * Consumer-specific frequency checks.
+ * Sink-specific frequency checks.
  */
 """
     local emitted = false
-    list model["consumers"] as consumer
-      if HasConsumerFrequencyChecks(consumer)
+    list model["sinks"] as sink
+      if HasSinkFrequencyChecks(sink)
         if emitted
           emit "\e"
         endif
-        EmitOneConsumerFrequencyChecks(consumer=consumer)
+        EmitOneSinkFrequencyChecks(sink=sink)
         local emitted = true
       endif
     endlist
@@ -1785,7 +1815,7 @@ endmacro
 
 /* Returns true if source dependency checks are emitted for one clock point.*/
 function HasSourceDependencyChecks(point)
-  if point["enable"] == "manual" && GetConsumerConditions(point)?size > 0
+  if point["enable"] == "manual" && GetDemandConditions(point)?size > 0
     return true
   endif
 
@@ -1796,12 +1826,12 @@ endfunction
 macro EmitSourceDependencyChecks(point)
   if point["enable"] == "manual"
     local enmacro = GetEnableMacro(point)
-    local conditions = GetConsumerConditions(point)
+    local conditions = GetDemandConditions(point)
     list conditions as condition
       local demanded = BuildAndExpression(condition["terms"])
       ppcode.EmitPPAssert(
         expression="(" + enmacro + " == TRUE) || !(" + demanded + ")",
-        message="\"" + point["name"] + " not enabled, required by " + condition["consumer"] + "\"",
+        message="\"" + point["name"] + " not enabled, required by " + condition["demander"] + "\"",
         requires=condition["requires"])
       if !condition?is_last
         emit "\e"
@@ -2039,8 +2069,8 @@ macro EmitDerivedConstants()
       EmitClockFrequencyChecks(point=point)
     endif
   endlist
-  if HasAnyConsumerFrequencyChecks()
+  if HasAnySinkFrequencyChecks()
     emit "\e"
-    EmitConsumerFrequencyChecks()
+    EmitSinkFrequencyChecks()
   endif
 endmacro

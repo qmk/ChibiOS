@@ -13,11 +13,11 @@
   <clocks>
     <clock point="DUP" enable="always" dynamic="no">
       <description>first definition</description>
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
     <clock point="DUP" enable="always" dynamic="no">
       <description>second definition</description>
-      <source frequency="2000000U" />
+      <derived frequency="2000000U" />
     </clock>
   </clocks>
 </clocktree>

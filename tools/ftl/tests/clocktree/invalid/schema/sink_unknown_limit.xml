@@ -11,13 +11,15 @@
     </configs>
   </settings>
   <clocks>
-    <clock point="OSC" enable="always" dynamic="no">
-      <description>source mixing frequency mechanisms</description>
-      <source frequency="16000000U">
-        <frequencies>
-          <default value="8000000U" />
-        </frequencies>
-      </source>
+    <clock point="USB" enable="always" dynamic="no">
+      <description>USB peripheral clock</description>
+      <derived frequency="48000000U" />
     </clock>
   </clocks>
+  <sinks>
+    <sink name="USB_DRIVER" input="USB" condition="HAL_USE_USB == TRUE">
+      <description>sink references a missing limit declaration</description>
+      <limits ref="MISSING_LIMIT" />
+    </sink>
+  </sinks>
 </clocktree>

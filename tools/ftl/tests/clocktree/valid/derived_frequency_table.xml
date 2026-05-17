@@ -1,0 +1,33 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="DERIVED_MODE" type="set" default="DERIVED_FAST"
+              values="DERIVED_FAST DERIVED_SLOW">
+        <description>Selects the derived clock range.</description>
+      </config>
+    </configs>
+  </settings>
+  <clocks>
+    <clock point="DERIVED" enable="always" dynamic="no">
+      <description>derived clock with table-driven frequency</description>
+      <derived>
+        <frequencies>
+          <case when="TST_CFG_DERIVED_MODE == DERIVED_FAST"
+                value="32000000U">
+            <bits target="CFGR" value="DERIVED_FAST_BITS" />
+          </case>
+          <default value="16000000U">
+            <bits target="CFGR" value="DERIVED_SLOW_BITS" />
+          </default>
+        </frequencies>
+      </derived>
+    </clock>
+  </clocks>
+</clocktree>

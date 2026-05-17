@@ -14,7 +14,7 @@
     <clock point="BASE" enable="always" dynamic="no">
       <description>clock references a missing limit declaration</description>
       <limits ref="MISSING_LIMIT" />
-      <source frequency="1000000U" />
+      <derived frequency="1000000U" />
     </clock>
   </clocks>
 </clocktree>

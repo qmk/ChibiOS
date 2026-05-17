@@ -13,12 +13,12 @@
   <clocks>
     <clock point="NONE" enable="never" dynamic="no">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
+      <derived frequency="0U" />
     </clock>
     <clock point="LOWOSC" enable="manual" dynamic="no">
-      <description>low speed oscillator demanded by a consumer</description>
+      <description>low speed oscillator demanded by a sink</description>
       <bits enabled="RCC_LOWOSC_ON" disabled="0U" />
-      <source frequency="32768U" />
+      <derived frequency="32768U" />
     </clock>
     <clock point="RTC" enable="auto" dynamic="no">
       <description>auto-enabled RTC mux</description>
@@ -28,9 +28,9 @@
       </mux>
     </clock>
   </clocks>
-  <consumers>
-    <consumer name="RTC_DRIVER" input="RTC" condition="HAL_USE_RTC == TRUE">
+  <sinks>
+    <sink name="RTC_DRIVER" input="RTC" condition="HAL_USE_RTC == TRUE">
       <description>RTC driver demands the RTC clock when enabled</description>
-    </consumer>
-  </consumers>
+    </sink>
+  </sinks>
 </clocktree>

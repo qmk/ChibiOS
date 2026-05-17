@@ -16,15 +16,15 @@
   <clocks>
     <clock point="NONE" enable="never" dynamic="no">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
+      <derived frequency="0U" />
     </clock>
     <clock point="OSC_A" enable="always" dynamic="no">
       <description>first fixed oscillator</description>
-      <source frequency="4000000U" />
+      <derived frequency="4000000U" />
     </clock>
     <clock point="OSC_B" enable="always" dynamic="no">
       <description>second fixed oscillator</description>
-      <source frequency="8000000U" />
+      <derived frequency="8000000U" />
     </clock>
     <clock point="MUXED" enable="auto" dynamic="no">
       <description>mux with default and disabled bits</description>
@@ -35,10 +35,10 @@
       </mux>
     </clock>
   </clocks>
-  <consumers>
-    <consumer name="MUXED_REQUIRED" input="MUXED"
+  <sinks>
+    <sink name="MUXED_REQUIRED" input="MUXED"
               condition="TST_CFG_MUXED_REQUIRED == TRUE">
       <description>Local option demands the muxed clock.</description>
-    </consumer>
-  </consumers>
+    </sink>
+  </sinks>
 </clocktree>

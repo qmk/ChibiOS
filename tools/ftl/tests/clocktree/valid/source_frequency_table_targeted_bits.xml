@@ -17,34 +17,37 @@
       </config>
     </configs>
   </settings>
-  <clocks>
-    <clock point="NONE" enable="never" dynamic="no">
+  <sources>
+    <source point="NONE" enable="never" dynamic="no" frequency="0U">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
-    </clock>
-    <clock point="TABLEOSC" enable="manual" dynamic="yes">
+    </source>
+    <source point="TABLEOSC" enable="manual" dynamic="yes">
       <description>table-driven oscillator with targeted register bits</description>
       <bits target="CR" enabled="OSC_ON" disabled="0U" />
-      <source>
-        <frequencies>
-          <select>
-            <when condition="TST_CFG_OSC_MODE == OSC_FAST">
-              <bits target="CR" value="OSC_FAST_CR_BITS" />
-              <select>
-                <when condition="TST_CFG_OSC_FINE == TRUE" value="50000000U">
-                  <bits target="CFGR" value="OSC_FINE_BITS" />
-                </when>
-                <otherwise value="48000000U">
-                  <bits target="CFGR" value="OSC_FAST_BITS" />
-                </otherwise>
-              </select>
-            </when>
-            <otherwise value="12000000U">
+      <frequencies>
+        <select>
+          <when condition="TST_CFG_OSC_MODE == OSC_FAST">
+            <bits target="CR" value="OSC_FAST_CR_BITS" />
+            <select>
+              <when condition="TST_CFG_OSC_FINE == TRUE" value="50000000U">
+                <bits target="CFGR" value="OSC_FINE_BITS" />
+              </when>
+              <otherwise value="48000000U">
+                <bits target="CFGR" value="OSC_FAST_BITS" />
+              </otherwise>
+            </select>
+          </when>
+          <otherwise value="12000000U">
             <bits target="CFGR" value="OSC_SLOW_BITS" />
-            </otherwise>
-          </select>
-        </frequencies>
-      </source>
+          </otherwise>
+        </select>
+      </frequencies>
+    </source>
+  </sources>
+  <clocks>
+    <clock point="ROOT" enable="always" dynamic="no">
+      <description>root clock selected from table oscillator</description>
+      <derived input="TABLEOSC" frequency="%I%" />
     </clock>
   </clocks>
 </clocktree>

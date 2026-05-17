@@ -13,17 +13,17 @@
   <clocks>
     <clock point="NONE" enable="never" dynamic="no">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
+      <derived frequency="0U" />
     </clock>
     <clock point="INTOSC" enable="manual" dynamic="yes">
       <description>internal oscillator with explicit enable bits</description>
       <bits enabled="RCC_INTOSC_ON" disabled="0U" />
-      <source frequency="16000000U" />
+      <derived frequency="16000000U" />
     </clock>
     <clock point="EXTOSC" enable="manual" dynamic="no">
       <description>external oscillator with static enable bits</description>
       <bits enabled="RCC_EXTOSC_ON" disabled="0U" />
-      <source frequency="8000000U" />
+      <derived frequency="8000000U" />
     </clock>
   </clocks>
 </clocktree>

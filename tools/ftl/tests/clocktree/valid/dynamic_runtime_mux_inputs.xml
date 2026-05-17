@@ -13,16 +13,16 @@
   <clocks>
     <clock point="NONE" enable="never" dynamic="no">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
+      <derived frequency="0U" />
     </clock>
     <clock point="INTOSC" enable="manual" dynamic="yes">
       <description>runtime-switchable oscillator</description>
       <bits enabled="RCC_INTOSC_ON" disabled="0U" />
-      <source frequency="16000000U" />
+      <derived frequency="16000000U" />
     </clock>
     <clock point="LOWOSC" enable="always" dynamic="no">
       <description>fixed low speed oscillator</description>
-      <source frequency="32768U" />
+      <derived frequency="32768U" />
     </clock>
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>dynamic system clock mux</description>

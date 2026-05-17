@@ -119,38 +119,37 @@
       </state-values>
     </limit-values>
   </settings>
-  <clocks>
-    <clock point="NONE" enable="never" dynamic="no">
+  <sources>
+    <source point="NONE" enable="never" dynamic="no" frequency="0U">
       <description>pseudo-clock for disabled sources</description>
-      <source frequency="0U" />
-    </clock>
-    <clock point="HSI16" enable="manual" dynamic="yes">
+    </source>
+    <source point="HSI16" enable="manual" dynamic="yes" frequency="16000000U">
       <description>16MHz high speed internal oscillator</description>
       <bits enabled="(RCC_CR_HSIKERON | RCC_CR_HSION)" disabled="0U" />
-      <source frequency="16000000U" />
-    </clock>
-    <clock point="HSI48" enable="manual" dynamic="yes">
+    </source>
+    <source point="HSI48" enable="manual" dynamic="yes" frequency="48000000U">
       <description>48MHz high speed internal oscillator</description>
       <bits enabled="RCC_CRRCR_HSI48ON" disabled="0U" />
-      <source frequency="48000000U" />
-    </clock>
-    <clock point="HSE" enable="manual" dynamic="yes">
+    </source>
+    <source point="HSE" enable="manual" dynamic="yes" frequency="STM32_HSECLK">
       <description>high frequency external oscillator</description>
       <bits enabled="RCC_CR_HSEON" disabled="0U" />
       <limits ref="HSECLK" />
-      <source frequency="STM32_HSECLK" />
-    </clock>
-    <clock point="LSE" enable="manual" dynamic="no">
+    </source>
+    <source point="LSE" enable="manual" dynamic="no" frequency="STM32_LSECLK">
       <description>low frequency external oscillator</description>
       <bits enabled="RCC_BDCR_LSEON" disabled="0U" />
       <limits ref="LSECLK" />
-      <source frequency="STM32_LSECLK" />
-    </clock>
-    <clock point="LSI" enable="manual" dynamic="no">
+    </source>
+    <source point="LSI" enable="manual" dynamic="no" frequency="STM32_LSICLK">
       <description>low frequency internal oscillator</description>
       <bits enabled="RCC_CSR_LSION" disabled="0U" />
-      <source frequency="STM32_LSICLK" />
-    </clock>
+    </source>
+    <source point="CKIN" enable="always" dynamic="no" frequency="0U">
+      <description>external audio clock input</description>
+    </source>
+  </sources>
+  <clocks>
     <clock point="PLLIN" enable="auto" dynamic="no">
       <description>PLL input</description>
       <mux name="PLLSRC">
@@ -272,19 +271,15 @@
     </clock>
     <clock point="PCLK1TIM" enable="always" dynamic="yes">
       <description>APB1 timer clock</description>
-      <source input="PCLK1" frequency="((STM32_CFG_PCLK1_VALUE == 1) ? %I% : (%I% * 2U))" />
+      <derived input="PCLK1" frequency="((STM32_CFG_PCLK1_VALUE == 1) ? %I% : (%I% * 2U))" />
     </clock>
     <clock point="PCLK2TIM" enable="always" dynamic="yes">
       <description>APB2 timer clock</description>
-      <source input="PCLK2" frequency="((STM32_CFG_PCLK2_VALUE == 1) ? %I% : (%I% * 2U))" />
-    </clock>
-    <clock point="CKIN" enable="always" dynamic="no">
-      <description>external audio clock input</description>
-      <source frequency="0U" />
+      <derived input="PCLK2" frequency="((STM32_CFG_PCLK2_VALUE == 1) ? %I% : (%I% * 2U))" />
     </clock>
     <clock point="HSEDIV" enable="auto" dynamic="no">
       <description>HSE divided clock</description>
-      <source input="HSE" frequency="(%I% / 32U)" />
+      <derived input="HSE" frequency="(%I% / 32U)" />
     </clock>
     <clock point="MCODIV" enable="always" dynamic="no">
       <description>MCO source before prescaler</description>
@@ -484,16 +479,16 @@
     </clock>
     <clock point="RNG" enable="always" dynamic="no">
       <description>RNG</description>
-      <source input="CLK48" frequency="%I%" />
+      <derived input="CLK48" frequency="%I%" />
     </clock>
     <clock point="USB" enable="always" dynamic="no">
       <description>USB</description>
-      <source input="CLK48" frequency="%I%" />
+      <derived input="CLK48" frequency="%I%" />
     </clock>
   </clocks>
-  <consumers>
-    <consumer name="RTC" input="RTC" condition="HAL_USE_RTC == TRUE">
-      <description>RTC peripheral clock consumer</description>
-    </consumer>
-  </consumers>
+  <sinks>
+    <sink name="RTC" input="RTC" condition="HAL_USE_RTC == TRUE">
+      <description>RTC peripheral clock sink</description>
+    </sink>
+  </sinks>
 </clocktree>
