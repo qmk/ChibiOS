@@ -1,0 +1,27 @@
+# Always and never zero helpers emit direct definitions, not dead wrappers.
+#define TST_NONE_BITS                    0U
+#define TST_NONE_FREQ                    0U
+#define TST_ALWAYSZERO_BITS              0U
+#define TST_ALWAYSZERO_FREQ              0U
+ABSENT:(TST_NONE_ENABLED == TRUE)
+ABSENT:(TST_ALWAYSZERO_ENABLED == TRUE)
+
+# Always-on non-zero values also emit directly.
+#define TST_ALWAYSOSC_BITS               RCC_ALWAYSOSC_ON
+#define TST_ALWAYSOSC_FREQ               16000000U
+ABSENT:(TST_ALWAYSOSC_ENABLED == TRUE)
+
+# Manual zero state emits directly because both branches are identical.
+#define TST_MANUALZERO_BITS              0U
+#define TST_MANUALZERO_FREQ              0U
+ABSENT:(TST_MANUALZERO_ENABLED == TRUE)
+
+# Manual non-zero state remains conditional.
+(TST_MANUALOSC_ENABLED == TRUE) || defined(__DOXYGEN__)
+#define TST_MANUALOSC_BITS               RCC_MANUALOSC_ON
+#define TST_MANUALOSC_FREQ               8000000U
+
+# Always-on muxes skip the dead disabled branch.
+ABSENT:(TST_ALWAYSMUX_ENABLED == FALSE)
+(TST_CFG_ALWAYSMUX_SEL == MUX_NONE) || defined(__DOXYGEN__)
+(RCC_ALWAYSMUX_ON | MUX_NONE)

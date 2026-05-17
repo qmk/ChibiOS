@@ -283,7 +283,8 @@
       <derived input="PCLK2" frequency="((STM32_CFG_PCLK2_VALUE == 1) ? %I% : (%I% * 2U))" />
     </clock>
     <clock point="HSEDIV" enable="auto" dynamic="no">
-      <description>HSE divided clock</description>
+      <description>HSE divided-by-32 RTC clock</description>
+      <!-- STM32G4 has no programmable RTCPRE field, this is a fixed divider. -->
       <derived input="HSE" frequency="(%I% / 32U)" />
     </clock>
     <clock point="MCODIV" enable="always" dynamic="no">

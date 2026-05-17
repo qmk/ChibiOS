@@ -1,0 +1,46 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+    </configs>
+  </settings>
+  <clocks>
+    <clock point="NONE" enable="never" dynamic="no">
+      <description>pseudo-clock for disabled sources</description>
+      <derived frequency="0U" />
+    </clock>
+    <clock point="ALWAYSZERO" enable="always" dynamic="no">
+      <description>always enabled zero helper</description>
+      <derived frequency="0U" />
+    </clock>
+    <clock point="ALWAYSOSC" enable="always" dynamic="no">
+      <description>always enabled oscillator with bits</description>
+      <bits enabled="RCC_ALWAYSOSC_ON" disabled="0U" />
+      <derived frequency="16000000U" />
+    </clock>
+    <clock point="MANUALZERO" enable="manual" dynamic="no">
+      <description>manual zero helper</description>
+      <bits enabled="0U" disabled="0U" />
+      <derived frequency="0U" />
+    </clock>
+    <clock point="MANUALOSC" enable="manual" dynamic="no">
+      <description>manual oscillator with non-zero state</description>
+      <bits enabled="RCC_MANUALOSC_ON" disabled="0U" />
+      <derived frequency="8000000U" />
+    </clock>
+    <clock point="ALWAYSMUX" enable="always" dynamic="no">
+      <description>always enabled mux with disabled bits</description>
+      <bits enabled="RCC_ALWAYSMUX_ON" disabled="RCC_ALWAYSMUX_OFF" />
+      <mux name="ALWAYSMUXSEL">
+        <input point="NONE" default="yes"><bits value="MUX_NONE" /></input>
+        <input point="ALWAYSOSC"><bits value="MUX_ALWAYSOSC" /></input>
+      </mux>
+    </clock>
+  </clocks>
+</clocktree>

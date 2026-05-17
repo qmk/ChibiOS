@@ -1424,40 +1424,24 @@
 /**
  * @brief   NONE clock register bits.
  */
-#if (STM32_NONE_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_NONE_BITS                   0U
-#else
-  #define STM32_NONE_BITS                   0U
-#endif
+#define STM32_NONE_BITS                     0U
 
 /**
  * @brief   Pseudo-clock for disabled sources clock point.
  */
-#if (STM32_NONE_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_NONE_FREQ                   0U
-#else
-  #define STM32_NONE_FREQ                   0U
-#endif
+#define STM32_NONE_FREQ                     0U
 
 /*--- Macros and checks for the AUDIOCLK clock point. ----------------------*/
 
 /**
  * @brief   AUDIOCLK clock register bits.
  */
-#if (STM32_AUDIOCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_AUDIOCLK_BITS               0U
-#else
-  #define STM32_AUDIOCLK_BITS               0U
-#endif
+#define STM32_AUDIOCLK_BITS                 0U
 
 /**
  * @brief   External audio clock input clock point.
  */
-#if (STM32_AUDIOCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_AUDIOCLK_FREQ               STM32_AUDIOCLK
-#else
-  #define STM32_AUDIOCLK_FREQ               0U
-#endif
+#define STM32_AUDIOCLK_FREQ                 STM32_AUDIOCLK
 
 /*--- Macros and checks for the HSI16 clock point. -------------------------*/
 
@@ -2031,11 +2015,7 @@
     #define STM32_MSIRC0_CR_BITS            0U
   #endif
 #else
-  #if (STM32_MSIRC0_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MSIRC0_CR_BITS            0U
-  #else
-    #define STM32_MSIRC0_CR_BITS            0U
-  #endif
+  #define STM32_MSIRC0_CR_BITS              0U
 #endif
 
 #if (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE) || \
@@ -2066,11 +2046,7 @@
     #define STM32_MSIRC0_ICSCR1_BITS        0U
   #endif
 #else
-  #if (STM32_MSIRC0_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MSIRC0_ICSCR1_BITS        0U
-  #else
-    #define STM32_MSIRC0_ICSCR1_BITS        0U
-  #endif
+  #define STM32_MSIRC0_ICSCR1_BITS          0U
 #endif
 
 /**
@@ -2214,11 +2190,7 @@
     #define STM32_MSIRC1_CR_BITS            0U
   #endif
 #else
-  #if (STM32_MSIRC1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MSIRC1_CR_BITS            0U
-  #else
-    #define STM32_MSIRC1_CR_BITS            0U
-  #endif
+  #define STM32_MSIRC1_CR_BITS              0U
 #endif
 
 #if ((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE) && \
@@ -2355,11 +2327,7 @@
     #define STM32_MSIRC1_ICSCR1_BITS        0U
   #endif
 #else
-  #if (STM32_MSIRC1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MSIRC1_ICSCR1_BITS        0U
-  #else
-    #define STM32_MSIRC1_ICSCR1_BITS        0U
-  #endif
+  #define STM32_MSIRC1_ICSCR1_BITS          0U
 #endif
 
 /**
@@ -3375,59 +3343,23 @@
  * @brief   HCLK clock register bits.
  */
 #if (STM32_CFG_HCLK_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV1
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV1
 #elif (STM32_CFG_HCLK_VALUE == 2)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV2
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV2
 #elif (STM32_CFG_HCLK_VALUE == 4)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV4
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV4
 #elif (STM32_CFG_HCLK_VALUE == 8)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV8
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV8
 #elif (STM32_CFG_HCLK_VALUE == 16)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV16
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV16
 #elif (STM32_CFG_HCLK_VALUE == 64)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV64
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV64
 #elif (STM32_CFG_HCLK_VALUE == 128)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV128
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV128
 #elif (STM32_CFG_HCLK_VALUE == 256)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV256
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV256
 #elif (STM32_CFG_HCLK_VALUE == 512)
-  #if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_HCLK_BITS                 RCC_CFGR2_HPRE_DIV512
-  #else
-    #define STM32_HCLK_BITS                 0U
-  #endif
+  #define STM32_HCLK_BITS                   RCC_CFGR2_HPRE_DIV512
 #else
   #error "invalid STM32_CFG_HCLK_VALUE value specified"
 #endif
@@ -3435,12 +3367,8 @@
 /**
  * @brief   AHB clock clock point.
  */
-#if (STM32_HCLK_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_HCLK_FREQ                   (STM32_SYSCLK_FREQ /            \
+#define STM32_HCLK_FREQ                     (STM32_SYSCLK_FREQ /            \
                                              STM32_CFG_HCLK_VALUE)
-#else
-  #define STM32_HCLK_FREQ                   0U
-#endif
 
 #if !((STM32_HCLK_ENABLED != TRUE) || (STM32_HCLK_FREQ <= STM32_HCLK_MAX)) && \
     !defined(__DOXYGEN__)
@@ -3453,35 +3381,15 @@
  * @brief   PCLK1 clock register bits.
  */
 #if (STM32_CFG_PCLK1_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK1_BITS                RCC_CFGR2_PPRE1_DIV1
-  #else
-    #define STM32_PCLK1_BITS                0U
-  #endif
+  #define STM32_PCLK1_BITS                  RCC_CFGR2_PPRE1_DIV1
 #elif (STM32_CFG_PCLK1_VALUE == 2)
-  #if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK1_BITS                RCC_CFGR2_PPRE1_DIV2
-  #else
-    #define STM32_PCLK1_BITS                0U
-  #endif
+  #define STM32_PCLK1_BITS                  RCC_CFGR2_PPRE1_DIV2
 #elif (STM32_CFG_PCLK1_VALUE == 4)
-  #if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK1_BITS                RCC_CFGR2_PPRE1_DIV4
-  #else
-    #define STM32_PCLK1_BITS                0U
-  #endif
+  #define STM32_PCLK1_BITS                  RCC_CFGR2_PPRE1_DIV4
 #elif (STM32_CFG_PCLK1_VALUE == 8)
-  #if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK1_BITS                RCC_CFGR2_PPRE1_DIV8
-  #else
-    #define STM32_PCLK1_BITS                0U
-  #endif
+  #define STM32_PCLK1_BITS                  RCC_CFGR2_PPRE1_DIV8
 #elif (STM32_CFG_PCLK1_VALUE == 16)
-  #if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK1_BITS                RCC_CFGR2_PPRE1_DIV16
-  #else
-    #define STM32_PCLK1_BITS                0U
-  #endif
+  #define STM32_PCLK1_BITS                  RCC_CFGR2_PPRE1_DIV16
 #else
   #error "invalid STM32_CFG_PCLK1_VALUE value specified"
 #endif
@@ -3489,12 +3397,8 @@
 /**
  * @brief   APB1 clock clock point.
  */
-#if (STM32_PCLK1_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK1_FREQ                  (STM32_HCLK_FREQ /              \
+#define STM32_PCLK1_FREQ                    (STM32_HCLK_FREQ /              \
                                              STM32_CFG_PCLK1_VALUE)
-#else
-  #define STM32_PCLK1_FREQ                  0U
-#endif
 
 #if !((STM32_PCLK1_ENABLED != TRUE) || (STM32_PCLK1_FREQ <= STM32_PCLK1_MAX)) && \
     !defined(__DOXYGEN__)
@@ -3506,21 +3410,13 @@
 /**
  * @brief   PCLK1TIM clock register bits.
  */
-#if (STM32_PCLK1TIM_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK1TIM_BITS               0U
-#else
-  #define STM32_PCLK1TIM_BITS               0U
-#endif
+#define STM32_PCLK1TIM_BITS                 0U
 
 /**
  * @brief   APB1 timer clock clock point.
  */
-#if (STM32_PCLK1TIM_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK1TIM_FREQ               ((STM32_CFG_PCLK1_VALUE == 1) ? STM32_PCLK1_FREQ : \
+#define STM32_PCLK1TIM_FREQ                 ((STM32_CFG_PCLK1_VALUE == 1) ? STM32_PCLK1_FREQ : \
                                              (STM32_PCLK1_FREQ * 2U))
-#else
-  #define STM32_PCLK1TIM_FREQ               0U
-#endif
 
 /*--- Macros and checks for the PCLK2 clock point. -------------------------*/
 
@@ -3528,35 +3424,15 @@
  * @brief   PCLK2 clock register bits.
  */
 #if (STM32_CFG_PCLK2_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK2_BITS                RCC_CFGR2_PPRE2_DIV1
-  #else
-    #define STM32_PCLK2_BITS                0U
-  #endif
+  #define STM32_PCLK2_BITS                  RCC_CFGR2_PPRE2_DIV1
 #elif (STM32_CFG_PCLK2_VALUE == 2)
-  #if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK2_BITS                RCC_CFGR2_PPRE2_DIV2
-  #else
-    #define STM32_PCLK2_BITS                0U
-  #endif
+  #define STM32_PCLK2_BITS                  RCC_CFGR2_PPRE2_DIV2
 #elif (STM32_CFG_PCLK2_VALUE == 4)
-  #if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK2_BITS                RCC_CFGR2_PPRE2_DIV4
-  #else
-    #define STM32_PCLK2_BITS                0U
-  #endif
+  #define STM32_PCLK2_BITS                  RCC_CFGR2_PPRE2_DIV4
 #elif (STM32_CFG_PCLK2_VALUE == 8)
-  #if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK2_BITS                RCC_CFGR2_PPRE2_DIV8
-  #else
-    #define STM32_PCLK2_BITS                0U
-  #endif
+  #define STM32_PCLK2_BITS                  RCC_CFGR2_PPRE2_DIV8
 #elif (STM32_CFG_PCLK2_VALUE == 16)
-  #if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK2_BITS                RCC_CFGR2_PPRE2_DIV16
-  #else
-    #define STM32_PCLK2_BITS                0U
-  #endif
+  #define STM32_PCLK2_BITS                  RCC_CFGR2_PPRE2_DIV16
 #else
   #error "invalid STM32_CFG_PCLK2_VALUE value specified"
 #endif
@@ -3564,12 +3440,8 @@
 /**
  * @brief   APB2 clock clock point.
  */
-#if (STM32_PCLK2_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK2_FREQ                  (STM32_HCLK_FREQ /              \
+#define STM32_PCLK2_FREQ                    (STM32_HCLK_FREQ /              \
                                              STM32_CFG_PCLK2_VALUE)
-#else
-  #define STM32_PCLK2_FREQ                  0U
-#endif
 
 #if !((STM32_PCLK2_ENABLED != TRUE) || (STM32_PCLK2_FREQ <= STM32_PCLK2_MAX)) && \
     !defined(__DOXYGEN__)
@@ -3581,21 +3453,13 @@
 /**
  * @brief   PCLK2TIM clock register bits.
  */
-#if (STM32_PCLK2TIM_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK2TIM_BITS               0U
-#else
-  #define STM32_PCLK2TIM_BITS               0U
-#endif
+#define STM32_PCLK2TIM_BITS                 0U
 
 /**
  * @brief   APB2 timer clock clock point.
  */
-#if (STM32_PCLK2TIM_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK2TIM_FREQ               ((STM32_CFG_PCLK2_VALUE == 1) ? STM32_PCLK2_FREQ : \
+#define STM32_PCLK2TIM_FREQ                 ((STM32_CFG_PCLK2_VALUE == 1) ? STM32_PCLK2_FREQ : \
                                              (STM32_PCLK2_FREQ * 2U))
-#else
-  #define STM32_PCLK2TIM_FREQ               0U
-#endif
 
 /*--- Macros and checks for the PCLK3 clock point. -------------------------*/
 
@@ -3603,35 +3467,15 @@
  * @brief   PCLK3 clock register bits.
  */
 #if (STM32_CFG_PCLK3_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK3_BITS                RCC_CFGR3_PPRE3_DIV1
-  #else
-    #define STM32_PCLK3_BITS                0U
-  #endif
+  #define STM32_PCLK3_BITS                  RCC_CFGR3_PPRE3_DIV1
 #elif (STM32_CFG_PCLK3_VALUE == 2)
-  #if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK3_BITS                RCC_CFGR3_PPRE3_DIV2
-  #else
-    #define STM32_PCLK3_BITS                0U
-  #endif
+  #define STM32_PCLK3_BITS                  RCC_CFGR3_PPRE3_DIV2
 #elif (STM32_CFG_PCLK3_VALUE == 4)
-  #if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK3_BITS                RCC_CFGR3_PPRE3_DIV4
-  #else
-    #define STM32_PCLK3_BITS                0U
-  #endif
+  #define STM32_PCLK3_BITS                  RCC_CFGR3_PPRE3_DIV4
 #elif (STM32_CFG_PCLK3_VALUE == 8)
-  #if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK3_BITS                RCC_CFGR3_PPRE3_DIV8
-  #else
-    #define STM32_PCLK3_BITS                0U
-  #endif
+  #define STM32_PCLK3_BITS                  RCC_CFGR3_PPRE3_DIV8
 #elif (STM32_CFG_PCLK3_VALUE == 16)
-  #if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_PCLK3_BITS                RCC_CFGR3_PPRE3_DIV16
-  #else
-    #define STM32_PCLK3_BITS                0U
-  #endif
+  #define STM32_PCLK3_BITS                  RCC_CFGR3_PPRE3_DIV16
 #else
   #error "invalid STM32_CFG_PCLK3_VALUE value specified"
 #endif
@@ -3639,12 +3483,8 @@
 /**
  * @brief   APB3 clock clock point.
  */
-#if (STM32_PCLK3_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_PCLK3_FREQ                  (STM32_HCLK_FREQ /              \
+#define STM32_PCLK3_FREQ                    (STM32_HCLK_FREQ /              \
                                              STM32_CFG_PCLK3_VALUE)
-#else
-  #define STM32_PCLK3_FREQ                  0U
-#endif
 
 #if !((STM32_PCLK3_ENABLED != TRUE) || (STM32_PCLK3_FREQ <= STM32_PCLK3_MAX)) && \
     !defined(__DOXYGEN__)
@@ -3656,11 +3496,7 @@
 /**
  * @brief   HSEDIV clock register bits.
  */
-#if (STM32_HSEDIV_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_HSEDIV_BITS                 0U
-#else
-  #define STM32_HSEDIV_BITS                 0U
-#endif
+#define STM32_HSEDIV_BITS                   0U
 
 /**
  * @brief   HSE divided clock clock point.
@@ -3676,30 +3512,20 @@
 /**
  * @brief   HCLKDIV8 clock register bits.
  */
-#if (STM32_HCLKDIV8_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_HCLKDIV8_BITS               0U
-#else
-  #define STM32_HCLKDIV8_BITS               0U
-#endif
+#define STM32_HCLKDIV8_BITS                 0U
 
 /**
  * @brief   HCLK divided by 8 clock point.
  */
-#if (STM32_HCLKDIV8_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_HCLKDIV8_FREQ               (hal_lld_get_clock_point(CLK_HCLK) / \
+#define STM32_HCLKDIV8_FREQ                 (hal_lld_get_clock_point(CLK_HCLK) / \
                                              8U)
-#else
-  #define STM32_HCLKDIV8_FREQ               0U
-#endif
 
 /*--- Macros and checks for the MCO1DIV clock point. -----------------------*/
 
 /**
  * @brief   MCO1DIV clock register bits.
  */
-#if (STM32_MCO1DIV_ENABLED == FALSE)
-  #define STM32_MCO1DIV_BITS                RCC_CFGR1_MCO1SEL_OFF
-#elif (STM32_CFG_MCO1DIV_SEL == RCC_CFGR1_MCO1SEL_OFF) || defined(__DOXYGEN__)
+#if (STM32_CFG_MCO1DIV_SEL == RCC_CFGR1_MCO1SEL_OFF) || defined(__DOXYGEN__)
   #define STM32_MCO1DIV_BITS                RCC_CFGR1_MCO1SEL_OFF
 #elif (STM32_CFG_MCO1DIV_SEL == RCC_CFGR1_MCO1SEL_SYSCLK)
   #define STM32_MCO1DIV_BITS                RCC_CFGR1_MCO1SEL_SYSCLK
@@ -3762,53 +3588,21 @@
  * @brief   MCO1 clock register bits.
  */
 #if (STM32_CFG_MCO1_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV1
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV1
 #elif (STM32_CFG_MCO1_VALUE == 2)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV2
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV2
 #elif (STM32_CFG_MCO1_VALUE == 4)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV4
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV4
 #elif (STM32_CFG_MCO1_VALUE == 8)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV8
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV8
 #elif (STM32_CFG_MCO1_VALUE == 16)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV16
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV16
 #elif (STM32_CFG_MCO1_VALUE == 32)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV32
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV32
 #elif (STM32_CFG_MCO1_VALUE == 64)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV64
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV64
 #elif (STM32_CFG_MCO1_VALUE == 128)
-  #if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO1_BITS                 RCC_CFGR1_MCO1PRE_DIV128
-  #else
-    #define STM32_MCO1_BITS                 0U
-  #endif
+  #define STM32_MCO1_BITS                   RCC_CFGR1_MCO1PRE_DIV128
 #else
   #error "invalid STM32_CFG_MCO1_VALUE value specified"
 #endif
@@ -3816,21 +3610,15 @@
 /**
  * @brief   MCO1 output pin clock point.
  */
-#if (STM32_MCO1_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_MCO1_FREQ                   (STM32_MCO1DIV_FREQ /           \
+#define STM32_MCO1_FREQ                     (STM32_MCO1DIV_FREQ /           \
                                              STM32_CFG_MCO1_VALUE)
-#else
-  #define STM32_MCO1_FREQ                   0U
-#endif
 
 /*--- Macros and checks for the MCO2DIV clock point. -----------------------*/
 
 /**
  * @brief   MCO2DIV clock register bits.
  */
-#if (STM32_MCO2DIV_ENABLED == FALSE)
-  #define STM32_MCO2DIV_BITS                RCC_CFGR1_MCO2SEL_OFF
-#elif (STM32_CFG_MCO2DIV_SEL == RCC_CFGR1_MCO2SEL_OFF) || defined(__DOXYGEN__)
+#if (STM32_CFG_MCO2DIV_SEL == RCC_CFGR1_MCO2SEL_OFF) || defined(__DOXYGEN__)
   #define STM32_MCO2DIV_BITS                RCC_CFGR1_MCO2SEL_OFF
 #elif (STM32_CFG_MCO2DIV_SEL == RCC_CFGR1_MCO2SEL_SYSCLK)
   #define STM32_MCO2DIV_BITS                RCC_CFGR1_MCO2SEL_SYSCLK
@@ -3893,53 +3681,21 @@
  * @brief   MCO2 clock register bits.
  */
 #if (STM32_CFG_MCO2_VALUE == 1) || defined(__DOXYGEN__)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV1
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV1
 #elif (STM32_CFG_MCO2_VALUE == 2)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV2
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV2
 #elif (STM32_CFG_MCO2_VALUE == 4)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV4
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV4
 #elif (STM32_CFG_MCO2_VALUE == 8)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV8
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV8
 #elif (STM32_CFG_MCO2_VALUE == 16)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV16
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV16
 #elif (STM32_CFG_MCO2_VALUE == 32)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV32
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV32
 #elif (STM32_CFG_MCO2_VALUE == 64)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV64
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV64
 #elif (STM32_CFG_MCO2_VALUE == 128)
-  #if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_MCO2_BITS                 RCC_CFGR1_MCO2PRE_DIV128
-  #else
-    #define STM32_MCO2_BITS                 0U
-  #endif
+  #define STM32_MCO2_BITS                   RCC_CFGR1_MCO2PRE_DIV128
 #else
   #error "invalid STM32_CFG_MCO2_VALUE value specified"
 #endif
@@ -3947,21 +3703,15 @@
 /**
  * @brief   MCO2 output pin clock point.
  */
-#if (STM32_MCO2_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_MCO2_FREQ                   (STM32_MCO2DIV_FREQ /           \
+#define STM32_MCO2_FREQ                     (STM32_MCO2DIV_FREQ /           \
                                              STM32_CFG_MCO2_VALUE)
-#else
-  #define STM32_MCO2_FREQ                   0U
-#endif
 
 /*--- Macros and checks for the RTC clock point. ---------------------------*/
 
 /**
  * @brief   RTC clock register bits.
  */
-#if (STM32_RTC_ENABLED == FALSE)
-  #define STM32_RTC_BITS                    RCC_BDCR_RTCSEL_NOCLOCK
-#elif (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_NOCLOCK) || defined(__DOXYGEN__)
+#if (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_NOCLOCK) || defined(__DOXYGEN__)
   #define STM32_RTC_BITS                    RCC_BDCR_RTCSEL_NOCLOCK
 #elif (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_LSE)
   #define STM32_RTC_BITS                    RCC_BDCR_RTCSEL_LSE
@@ -3998,9 +3748,7 @@
 /**
  * @brief   LSCO clock register bits.
  */
-#if (STM32_LSCO_ENABLED == FALSE)
-  #define STM32_LSCO_BITS                   RCC_BDCR_LSCOSEL_NOCLOCK
-#elif (STM32_CFG_LSCO_SEL == RCC_BDCR_LSCOSEL_NOCLOCK) || defined(__DOXYGEN__)
+#if (STM32_CFG_LSCO_SEL == RCC_BDCR_LSCOSEL_NOCLOCK) || defined(__DOXYGEN__)
   #define STM32_LSCO_BITS                   RCC_BDCR_LSCOSEL_NOCLOCK
 #elif (STM32_CFG_LSCO_SEL == RCC_BDCR_LSCOSEL_LSI)
   #define STM32_LSCO_BITS                   RCC_BDCR_LSCOSEL_LSI
@@ -4432,11 +4180,7 @@
 /**
  * @brief   TIM16IC clock register bits.
  */
-#if (STM32_TIM16IC_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_TIM16IC_BITS                0U
-#else
-  #define STM32_TIM16IC_BITS                0U
-#endif
+#define STM32_TIM16IC_BITS                  0U
 
 /**
  * @brief   TIM16 internal capture clock clock point.
@@ -4456,11 +4200,7 @@
 /**
  * @brief   TIM17IC clock register bits.
  */
-#if (STM32_TIM17IC_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_TIM17IC_BITS                0U
-#else
-  #define STM32_TIM17IC_BITS                0U
-#endif
+#define STM32_TIM17IC_BITS                  0U
 
 /**
  * @brief   TIM17 internal capture clock clock point.
@@ -4483,11 +4223,7 @@
 /**
  * @brief   LPTIM2IC clock register bits.
  */
-#if (STM32_LPTIM2IC_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_LPTIM2IC_BITS               0U
-#else
-  #define STM32_LPTIM2IC_BITS               0U
-#endif
+#define STM32_LPTIM2IC_BITS                 0U
 
 /**
  * @brief   LPTIM2 internal capture clock clock point.
@@ -4547,11 +4283,7 @@
 /**
  * @brief   ICLKDIV2 clock register bits.
  */
-#if (STM32_ICLKDIV2_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_ICLKDIV2_BITS               0U
-#else
-  #define STM32_ICLKDIV2_BITS               0U
-#endif
+#define STM32_ICLKDIV2_BITS                 0U
 
 /**
  * @brief   ICLK divided by 2 clock point.
@@ -4594,11 +4326,7 @@
 /**
  * @brief   SDMMC1 clock register bits.
  */
-#if (STM32_SDMMC1_ENABLED == TRUE) || defined(__DOXYGEN__)
-  #define STM32_SDMMC1_BITS                 0U
-#else
-  #define STM32_SDMMC1_BITS                 0U
-#endif
+#define STM32_SDMMC1_BITS                   0U
 
 /**
  * @brief   SDMMC1 clock clock point.

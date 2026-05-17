@@ -49,6 +49,9 @@ jar.
 - Formula or pass-through clock points under `clocks` use `<derived>`. A
   derived point can specify an optional `input` plus a fixed `frequency`
   expression or conditional `<frequencies>` table.
+- Fixed hardware dividers with no selectable register field should also be
+  modeled as `<derived>` frequency expressions. Use `<divider>` only when the
+  divider value is configurable and emits selection bits.
 - Terminal peripheral users are modeled in the optional top-level `sinks`
   list. A sink names an input clock point and may specify a preprocessor
   `condition`; active sinks create downstream demand for `auto` clock

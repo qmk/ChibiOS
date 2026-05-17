@@ -52,6 +52,16 @@ EOF
       case "$pattern" in
         ''|\#*) continue ;;
       esac
+      case "$pattern" in
+        ABSENT:*)
+          pattern=${pattern#ABSENT:}
+          if grep -F -- "$pattern" "$work/out/clocktree.h" >/dev/null; then
+            printf '%s\n' "generated output for $fixture unexpectedly contains: $pattern" >&2
+            return 1
+          fi
+          continue
+          ;;
+      esac
       if ! grep -F -- "$pattern" "$work/out/clocktree.h" >/dev/null; then
         printf '%s\n' "generated output for $fixture is missing: $pattern" >&2
         return 1

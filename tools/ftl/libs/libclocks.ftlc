@@ -1543,23 +1543,33 @@ macro EmitTargetBitsDefinitionAt(point, bits, target, indent)
     else
       local enabledbits = "(" + enabledbits + " | " + bits + ")"
     endif
-    ppcode.EmitPPIfAt(expression="(" + enmacro + " == TRUE) || defined(__DOXYGEN__)", level=indent)
-    ppcode.EmitPPDefineAt(name=bitsmacro, value=enabledbits, level=indent + 1)
-    ppcode.EmitPPElseAt(level=indent)
-    ppcode.EmitPPDefineAt(name=bitsmacro, value=disabledbits, level=indent + 1)
-    ppcode.EmitPPEndifAt(level=indent)
+
+    if point["enable"] == "always" || enabledbits == disabledbits
+      ppcode.EmitPPDefineAt(name=bitsmacro, value=enabledbits, level=indent)
+    elseif point["enable"] == "never"
+      ppcode.EmitPPDefineAt(name=bitsmacro, value=disabledbits, level=indent)
+    else
+      ppcode.EmitPPIfAt(expression="(" + enmacro + " == TRUE) || defined(__DOXYGEN__)", level=indent)
+      ppcode.EmitPPDefineAt(name=bitsmacro, value=enabledbits, level=indent + 1)
+      ppcode.EmitPPElseAt(level=indent)
+      ppcode.EmitPPDefineAt(name=bitsmacro, value=disabledbits, level=indent + 1)
+      ppcode.EmitPPEndifAt(level=indent)
+    endif
   else
     if bits == ""
       local bits = "0U"
     endif
-    if point["enable"] == "manual" || point["enable"] == "auto" || point["enable"] == "never" || point["enable"] == "always"
+
+    if point["enable"] == "always"
+      ppcode.EmitPPDefineAt(name=bitsmacro, value=bits, level=indent)
+    elseif point["enable"] == "never" || bits == "0U"
+      ppcode.EmitPPDefineAt(name=bitsmacro, value="0U", level=indent)
+    else
       ppcode.EmitPPIfAt(expression="(" + enmacro + " == TRUE) || defined(__DOXYGEN__)", level=indent)
       ppcode.EmitPPDefineAt(name=bitsmacro, value=bits, level=indent + 1)
       ppcode.EmitPPElseAt(level=indent)
       ppcode.EmitPPDefineAt(name=bitsmacro, value="0U", level=indent + 1)
       ppcode.EmitPPEndifAt(level=indent)
-    else
-      ppcode.EmitPPDefineAt(name=bitsmacro, value=bits, level=indent)
     endif
   endif
 endmacro
@@ -1596,14 +1606,16 @@ macro EmitFrequencyDefinition(point, frequency)
   local freqmacro = premacro + point["name"] + postclocks
   local enmacro = GetEnableMacro(point)
 
-  if point["enable"] == "manual" || point["enable"] == "auto" || point["enable"] == "never" || point["enable"] == "always"
+  if point["enable"] == "always"
+    ppcode.EmitPPDefine(name=freqmacro, value=frequency)
+  elseif point["enable"] == "never" || frequency == "0U"
+    ppcode.EmitPPDefine(name=freqmacro, value="0U")
+  else
     ppcode.EmitPPIf(expression="(" + enmacro + " == TRUE) || defined(__DOXYGEN__)")
     ppcode.EmitPPDefine(name=freqmacro, value=frequency)
     ppcode.EmitPPElse()
     ppcode.EmitPPDefine(name=freqmacro, value="0U")
     ppcode.EmitPPEndif()
-  else
-    ppcode.EmitPPDefine(name=freqmacro, value=frequency)
   endif
 endmacro
 
@@ -1908,7 +1920,7 @@ macro EmitClockBits(point)
 """
     list point["inputs"] as input
       if input?is_first
-        if disabledbits != ""
+        if disabledbits != "" && point["enable"] != "always"
           ppcode.EmitPPIfAt(expression="(" + enmacro + " == FALSE)", level=0)
           ppcode.EmitPPDefineAt(name=bitsmacro, value=disabledbits, level=1)
           ppcode.EmitPPElifAt(expression="(" + selmacro + " == " + input["bits"] + ") || defined(__DOXYGEN__)", level=0)
