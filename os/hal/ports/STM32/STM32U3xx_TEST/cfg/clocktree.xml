@@ -46,6 +46,10 @@
               values="RCC_ICSCR1_MSIBIAS_CONTINUOUS RCC_ICSCR1_MSIBIAS_SAMPLING">
         <description>Selects the MSI bias mode.</description>
       </config>
+      <config name="TIMICSEL" type="set" default="RCC_CCIPR1_TIMICSEL_NOCLOCK"
+              values="RCC_CCIPR1_TIMICSEL_NOCLOCK RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4 RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4 RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4 RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4">
+        <description>Selects the timer internal capture clock sources.</description>
+      </config>
       <config name="DAC1SH_REQUIRED" type="bool" default="FALSE">
         <description>Enables demand for the DAC1 sample-and-hold clock.</description>
       </config>
@@ -782,6 +786,46 @@
         <input point="LSE"><bits value="RCC_CCIPR1_SYSTICKSEL_LSE" /></input>
       </mux>
     </clock>
+    <clock point="TIM16IC" enable="always" dynamic="no">
+      <description>TIM16 internal capture clock</description>
+      <source>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_HSI16) / 256U)" />
+          </select>
+        </frequencies>
+      </source>
+    </clock>
+    <clock point="TIM17IC" enable="always" dynamic="no">
+      <description>TIM17 internal capture clock</description>
+      <source>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <when condition="(STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4)"
+                  value="(hal_lld_get_clock_point(CLK_MSIS) / 1024U)" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_MSIK) / 1024U)" />
+          </select>
+        </frequencies>
+      </source>
+    </clock>
+    <clock point="LPTIM2IC" enable="always" dynamic="no">
+      <description>LPTIM2 internal capture clock</description>
+      <source>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <when condition="(STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4)"
+                  value="(hal_lld_get_clock_point(CLK_MSIS) / 4U)" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_MSIK) / 4U)" />
+          </select>
+        </frequencies>
+      </source>
+    </clock>
     <clock point="ICLK" enable="auto" dynamic="no">
       <description>ICLK clock</description>
       <mux name="ICLK">
@@ -960,6 +1004,18 @@
     <consumer name="OCTOSPI_REQUIRED" input="OCTOSPI"
               condition="STM32_CFG_OCTOSPI_REQUIRED == TRUE">
       <description>Local option demands the OCTOSPI clock when enabled.</description>
+    </consumer>
+    <consumer name="TIMICSEL_HSI16_SOURCE" input="HSI16"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands HSI16 when internal capture clocks are enabled.</description>
+    </consumer>
+    <consumer name="TIMICSEL_MSIS_SOURCE" input="MSIS"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands MSIS when internal capture clocks are enabled.</description>
+    </consumer>
+    <consumer name="TIMICSEL_MSIK_SOURCE" input="MSIK"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands MSIK when internal capture clocks are enabled.</description>
     </consumer>
     <consumer name="USB1_DRIVER" input="USB"
               condition="(HAL_USE_USB == TRUE) &amp;&amp; (STM32_USB_USE_USB1 == TRUE)">
