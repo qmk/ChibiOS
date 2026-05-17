@@ -1,0 +1,25 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+    </configs>
+  </settings>
+  <clocks>
+    <clock point="USB" enable="always" dynamic="no">
+      <description>USB peripheral clock</description>
+      <source frequency="48000000U" />
+    </clock>
+  </clocks>
+  <consumers>
+    <consumer name="USB_DRIVER" input="USB" condition="HAL_USE_USB == TRUE">
+      <description>consumer references a missing limit declaration</description>
+      <limits ref="MISSING_LIMIT" />
+    </consumer>
+  </consumers>
+</clocktree>

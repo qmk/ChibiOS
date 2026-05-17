@@ -35,6 +35,10 @@
         <xs:selector xpath="consumers/consumer"></xs:selector>
         <xs:field xpath="@input"></xs:field>
       </xs:keyref>
+      <xs:keyref name="consumerLimitRef" refer="limitNameKey">
+        <xs:selector xpath="consumers/consumer/limits"></xs:selector>
+        <xs:field xpath="@ref"></xs:field>
+      </xs:keyref>
     </xs:element>
     
     <xs:complexType name="clocktreeType">
@@ -66,6 +70,9 @@
     <xs:complexType name="consumerType">
       <xs:sequence>
         <xs:element name="description" type="xs:string" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
+        <xs:element name="limits" type="clockLimitType" maxOccurs="1"
           minOccurs="0">
         </xs:element>
       </xs:sequence>

@@ -93,6 +93,7 @@
       <limit name="PCLK2" min="no" max="yes" />
       <limit name="PCLK3" min="no" max="yes" />
       <limit name="ADCCLK" min="no" max="yes" />
+      <limit name="USBCLK" min="yes" max="yes" />
       <limit name="FLASH_0WS" min="no" max="yes" />
       <limit name="FLASH_1WS" min="no" max="yes" />
       <limit name="FLASH_2WS" min="no" max="yes" />
@@ -115,6 +116,7 @@
         <limit name="PCLK2" max="96010000" />
         <limit name="PCLK3" max="96010000" />
         <limit name="ADCCLK" max="55000000" />
+        <limit name="USBCLK" min="47880000" max="48120000" />
         <limit name="FLASH_0WS">
           <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="32005000" />
           <default max="20000000" />
@@ -151,6 +153,7 @@
         <limit name="PCLK2" max="48005000" />
         <limit name="PCLK3" max="48005000" />
         <limit name="ADCCLK" max="48005000" />
+        <limit name="USBCLK" min="47880000" max="48120000" />
         <limit name="FLASH_0WS" max="16001250" />
         <limit name="FLASH_1WS" max="32002500" />
         <limit name="FLASH_2WS" max="48005000" />
@@ -1020,6 +1023,7 @@
     <consumer name="USB1_DRIVER" input="USB"
               condition="(HAL_USE_USB == TRUE) &amp;&amp; (STM32_USB_USE_USB1 == TRUE)">
       <description>USB driver demands the USB clock when enabled.</description>
+      <limits ref="USBCLK" />
     </consumer>
     <consumer name="SDMMC1_DRIVER" input="SDMMC1"
               condition="(HAL_USE_SDC == TRUE) &amp;&amp; (STM32_SDC_USE_SDMMC1 == TRUE)">

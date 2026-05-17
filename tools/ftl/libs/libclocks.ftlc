@@ -522,6 +522,7 @@ function ParseConsumers(clocknames)
       else
         local description = "no description"
       endif
+      local limits = ParseClockLimits(consumer)
 
       if names?seq_contains(name)
         stop ">>>> Duplicate clock consumer '" + name + "'"
@@ -532,7 +533,7 @@ function ParseConsumers(clocknames)
         stop ">>>> Unknown clock point '" + input + "' referenced by consumer '" + name + "'"
       endif
 
-      local consumers = consumers + [{"name":name, "input":input, "condition":condition, "description":description}]
+      local consumers = consumers + [{"name":name, "input":input, "condition":condition, "description":description, "limits":limits}]
     endlist
   endif
 
@@ -675,6 +676,14 @@ function Initialize()
   endlist
 
   local consumers = ParseConsumers(clocknames)
+  list consumers as consumer
+    if consumer["limits"]?size > 0
+      local limit = GetLimitDeclaration(limitmodel["limits"], consumer["limits"]["ref"])
+      if limit?size == 0
+        stop ">>>> Unknown clock limit '" + consumer["limits"]["ref"] + "' referenced by clock consumer '" + consumer["name"] + "'"
+      endif
+    endif
+  endlist
 
   return {"configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "consumers":consumers}
 endfunction
@@ -1702,6 +1711,78 @@ macro EmitClockFrequencyChecks(point)
   endif
 endmacro
 
+/* Returns true if a consumer has frequency checks.*/
+function HasConsumerFrequencyChecks(consumer)
+  return consumer["limits"]?size > 0
+endfunction
+
+/* Returns true if any consumer has frequency checks.*/
+function HasAnyConsumerFrequencyChecks()
+  list model["consumers"] as consumer
+    if HasConsumerFrequencyChecks(consumer)
+      return true
+    endif
+  endlist
+
+  return false
+endfunction
+
+/* Emits frequency range checks for one consumer.*/
+macro EmitOneConsumerFrequencyChecks(consumer)
+  if HasConsumerFrequencyChecks(consumer)
+    local freqmacro = premacro + consumer["input"] + postclocks
+    local active = consumer["condition"]
+    local limit = GetLimitDeclaration(model["limits"]["limits"], consumer["limits"]["ref"])
+    if limit["min"] == "yes"
+      local minval = GetLimitMacro(limit, "min")
+    else
+      local minval = ""
+    endif
+    if limit["max"] == "yes"
+      local maxval = GetLimitMacro(limit, "max")
+    else
+      local maxval = ""
+    endif
+
+    if minval != ""
+      ppcode.EmitPPAssert(
+        expression="!(" + active + ") || (" + freqmacro + " >= " + minval + ")",
+        message="\"" + freqmacro + " below minimum frequency for " + consumer["name"] + "\"")
+    endif
+
+    if minval != "" && maxval != ""
+      emit "\e"
+    endif
+
+    if maxval != ""
+      ppcode.EmitPPAssert(
+        expression="!(" + active + ") || (" + freqmacro + " <= " + maxval + ")",
+        message="\"" + freqmacro + " above maximum frequency for " + consumer["name"] + "\"")
+    endif
+  endif
+endmacro
+
+/* Emits frequency range checks for consumers.*/
+macro EmitConsumerFrequencyChecks()
+  if HasAnyConsumerFrequencyChecks()
+    emit """
+/*
+ * Consumer-specific frequency checks.
+ */
+"""
+    local emitted = false
+    list model["consumers"] as consumer
+      if HasConsumerFrequencyChecks(consumer)
+        if emitted
+          emit "\e"
+        endif
+        EmitOneConsumerFrequencyChecks(consumer=consumer)
+        local emitted = true
+      endif
+    endlist
+  endif
+endmacro
+
 /* Returns true if source dependency checks are emitted for one clock point.*/
 function HasSourceDependencyChecks(point)
   if point["enable"] == "manual" && GetConsumerConditions(point)?size > 0
@@ -1958,4 +2039,8 @@ macro EmitDerivedConstants()
       EmitClockFrequencyChecks(point=point)
     endif
   endlist
+  if HasAnyConsumerFrequencyChecks()
+    emit "\e"
+    EmitConsumerFrequencyChecks()
+  endif
 endmacro

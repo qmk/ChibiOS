@@ -922,6 +922,8 @@
 #define STM32_VOS1_PCLK2_MAX                96010000
 #define STM32_VOS1_PCLK3_MAX                96010000
 #define STM32_VOS1_ADCCLK_MAX               55000000
+#define STM32_VOS1_USBCLK_MIN               47880000
+#define STM32_VOS1_USBCLK_MAX               48120000
 #if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
     defined(__DOXYGEN__)
 #define STM32_VOS1_FLASH_0WS_MAX            32005000
@@ -980,6 +982,8 @@
 #define STM32_VOS2_PCLK2_MAX                48005000
 #define STM32_VOS2_PCLK3_MAX                48005000
 #define STM32_VOS2_ADCCLK_MAX               48005000
+#define STM32_VOS2_USBCLK_MIN               47880000
+#define STM32_VOS2_USBCLK_MAX               48120000
 #define STM32_VOS2_FLASH_0WS_MAX            16001250
 #define STM32_VOS2_FLASH_1WS_MAX            32002500
 #define STM32_VOS2_FLASH_2WS_MAX            48005000
@@ -1002,6 +1006,8 @@
 #define STM32_PCLK2_MAX                     STM32_VOS1_PCLK2_MAX
 #define STM32_PCLK3_MAX                     STM32_VOS1_PCLK3_MAX
 #define STM32_ADCCLK_MAX                    STM32_VOS1_ADCCLK_MAX
+#define STM32_USBCLK_MIN                    STM32_VOS1_USBCLK_MIN
+#define STM32_USBCLK_MAX                    STM32_VOS1_USBCLK_MAX
 #define STM32_FLASH_0WS_MAX                 STM32_VOS1_FLASH_0WS_MAX
 #define STM32_FLASH_1WS_MAX                 STM32_VOS1_FLASH_1WS_MAX
 #define STM32_FLASH_2WS_MAX                 STM32_VOS1_FLASH_2WS_MAX
@@ -1018,6 +1024,8 @@
 #define STM32_PCLK2_MAX                     STM32_VOS2_PCLK2_MAX
 #define STM32_PCLK3_MAX                     STM32_VOS2_PCLK3_MAX
 #define STM32_ADCCLK_MAX                    STM32_VOS2_ADCCLK_MAX
+#define STM32_USBCLK_MIN                    STM32_VOS2_USBCLK_MIN
+#define STM32_USBCLK_MAX                    STM32_VOS2_USBCLK_MAX
 #define STM32_FLASH_0WS_MAX                 STM32_VOS2_FLASH_0WS_MAX
 #define STM32_FLASH_1WS_MAX                 STM32_VOS2_FLASH_1WS_MAX
 #define STM32_FLASH_2WS_MAX                 STM32_VOS2_FLASH_2WS_MAX
@@ -4943,6 +4951,19 @@
   #define STM32_ADF1_FREQ                   STM32_SAI1_FREQ
 #else
   #define STM32_ADF1_FREQ                   0U
+#endif
+
+/*
+ * Consumer-specific frequency checks.
+ */
+#if !(!((HAL_USE_USB == TRUE) && (STM32_USB_USE_USB1 == TRUE)) ||           \
+     (STM32_USB_FREQ >= STM32_USBCLK_MIN)) && !defined(__DOXYGEN__)
+  #error "STM32_USB_FREQ below minimum frequency for USB1_DRIVER"
+#endif
+
+#if !(!((HAL_USE_USB == TRUE) && (STM32_USB_USE_USB1 == TRUE)) ||           \
+     (STM32_USB_FREQ <= STM32_USBCLK_MAX)) && !defined(__DOXYGEN__)
+  #error "STM32_USB_FREQ above maximum frequency for USB1_DRIVER"
 #endif
 /** @} */
 

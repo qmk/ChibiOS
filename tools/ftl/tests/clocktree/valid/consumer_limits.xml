@@ -1,0 +1,36 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+    </configs>
+    <states>
+      <state name="normal" when="TRUE" />
+    </states>
+    <limit-set>
+      <limit name="USBCLK" min="yes" max="yes" />
+    </limit-set>
+    <limit-values>
+      <state-values state="normal">
+        <limit name="USBCLK" min="48000000U" max="48000000U" />
+      </state-values>
+    </limit-values>
+  </settings>
+  <clocks>
+    <clock point="USB" enable="auto" dynamic="no">
+      <description>USB peripheral clock</description>
+      <source frequency="48000000U" />
+    </clock>
+  </clocks>
+  <consumers>
+    <consumer name="USB_DRIVER" input="USB" condition="HAL_USE_USB == TRUE">
+      <description>USB driver demands the USB clock when enabled.</description>
+      <limits ref="USBCLK" />
+    </consumer>
+  </consumers>
+</clocktree>

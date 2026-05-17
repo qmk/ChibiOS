@@ -47,7 +47,9 @@ jar.
   `condition`; active consumers create downstream demand for `auto` clock
   points without becoming clock points themselves. An `auto` clock point with
   no downstream clock point or explicit consumer is treated as unconditionally
-  demanded; add consumers only when demand has a condition.
+  demanded; add consumers only when demand has a condition. Consumers can also
+  specify optional `<limits ref="..."/>` references when a peripheral imposes
+  a frequency range on the consumed clock.
 - `settings/states`, `settings/limit-set`, and `settings/limit-values` define
   the selectable frequency limit states, the final limit macro set, and the
   state-specific values. The generator validates that each state provides all
@@ -80,6 +82,8 @@ Each clock point should emit, in XML order:
 - grouped state-specific frequency limit definitions and one selected final
   limit block where a limit model is declared;
 - compile-time frequency range checks where clock point limits are declared.
+- compile-time frequency range checks where active consumer limits are
+  declared.
 
 Generic configurations emit explicit settings using the configured
 configuration prefix and their local names, for example `CLOCK_DYNAMIC` becomes
@@ -122,8 +126,14 @@ switches in their consumer conditions. Examples:
 <consumer name="USB1_DRIVER" input="USB"
           condition="(HAL_USE_USB == TRUE) &amp;&amp; (STM32_USB_USE_USB1 == TRUE)">
   <description>USB driver demands the USB clock when enabled.</description>
+  <limits ref="USBCLK" />
 </consumer>
 ```
+
+Use consumer limits for requirements belonging to a specific peripheral use,
+such as USB requiring a known clock range. Keep structural bus or oscillator
+limits on the clock point itself. Consumer limits are checked only when the
+consumer condition is active.
 
 If several instances of one driver share a clock point, keep the driver part as
 one AND term and OR only the instance switches inside the second term:
