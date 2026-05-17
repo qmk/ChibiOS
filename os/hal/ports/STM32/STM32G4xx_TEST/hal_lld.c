@@ -566,7 +566,8 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
     }
 
     /* PLL Q output frequency.*/
-    pllqdiv = 2U + (2U * (ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLQ_Msk) >> RCC_PLLCFGR_PLLQ_Pos);
+    pllqdiv = 2U + (2U * ((ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLQ_Msk) >>
+                          RCC_PLLCFGR_PLLQ_Pos));
     if ((ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLQEN) != 0U) {
       pllqclk = pllvcoclk / pllqdiv;
 
@@ -576,7 +577,8 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
     }
 
     /* PLL R output frequency.*/
-    pllrdiv = 2U + (2U * (ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLR_Msk) >> RCC_PLLCFGR_PLLR_Pos);
+    pllrdiv = 2U + (2U * ((ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLR_Msk) >>
+                          RCC_PLLCFGR_PLLR_Pos));
     if ((ccp->rcc_pllcfgr & RCC_PLLCFGR_PLLREN) != 0U) {
       pllrclk = pllvcoclk / pllrdiv;
 

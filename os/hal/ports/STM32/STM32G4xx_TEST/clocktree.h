@@ -529,6 +529,7 @@
 #define STM32_BOOST_PLLR_MIN                8000000
 #define STM32_BOOST_PLLR_MAX                170000000
 #define STM32_BOOST_SYSCLK_MAX              170000000
+#define STM32_BOOST_HCLK_MAX                170000000
 #define STM32_BOOST_PCLK1_MAX               170000000
 #define STM32_BOOST_PCLK2_MAX               170000000
 #define STM32_BOOST_ADCCLK_MAX              60000000
@@ -570,6 +571,7 @@
 #define STM32_VOS1_PLLR_MIN                 8000000
 #define STM32_VOS1_PLLR_MAX                 150000000
 #define STM32_VOS1_SYSCLK_MAX               150000000
+#define STM32_VOS1_HCLK_MAX                 150000000
 #define STM32_VOS1_PCLK1_MAX                150000000
 #define STM32_VOS1_PCLK2_MAX                150000000
 #define STM32_VOS1_ADCCLK_MAX               60000000
@@ -611,6 +613,7 @@
 #define STM32_VOS2_PLLR_MIN                 8000000
 #define STM32_VOS2_PLLR_MAX                 26000000
 #define STM32_VOS2_SYSCLK_MAX               26000000
+#define STM32_VOS2_HCLK_MAX                 26000000
 #define STM32_VOS2_PCLK1_MAX                26000000
 #define STM32_VOS2_PCLK2_MAX                26000000
 #define STM32_VOS2_ADCCLK_MAX               26000000
@@ -642,6 +645,7 @@
 #define STM32_PLLR_MIN                      STM32_BOOST_PLLR_MIN
 #define STM32_PLLR_MAX                      STM32_BOOST_PLLR_MAX
 #define STM32_SYSCLK_MAX                    STM32_BOOST_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_BOOST_HCLK_MAX
 #define STM32_PCLK1_MAX                     STM32_BOOST_PCLK1_MAX
 #define STM32_PCLK2_MAX                     STM32_BOOST_PCLK2_MAX
 #define STM32_ADCCLK_MAX                    STM32_BOOST_ADCCLK_MAX
@@ -666,6 +670,7 @@
 #define STM32_PLLR_MIN                      STM32_VOS1_PLLR_MIN
 #define STM32_PLLR_MAX                      STM32_VOS1_PLLR_MAX
 #define STM32_SYSCLK_MAX                    STM32_VOS1_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS1_HCLK_MAX
 #define STM32_PCLK1_MAX                     STM32_VOS1_PCLK1_MAX
 #define STM32_PCLK2_MAX                     STM32_VOS1_PCLK2_MAX
 #define STM32_ADCCLK_MAX                    STM32_VOS1_ADCCLK_MAX
@@ -690,6 +695,7 @@
 #define STM32_PLLR_MIN                      STM32_VOS2_PLLR_MIN
 #define STM32_PLLR_MAX                      STM32_VOS2_PLLR_MAX
 #define STM32_SYSCLK_MAX                    STM32_VOS2_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS2_HCLK_MAX
 #define STM32_PCLK1_MAX                     STM32_VOS2_PCLK1_MAX
 #define STM32_PCLK2_MAX                     STM32_VOS2_PCLK2_MAX
 #define STM32_ADCCLK_MAX                    STM32_VOS2_ADCCLK_MAX
@@ -1775,6 +1781,11 @@
                                              STM32_CFG_HCLK_VALUE)
 #else
   #define STM32_HCLK_FREQ                   0U
+#endif
+
+#if !((STM32_HCLK_ENABLED != TRUE) || (STM32_HCLK_FREQ <= STM32_HCLK_MAX)) && \
+    !defined(__DOXYGEN__)
+  #error "STM32_HCLK_FREQ above maximum frequency"
 #endif
 
 /*--- Macros and checks for the PCLK1 clock point. -------------------------*/

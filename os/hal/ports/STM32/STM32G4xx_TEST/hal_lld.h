@@ -452,8 +452,8 @@
 #define STM32_HCLK                          STM32_HCLK_FREQ
 #define STM32_PCLK1                         STM32_PCLK1_FREQ
 #define STM32_PCLK2                         STM32_PCLK2_FREQ
-#define STM32_TIMP1CLK                      STM32_PCLK1TIM_FREQ
-#define STM32_TIMP2CLK                      STM32_PCLK2TIM_FREQ
+#define STM32_TIMP1CLK                      hal_lld_get_clock_point(CLK_PCLK1TIM)
+#define STM32_TIMP2CLK                      hal_lld_get_clock_point(CLK_PCLK2TIM)
 #define STM32_MCODIVCLK                     STM32_MCODIV_FREQ
 #define STM32_MCOCLK                        STM32_MCO_FREQ
 #define STM32_LSCOSEL                       STM32_LSCO_BITS
@@ -479,8 +479,8 @@
 #define STM32_48CLK                         STM32_CLK48_FREQ
 #define STM32_ADC12CLK                      STM32_ADC12_FREQ
 #define STM32_ADC345CLK                     STM32_ADC345_FREQ
-#define STM32_TIMCLK1                       STM32_PCLK1TIM_FREQ
-#define STM32_TIMCLK2                       STM32_PCLK2TIM_FREQ
+#define STM32_TIMCLK1                       hal_lld_get_clock_point(CLK_PCLK1TIM)
+#define STM32_TIMCLK2                       hal_lld_get_clock_point(CLK_PCLK2TIM)
 #define STM32_RNGCLK                        STM32_RNG_FREQ
 #define STM32_USBCLK                        STM32_USB_FREQ
 
