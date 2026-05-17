@@ -240,7 +240,7 @@
  * @brief   Enables the LSE clock source.
  */
 #if !defined(STM32_CFG_LSE_ENABLE) || defined(__DOXYGEN__)
-  #define STM32_CFG_LSE_ENABLE              FALSE
+  #define STM32_CFG_LSE_ENABLE              TRUE
 #endif
 
 /**
@@ -1654,6 +1654,20 @@
   #error "invalid STM32_CFG_HSE_ENABLE value specified"
 #endif
 
+#if !((STM32_HSE_ENABLED == TRUE) || !(((STM32_MSIRC0_ENABLED == TRUE)) &&  \
+      (((STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_HSE) ||                    \
+        (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_HSE_FAST))))) &&           \
+    !defined(__DOXYGEN__)
+  #error "HSE not enabled, required by MSIRC0_PLL_HSE_SOURCE"
+#endif
+
+#if !((STM32_HSE_ENABLED == TRUE) || !(((STM32_MSIRC1_ENABLED == TRUE)) &&  \
+      (((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_HSE) ||                    \
+        (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_HSE_FAST))))) &&           \
+    !defined(__DOXYGEN__)
+  #error "HSE not enabled, required by MSIRC1_PLL_HSE_SOURCE"
+#endif
+
 #if !defined(RCC_CFGR1_SW_HSE) && !defined(__DOXYGEN__)
   #error "RCC_CFGR1_SW_HSE not defined"
 #endif
@@ -1752,6 +1766,20 @@
 #if !((STM32_CFG_LSE_ENABLE == TRUE) || (STM32_CFG_LSE_ENABLE == FALSE)) && \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_LSE_ENABLE value specified"
+#endif
+
+#if !((STM32_LSE_ENABLED == TRUE) || !(((STM32_MSIRC0_ENABLED == TRUE)) &&  \
+      (((STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE) ||                    \
+        (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE_FAST))))) &&           \
+    !defined(__DOXYGEN__)
+  #error "LSE not enabled, required by MSIRC0_PLL_LSE_SOURCE"
+#endif
+
+#if !((STM32_LSE_ENABLED == TRUE) || !(((STM32_MSIRC1_ENABLED == TRUE)) &&  \
+      (((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE) ||                    \
+        (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE_FAST))))) &&           \
+    !defined(__DOXYGEN__)
+  #error "LSE not enabled, required by MSIRC1_PLL_LSE_SOURCE"
 #endif
 
 #if !defined(RCC_CFGR1_MCO1SEL_LSE) && !defined(__DOXYGEN__)

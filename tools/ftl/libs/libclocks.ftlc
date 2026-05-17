@@ -545,11 +545,15 @@ function ParseClockPoint(clock, sourceonly)
   /* Clock information.*/
   local clockname = clock.@point[0]
   local clockenable = clock.@enable[0]?string
+  local clockdefault = (clock.@default[0]!"")?string
   local clockdynamic = clock.@dynamic[0]?string
   if clock.description[0]??
     local clockdescr = clock.description[0]?string?word_list?join(" ")
   else
     local clockdescr = "no description"
+  endif
+  if clockdefault != "" && clockenable != "manual"
+    stop ">>>> Enable default specified for non-manual clock point '" + clockname + "'"
   endif
   local clockbits = ParseBoolBits(clock, "clock point '" + clockname + "'")
   local clocklimits = ParseClockLimits(clock)
@@ -588,10 +592,10 @@ function ParseClockPoint(clock, sourceonly)
       if clockinput != ""
         stop ">>>> Conditional frequency " + kind?lower_case + " clock point '" + clockname + "' cannot use an input clock"
       endif
-      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":"", "complex":clockcomplex}
+      return {"type":"source", "subtype":"frequencies", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequencies":ParseFrequencyCases(node, clockname), "input":"", "complex":clockcomplex}
     else
       local clockfreq = node.@frequency[0]?string
-      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput, "complex":clockcomplex}
+      return {"type":"source", "subtype":"fixed", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "frequency":clockfreq, "input":clockinput, "complex":clockcomplex}
     endif
 
   elseif clock.mux[0]??
@@ -608,21 +612,21 @@ function ParseClockPoint(clock, sourceonly)
       endif
       local muxinputs = muxinputs + [{"point":inputpoint, "bits":inputbits, "default":inputdefault}]
     endlist
-    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "default":muxdefault, "description":clockdescr, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
 
   elseif clock.divider[0]??
     /* It is a divided clock.*/
     local divname = clock.divider[0].@name[0]
     local divinput = clock.divider[0].@input[0]?string
     local divparsed = ParseScaler(clock.divider[0])
-    return {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "kind":divparsed["kind"], "data":divparsed["data"]}
+    return {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "kind":divparsed["kind"], "data":divparsed["data"]}
 
   elseif clock.multiplier[0]??
     /* It is a multiplied clock.*/
     local mulname = clock.multiplier[0].@name[0]
     local mulinput = clock.multiplier[0].@input[0]?string
     local mulparsed = ParseScaler(clock.multiplier[0])
-    return {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "kind":mulparsed["kind"], "data":mulparsed["data"]}
+    return {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "kind":mulparsed["kind"], "data":mulparsed["data"]}
   endif
 
   stop ">>>> Unknown clock point type for '" + clockname + "'"
@@ -988,7 +992,11 @@ macro EmitConfigurations()
       local name = precfg + point["name"] + postenable
       local brief = "Enables the " + point["name"] + " clock source."
       local notes = ""
-      local default = "FALSE"
+      if point["enable_default"] != ""
+        local default = point["enable_default"]
+      else
+        local default = "FALSE"
+      endif
     elseif config["type"] == "mux"
       local name = precfg + point["name"] + postchoices
       local brief = "Selects the " + point["name"] + " clock source."

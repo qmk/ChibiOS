@@ -97,9 +97,10 @@ Generic configurations emit explicit settings using the configured
 configuration prefix and their local names, for example `CLOCK_DYNAMIC` becomes
 `STM32_CFG_CLOCK_DYNAMIC`. Manual clock points emit explicit configuration
 settings using the configured configuration prefix and enable suffix, for example
-`STM32_CFG_HSI16_ENABLE`. Auto clock points derive enablement from downstream
-use. Always and never clock points still emit their own enabled flags for
-uniformity.
+`STM32_CFG_HSI16_ENABLE`. Manual clock points default to `FALSE` unless the
+clock point explicitly specifies `default="TRUE"`. Auto clock points derive
+enablement from downstream use. Always and never clock points still emit their
+own enabled flags for uniformity.
 
 Clock definitions with enable-state bits use a clock-level `<bits enabled="..."
 disabled="..."/>` element. Those bits are combined with selection bits when the

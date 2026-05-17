@@ -151,6 +151,14 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="default" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="TRUE"></xs:enumeration>
+            <xs:enumeration value="FALSE"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="dynamic" use="required">
         <xs:simpleType>
           <xs:restriction base="xs:string">
@@ -211,6 +219,14 @@
             <xs:enumeration value="manual"></xs:enumeration>
             <xs:enumeration value="auto"></xs:enumeration>
             <xs:enumeration value="always"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="default" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="TRUE"></xs:enumeration>
+            <xs:enumeration value="FALSE"></xs:enumeration>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

@@ -182,7 +182,8 @@
       <bits enabled="RCC_CR_HSEON" disabled="0U" />
       <limits ref="HSECLK" />
     </source>
-    <source point="LSE" enable="manual" dynamic="no" frequency="STM32_LSECLK">
+    <source point="LSE" enable="manual" default="TRUE" dynamic="no"
+            frequency="STM32_LSECLK">
       <description>low frequency external oscillator</description>
       <bits enabled="RCC_BDCR_LSEON" disabled="0U" />
       <limits ref="LSECLK" />
@@ -1066,6 +1067,22 @@
     <sink name="ADF1_REQUIRED" input="ADF1"
               condition="STM32_CFG_ADF1_REQUIRED == TRUE">
       <description>Local option demands the ADF1 clock when enabled.</description>
+    </sink>
+    <sink name="MSIRC0_PLL_LSE_SOURCE" input="LSE"
+              condition="(STM32_MSIRC0_ENABLED == TRUE) &amp;&amp; ((STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE) || (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE_FAST))">
+      <description>MSIRC0 PLL mode demands LSE when selected as its reference.</description>
+    </sink>
+    <sink name="MSIRC0_PLL_HSE_SOURCE" input="HSE"
+              condition="(STM32_MSIRC0_ENABLED == TRUE) &amp;&amp; ((STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_HSE) || (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_HSE_FAST))">
+      <description>MSIRC0 PLL mode demands HSE when selected as its reference.</description>
+    </sink>
+    <sink name="MSIRC1_PLL_LSE_SOURCE" input="LSE"
+              condition="(STM32_MSIRC1_ENABLED == TRUE) &amp;&amp; ((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE) || (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE_FAST))">
+      <description>MSIRC1 PLL mode demands LSE when selected as its reference.</description>
+    </sink>
+    <sink name="MSIRC1_PLL_HSE_SOURCE" input="HSE"
+              condition="(STM32_MSIRC1_ENABLED == TRUE) &amp;&amp; ((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_HSE) || (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_HSE_FAST))">
+      <description>MSIRC1 PLL mode demands HSE when selected as its reference.</description>
     </sink>
     <sink name="MSIS_IRC0_SOURCE" input="MSIRC0"
               condition="(STM32_MSIS_ENABLED == TRUE) &amp;&amp; ((STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV1) || (STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV2) || (STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV4) || (STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV8))">
