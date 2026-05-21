@@ -45,6 +45,9 @@
 #define I_BIT                               0x80
 #define F_BIT                               0x40
 
+#define CPACR_CP10_CP11_FULL_ACCESS         0x00F00000
+#define FPEXC_EN                            (1 << 30)
+
 /*===========================================================================*/
 /* Module pre-compile time settings.                                         */
 /*===========================================================================*/
@@ -62,6 +65,25 @@
  */
 #if !defined(CRT0_INIT_CORE) || defined(__DOXYGEN__)
 #define CRT0_INIT_CORE                      TRUE
+#endif
+
+/**
+ * @brief   FPU initialization switch.
+ */
+#if !defined(CRT0_INIT_FPU) || defined(__DOXYGEN__)
+#if defined(CORTEX_USE_FPU) || defined(__DOXYGEN__)
+#define CRT0_INIT_FPU                       CORTEX_USE_FPU
+#else
+#define CRT0_INIT_FPU                       FALSE
+#endif
+#endif
+
+/**
+ * @brief   FPU FPSCR register initialization value.
+ * @note    Only used if @p CRT0_INIT_FPU is equal to @p TRUE.
+ */
+#if !defined(CRT0_FPSCR_INIT) || defined(__DOXYGEN__)
+#define CRT0_FPSCR_INIT                     0
 #endif
 
 /**
@@ -136,6 +158,9 @@
 
                 .syntax unified
                 .cpu    cortex-r8
+#if CRT0_INIT_FPU == TRUE
+                .fpu    vfpv3-d16
+#endif
                 .arm
                 .text
 
@@ -153,6 +178,24 @@
                 mcr     p15, 0, \reg, c12, c0, 0
                 dsb
                 isb
+#endif
+                .endm
+
+                .macro  CRT0_SETUP_FPU
+#if CRT0_INIT_FPU == TRUE
+                mrc     p15, 0, r0, c1, c0, 2
+                ldr     r1, =CPACR_CP10_CP11_FULL_ACCESS
+                orr     r0, r0, r1
+                mcr     p15, 0, r0, c1, c0, 2
+                isb
+
+                vmrs    r0, fpexc
+                ldr     r1, =FPEXC_EN
+                orr     r0, r0, r1
+                vmsr    fpexc, r0
+
+                ldr     r0, =CRT0_FPSCR_INIT
+                vmsr    fpscr, r0
 #endif
                 .endm
 
@@ -232,6 +275,7 @@
 _crt0_entry:
                 CRT0_INIT_MODE_STACKS
                 CRT0_SET_VBAR_SYMBOL _vectors
+                CRT0_SETUP_FPU
 
 #if CRT0_INIT_CORE == TRUE
                 bl      __cpu_init
@@ -308,6 +352,7 @@ _crt0_entry:
 _crt0_c\core\()_entry:
                 CRT0_INIT_MODE_STACKS c\core\()_
                 CRT0_SET_VBAR_SYMBOL _vectors
+                CRT0_SETUP_FPU
 
 #if CRT0_INIT_CORE == TRUE
                 bl      __c\core\()_cpu_init
