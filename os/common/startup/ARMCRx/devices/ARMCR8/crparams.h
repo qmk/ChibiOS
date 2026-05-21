@@ -61,6 +61,17 @@
 #define ARMCR8_HAS_MPU          0
 #endif
 
+#define CORTEX_HAS_MPU          ARMCR8_HAS_MPU
+
+/**
+ * @brief   Number of MPU regions.
+ */
+#if !defined(ARMCR8_MPU_REGIONS) || defined(__DOXYGEN__)
+#define ARMCR8_MPU_REGIONS      24
+#endif
+
+#define CORTEX_MPU_REGIONS      ARMCR8_MPU_REGIONS
+
 /**
  * @brief   Instruction cache presence.
  */

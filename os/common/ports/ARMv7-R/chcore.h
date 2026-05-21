@@ -29,6 +29,7 @@
 
 /* Inclusion of the Cortex-R implementation specific parameters.*/
 #include "crparams.h"
+#include "mpu_v7r.h"
 
 /*===========================================================================*/
 /* Module constants.                                                         */
@@ -151,9 +152,311 @@
 #error "the selected core does not have an FPU"
 #endif
 
+/**
+ * @brief   Enables MPU static initialization.
+ * @details The initialization is performed according to the various
+ *          @p PORT_MPU_DRBARx_INIT, @p PORT_MPU_DRSRx_INIT and
+ *          @p PORT_MPU_DRACRx_INIT settings.
+ * @note    The default is disabled because enabling an ARMv7-R MPU without
+ *          a complete memory map prevents all unmatched accesses.
+ */
+#if !defined(PORT_MPU_INITIALIZE) || defined(__DOXYGEN__)
+#define PORT_MPU_INITIALIZE             FALSE
+#elif (PORT_MPU_INITIALIZE == TRUE) && (CORTEX_HAS_MPU == FALSE)
+/* This setting requires an MPU presence check in case it is externally
+   redefined.*/
+#error "the selected core does not have an MPU"
+#endif
+
+/**
+ * @brief   Number of static MPU regions.
+ */
+#if !defined(PORT_MPU_REGIONS) || defined(__DOXYGEN__)
+#define PORT_MPU_REGIONS                CORTEX_MPU_REGIONS
+#endif
+
+/**
+ * @name    MPU Data Region Size and Enable register constants
+ * @{
+ */
+#define PORT_MPU_DRSR_ENABLE            MPU_DRSR_ENABLE
+#define PORT_MPU_DRSR_SIZE(n)           MPU_DRSR_SIZE(n)
+#define PORT_MPU_DRSR_SIZE_256          MPU_DRSR_SIZE_256
+#define PORT_MPU_DRSR_SIZE_512          MPU_DRSR_SIZE_512
+#define PORT_MPU_DRSR_SIZE_1K           MPU_DRSR_SIZE_1K
+#define PORT_MPU_DRSR_SIZE_2K           MPU_DRSR_SIZE_2K
+#define PORT_MPU_DRSR_SIZE_4K           MPU_DRSR_SIZE_4K
+#define PORT_MPU_DRSR_SIZE_8K           MPU_DRSR_SIZE_8K
+#define PORT_MPU_DRSR_SIZE_16K          MPU_DRSR_SIZE_16K
+#define PORT_MPU_DRSR_SIZE_32K          MPU_DRSR_SIZE_32K
+#define PORT_MPU_DRSR_SIZE_64K          MPU_DRSR_SIZE_64K
+#define PORT_MPU_DRSR_SIZE_128K         MPU_DRSR_SIZE_128K
+#define PORT_MPU_DRSR_SIZE_256K         MPU_DRSR_SIZE_256K
+#define PORT_MPU_DRSR_SIZE_512K         MPU_DRSR_SIZE_512K
+#define PORT_MPU_DRSR_SIZE_1M           MPU_DRSR_SIZE_1M
+#define PORT_MPU_DRSR_SIZE_2M           MPU_DRSR_SIZE_2M
+#define PORT_MPU_DRSR_SIZE_4M           MPU_DRSR_SIZE_4M
+#define PORT_MPU_DRSR_SIZE_8M           MPU_DRSR_SIZE_8M
+#define PORT_MPU_DRSR_SIZE_16M          MPU_DRSR_SIZE_16M
+#define PORT_MPU_DRSR_SIZE_32M          MPU_DRSR_SIZE_32M
+#define PORT_MPU_DRSR_SIZE_64M          MPU_DRSR_SIZE_64M
+#define PORT_MPU_DRSR_SIZE_128M         MPU_DRSR_SIZE_128M
+#define PORT_MPU_DRSR_SIZE_256M         MPU_DRSR_SIZE_256M
+#define PORT_MPU_DRSR_SIZE_512M         MPU_DRSR_SIZE_512M
+#define PORT_MPU_DRSR_SIZE_1G           MPU_DRSR_SIZE_1G
+#define PORT_MPU_DRSR_SIZE_2G           MPU_DRSR_SIZE_2G
+#define PORT_MPU_DRSR_SIZE_4G           MPU_DRSR_SIZE_4G
+#define PORT_MPU_DRSR_SRD(n)            MPU_DRSR_SRD(n)
+/** @} */
+
+/**
+ * @name    MPU Data Region Access Control register constants
+ * @{
+ */
+#define PORT_MPU_DRACR_B                MPU_DRACR_B
+#define PORT_MPU_DRACR_C                MPU_DRACR_C
+#define PORT_MPU_DRACR_S                MPU_DRACR_S
+#define PORT_MPU_DRACR_TEX(n)           MPU_DRACR_TEX(n)
+#define PORT_MPU_DRACR_AP(n)            MPU_DRACR_AP(n)
+#define PORT_MPU_DRACR_XN               MPU_DRACR_XN
+#define PORT_MPU_DRACR_AP_NA_NA         MPU_DRACR_AP_NA_NA
+#define PORT_MPU_DRACR_AP_RW_NA         MPU_DRACR_AP_RW_NA
+#define PORT_MPU_DRACR_AP_RW_RO         MPU_DRACR_AP_RW_RO
+#define PORT_MPU_DRACR_AP_RW_RW         MPU_DRACR_AP_RW_RW
+#define PORT_MPU_DRACR_AP_RO_NA         MPU_DRACR_AP_RO_NA
+#define PORT_MPU_DRACR_AP_RO_RO         MPU_DRACR_AP_RO_RO
+/** @} */
+
+/**
+ * @brief   MPU Data Region Base Address register initializer.
+ */
+#define PORT_MPU_DRBAR(base)            MPU_DRBAR_ADDR(base)
+
+#if !defined(PORT_MPU_DRBAR0_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR0_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR0_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR0_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR0_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR0_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR1_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR1_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR1_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR1_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR1_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR1_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR2_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR2_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR2_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR2_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR2_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR2_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR3_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR3_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR3_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR3_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR3_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR3_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR4_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR4_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR4_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR4_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR4_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR4_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR5_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR5_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR5_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR5_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR5_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR5_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR6_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR6_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR6_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR6_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR6_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR6_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR7_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR7_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR7_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR7_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR7_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR7_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR8_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR8_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR8_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR8_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR8_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR8_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR9_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR9_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRSR9_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR9_INIT             0U
+#endif
+#if !defined(PORT_MPU_DRACR9_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR9_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRBAR10_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR10_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR10_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR10_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR10_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR10_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR11_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR11_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR11_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR11_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR11_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR11_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR12_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR12_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR12_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR12_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR12_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR12_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR13_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR13_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR13_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR13_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR13_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR13_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR14_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR14_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR14_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR14_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR14_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR14_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR15_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR15_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR15_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR15_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR15_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR15_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR16_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR16_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR16_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR16_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR16_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR16_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR17_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR17_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR17_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR17_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR17_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR17_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR18_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR18_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR18_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR18_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR18_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR18_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR19_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR19_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR19_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR19_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR19_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR19_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR20_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR20_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR20_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR20_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR20_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR20_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR21_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR21_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR21_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR21_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR21_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR21_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR22_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR22_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR22_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR22_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR22_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR22_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRBAR23_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRBAR23_INIT           0U
+#endif
+#if !defined(PORT_MPU_DRSR23_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRSR23_INIT            0U
+#endif
+#if !defined(PORT_MPU_DRACR23_INIT) || defined(__DOXYGEN__)
+#define PORT_MPU_DRACR23_INIT           0U
+#endif
+
 /*===========================================================================*/
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
+
+#if (PORT_MPU_INITIALIZE == TRUE) &&                                    \
+    ((PORT_MPU_REGIONS < 1U) || (PORT_MPU_REGIONS > 24U))
+#error "invalid PORT_MPU_REGIONS value"
+#endif
 
 /* Inclusion of SMP support, if enabled.*/
 #if (CH_CFG_SMP_MODE == TRUE) || defined(__DOXYGEN__)
@@ -181,24 +484,19 @@
 #if !defined(_FROM_ASM_)
 
 /**
- * @brief   Generic ARM register.
- */
-typedef void *regarm_t;
-
-/**
  * @brief   Interrupt saved context.
  * @details This structure represents the stack frame saved during an
  *          interrupt handler when preemption is required.
  */
 struct port_extctx {
-  regarm_t              spsr_irq;
-  regarm_t              lr_irq;
-  regarm_t              r0;
-  regarm_t              r1;
-  regarm_t              r2;
-  regarm_t              r3;
-  regarm_t              r12;
-  regarm_t              lr_usr;
+  uint32_t              spsr_irq;
+  uint32_t              lr_irq;
+  uint32_t              r0;
+  uint32_t              r1;
+  uint32_t              r2;
+  uint32_t              r3;
+  uint32_t              r12;
+  uint32_t              lr_usr;
 };
 
 /**
@@ -209,17 +507,17 @@ struct port_extctx {
 struct port_intctx {
 #if (CORTEX_USE_FPU == TRUE) || defined(__DOXYGEN__)
   uint64_t              d[16];
-  regarm_t              fpscr;
+  uint32_t              fpscr;
 #endif
-  regarm_t              r4;
-  regarm_t              r5;
-  regarm_t              r6;
-  regarm_t              r7;
-  regarm_t              r8;
-  regarm_t              r9;
-  regarm_t              r10;
-  regarm_t              r11;
-  regarm_t              lr;
+  uint32_t              r4;
+  uint32_t              r5;
+  uint32_t              r6;
+  uint32_t              r7;
+  uint32_t              r8;
+  uint32_t              r9;
+  uint32_t              r10;
+  uint32_t              r11;
+  uint32_t              lr;
 };
 
 /**
@@ -258,7 +556,7 @@ struct port_context {
  */
 #if (CORTEX_USE_FPU == TRUE) || defined(__DOXYGEN__)
 #define __PORT_SETUP_CONTEXT_FPU(tp)                                        \
-  (tp)->ctx.sp->fpscr = (regarm_t)0
+  (tp)->ctx.sp->fpscr = 0U
 #else
 #define __PORT_SETUP_CONTEXT_FPU(tp)
 #endif
@@ -272,9 +570,9 @@ struct port_context {
   (tp)->ctx.sp = (struct port_intctx *)((uint8_t *)(wtop) -                 \
                                         sizeof (struct port_intctx));       \
   __PORT_SETUP_CONTEXT_FPU(tp);                                             \
-  (tp)->ctx.sp->r4 = (regarm_t)(pf);                                        \
-  (tp)->ctx.sp->r5 = (regarm_t)(arg);                                       \
-  (tp)->ctx.sp->lr = (regarm_t)(__port_thread_start);                       \
+  (tp)->ctx.sp->r4 = (uint32_t)(pf);                                        \
+  (tp)->ctx.sp->r5 = (uint32_t)(arg);                                       \
+  (tp)->ctx.sp->lr = (uint32_t)__port_thread_start;                         \
 }
 
 /**
@@ -348,6 +646,9 @@ extern "C" {
   void __port_switch_arm(thread_t *ntp, thread_t *otp);
   void __port_thread_start(void);
   bool __port_irq_dispatch(void);
+#if PORT_MPU_INITIALIZE == TRUE
+  void __port_mpu_init(void);
+#endif
 #ifdef __cplusplus
 }
 #endif
@@ -366,6 +667,10 @@ static inline void port_init(os_instance_t *oip) {
   /* Starting in a known IRQ configuration.*/
   __asm volatile ("cpsid   i" : : : "memory");
   __asm volatile ("cpsie   f" : : : "memory");
+
+#if PORT_MPU_INITIALIZE == TRUE
+  __port_mpu_init();
+#endif
 
 #if defined(port_smp_init)
   port_smp_init(oip);
