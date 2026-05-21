@@ -120,7 +120,7 @@ include $(CHIBIOS)/os/common/startup/ARMCRx/compilers/GCC/mk/startup_armcr8.mk
 # HAL-OSAL files (optional).
 #include $(CHIBIOS)/os/hal/hal.mk
 #include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
-# RTOS files (optional, disabled until the ARMv7-R port is available).
+# RTOS files (optional, disabled until IRQ-controller integration exists).
 #include $(CHIBIOS)/os/rt/rt.mk
 #include $(CHIBIOS)/os/common/ports/ARMv7-R/compilers/GCC/mk/port.mk
 # Auto-build files in ./source recursively.
