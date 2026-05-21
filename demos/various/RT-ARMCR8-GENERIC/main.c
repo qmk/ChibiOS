@@ -14,21 +14,14 @@
     limitations under the License.
 */
 
-#include <stdint.h>
+#include "ch.h"
 
-#include "armcr8.h"
+static volatile uint32_t thread_counter;
+static volatile uint32_t main_counter;
 
 /*
- * RTOS include, disabled until the ARMv7-R port is available.
+ * RTOS example thread.
  */
-/* #include "ch.h" */
-
-static volatile uint32_t seconds_counter;
-
-/*
- * RTOS example thread, disabled until the ARMv7-R port is available.
- */
-/*
 static THD_WORKING_AREA(waThread1, 128);
 static THD_FUNCTION(Thread1, arg) {
 
@@ -37,11 +30,10 @@ static THD_FUNCTION(Thread1, arg) {
   chRegSetThreadName("counter");
 
   while (true) {
-    chThdSleepMilliseconds(1000);
-    seconds_counter++;
+    thread_counter++;
+    chThdYield();
   }
 }
-*/
 
 /*
  * Application entry point.
@@ -49,9 +41,9 @@ static THD_FUNCTION(Thread1, arg) {
 int main(void) {
 
   /*
-   * System initializations, disabled until the ARMv7-R port is available.
+   * System initialization, the main() function becomes a thread and the
+   * RTOS is active.
    */
-  /*
   chSysInit();
 
   (void) chThdCreateStatic(waThread1,
@@ -59,9 +51,9 @@ int main(void) {
                            NORMALPRIO,
                            Thread1,
                            NULL);
-  */
 
-  while (1) {
-    seconds_counter++;
+  while (true) {
+    main_counter++;
+    chThdYield();
   }
 }

@@ -159,6 +159,23 @@
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
 
+/* Inclusion of SMP support, if enabled.*/
+#if (CH_CFG_SMP_MODE == TRUE) || defined(__DOXYGEN__)
+#if !defined(_FROM_ASM_)
+#if !defined(__CHIBIOS_RT__)
+#error "SMP is supported in RT only"
+#endif
+
+#include "chcoresmp.h"
+
+#if !defined(PORT_CORES_NUMBER)
+#error "PORT_CORES_NUMBER not defined in chcoresmp.h"
+#endif
+
+#endif
+#else /* CH_CFG_SMP_MODE != TRUE */
+#endif /* CH_CFG_SMP_MODE != TRUE */
+
 /*===========================================================================*/
 /* Module data structures and types.                                         */
 /*===========================================================================*/
@@ -338,6 +355,10 @@ static inline void port_init(os_instance_t *oip) {
   /* Starting in a known IRQ configuration.*/
   __asm volatile ("cpsid   i" : : : "memory");
   __asm volatile ("cpsie   f" : : : "memory");
+
+#if defined(port_smp_init)
+  port_smp_init(oip);
+#endif
 }
 
 /**
@@ -396,6 +417,9 @@ static inline bool port_is_isr_context(void) {
 static inline void port_lock(void) {
 
   __asm volatile ("cpsid   i" : : : "memory");
+#if CH_CFG_SMP_MODE == TRUE
+  port_spinlock_take();
+#endif
 }
 
 /**
@@ -404,23 +428,32 @@ static inline void port_lock(void) {
  */
 static inline void port_unlock(void) {
 
+#if CH_CFG_SMP_MODE == TRUE
+  port_spinlock_release();
+#endif
   __asm volatile ("cpsie   if" : : : "memory");
 }
 
 /**
  * @brief   Kernel-lock action from an interrupt handler.
- * @note    Empty in this port.
+ * @note    Empty in single-core configurations.
  */
 static inline void port_lock_from_isr(void) {
 
+#if CH_CFG_SMP_MODE == TRUE
+  port_spinlock_take();
+#endif
 }
 
 /**
  * @brief   Kernel-unlock action from an interrupt handler.
- * @note    Empty in this port.
+ * @note    Empty in single-core configurations.
  */
 static inline void port_unlock_from_isr(void) {
 
+#if CH_CFG_SMP_MODE == TRUE
+  port_spinlock_release();
+#endif
 }
 
 /**
