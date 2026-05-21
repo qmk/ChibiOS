@@ -31,7 +31,7 @@ __sys_stack_size__ = DEFINED(__sys_stack_size__) ? __sys_stack_size__ : 0x800;
 MEMORY
 {
     flash0 (rx) : org = DEFINED(FLASH_ORIGIN) ? FLASH_ORIGIN : 0x00000000,
-                  len = DEFINED(FLASH_LEN) ? FLASH_LEN : 256k
+                  len = DEFINED(FLASH_LEN) ? FLASH_LEN : 1M
     flash1 (rx) : org = 0x00000000, len = 0
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
@@ -39,7 +39,7 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    ram0   (wx) : org = DEFINED(RAM_ORIGIN) ? RAM_ORIGIN : 0x10000000,
+    ram0   (wx) : org = DEFINED(RAM_ORIGIN) ? RAM_ORIGIN : 0x00100000,
                   len = DEFINED(RAM_LEN) ? RAM_LEN : 256k
     ram1   (wx) : org = 0x00000000, len = 0
     ram2   (wx) : org = 0x00000000, len = 0

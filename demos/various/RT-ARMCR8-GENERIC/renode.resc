@@ -1,0 +1,17 @@
+:name: ChibiOS ARMCR8 Generic
+:description: Runs the generic ARM Cortex-R8 ChibiOS/RT demo on Renode.
+
+using sysbus
+
+$name?="ChibiOS ARMCR8 Generic"
+$elf?=$ORIGIN/build/ch.elf
+
+mach create $name
+machine LoadPlatformDescription @platforms/cpus/cortex-r8.repl
+
+macro reset
+"""
+    sysbus LoadELF $elf
+"""
+
+runMacro $reset
