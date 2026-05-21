@@ -185,7 +185,9 @@ CPPWARN = -Wall -Wextra -Wundef
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -DARMCR8_HAS_GIC=1                                   \
+        -DGIC_INTERFACE_BASE=0xAE000100U                      \
+        -DGIC_DISTRIBUTOR_BASE=0xAE001000U
 
 # The generic Renode Cortex-R8 model has an FPU. When the demo is built with
 # USE_FPU enabled then declare the generic device as FPU-capable.
