@@ -187,6 +187,12 @@ CPPWARN = -Wall -Wextra -Wundef
 # List all user C define here, like -D_DEBUG=1
 UDEFS =
 
+# The generic Renode Cortex-R8 model has an FPU. When the demo is built with
+# USE_FPU enabled then declare the generic device as FPU-capable.
+ifneq ($(USE_FPU),no)
+  UDEFS += -DARMCR8_HAS_FPU=1
+endif
+
 # Define ASM defines here
 UADEFS =
 

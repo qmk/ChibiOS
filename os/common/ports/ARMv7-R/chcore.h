@@ -151,10 +151,6 @@
 #error "the selected core does not have an FPU"
 #endif
 
-#if CORTEX_USE_FPU == TRUE
-#error "ARMv7-R FPU context switching is not implemented yet"
-#endif
-
 /*===========================================================================*/
 /* Derived constants and error checks.                                       */
 /*===========================================================================*/
@@ -211,6 +207,10 @@ struct port_extctx {
  *          switch.
  */
 struct port_intctx {
+#if (CORTEX_USE_FPU == TRUE) || defined(__DOXYGEN__)
+  uint64_t              d[16];
+  regarm_t              fpscr;
+#endif
   regarm_t              r4;
   regarm_t              r5;
   regarm_t              r6;
@@ -254,6 +254,16 @@ struct port_context {
 #define PORT_THD_FUNCTION(tname, arg) void tname(void *arg)
 
 /**
+ * @brief   Initialization of FPU part of thread context.
+ */
+#if (CORTEX_USE_FPU == TRUE) || defined(__DOXYGEN__)
+#define __PORT_SETUP_CONTEXT_FPU(tp)                                        \
+  (tp)->ctx.sp->fpscr = (regarm_t)0
+#else
+#define __PORT_SETUP_CONTEXT_FPU(tp)
+#endif
+
+/**
  * @brief   Platform dependent part of the @p chThdCreateI() API.
  * @details This code usually setup the context switching frame represented
  *          by an @p port_intctx structure.
@@ -261,6 +271,7 @@ struct port_context {
 #define PORT_SETUP_CONTEXT(tp, wbase, wtop, pf, arg) {                      \
   (tp)->ctx.sp = (struct port_intctx *)((uint8_t *)(wtop) -                 \
                                         sizeof (struct port_intctx));       \
+  __PORT_SETUP_CONTEXT_FPU(tp);                                             \
   (tp)->ctx.sp->r4 = (regarm_t)(pf);                                        \
   (tp)->ctx.sp->r5 = (regarm_t)(arg);                                       \
   (tp)->ctx.sp->lr = (regarm_t)(__port_thread_start);                       \

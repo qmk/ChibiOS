@@ -18,6 +18,11 @@
 
 static volatile uint32_t thread_counter;
 static volatile uint32_t main_counter;
+#if CORTEX_USE_FPU == TRUE
+static volatile uint32_t fpu_thread_counter;
+static volatile uint32_t fpu_main_counter;
+static volatile uint32_t fpu_error_counter;
+#endif
 
 /*
  * RTOS example thread.
@@ -35,10 +40,47 @@ static THD_FUNCTION(Thread1, arg) {
   }
 }
 
+#if CORTEX_USE_FPU == TRUE
+/*
+ * FPU context test thread.
+ */
+static THD_WORKING_AREA(waThread2, 256);
+static THD_FUNCTION(Thread2, arg) {
+  register double marker asm ("d8");
+  double expected;
+
+  (void)arg;
+
+  chRegSetThreadName("fpu");
+
+  marker = 1000.0;
+  expected = 1000.0;
+
+  while (true) {
+    __asm volatile ("" : "+w" (marker));
+    chThdYield();
+    __asm volatile ("" : "+w" (marker));
+
+    if (marker != expected) {
+      fpu_error_counter++;
+      marker = expected;
+    }
+
+    marker += 1.0;
+    expected += 1.0;
+    fpu_thread_counter++;
+  }
+}
+#endif
+
 /*
  * Application entry point.
  */
 int main(void) {
+#if CORTEX_USE_FPU == TRUE
+  register double marker asm ("d8");
+  double expected;
+#endif
 
   /*
    * System initialization, the main() function becomes a thread and the
@@ -52,8 +94,34 @@ int main(void) {
                            Thread1,
                            NULL);
 
+#if CORTEX_USE_FPU == TRUE
+  (void) chThdCreateStatic(waThread2,
+                           sizeof(waThread2),
+                           NORMALPRIO,
+                           Thread2,
+                           NULL);
+
+  marker = 2000.0;
+  expected = 2000.0;
+#endif
+
   while (true) {
+#if CORTEX_USE_FPU == TRUE
+    __asm volatile ("" : "+w" (marker));
+#endif
     main_counter++;
     chThdYield();
+#if CORTEX_USE_FPU == TRUE
+    __asm volatile ("" : "+w" (marker));
+
+    if (marker != expected) {
+      fpu_error_counter++;
+      marker = expected;
+    }
+
+    marker += 1.0;
+    expected += 1.0;
+    fpu_main_counter++;
+#endif
   }
 }

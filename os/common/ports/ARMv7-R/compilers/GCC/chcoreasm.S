@@ -68,8 +68,18 @@
                 .global __port_switch_arm
 __port_switch_arm:
                 stmfd   sp!, {r4, r5, r6, r7, r8, r9, r10, r11, lr}
+#if CORTEX_USE_FPU == TRUE
+                vmrs    r2, fpscr
+                stmfd   sp!, {r2}
+                vstmdb  sp!, {d0-d15}
+#endif
                 str     sp, [r1, #CONTEXT_OFFSET]
                 ldr     sp, [r0, #CONTEXT_OFFSET]
+#if CORTEX_USE_FPU == TRUE
+                vldmia  sp!, {d0-d15}
+                ldmfd   sp!, {r2}
+                vmsr    fpscr, r2
+#endif
                 ldmfd   sp!, {r4, r5, r6, r7, r8, r9, r10, r11, pc}
 
 /*
