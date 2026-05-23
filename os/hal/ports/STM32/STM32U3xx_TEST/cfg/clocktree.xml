@@ -875,18 +875,39 @@
     <clock point="I3C2" enable="auto" dynamic="no">
       <description>I3C2 clock</description>
       <mux name="I3C2">
-        <input point="PCLK3" default="yes"><bits value="RCC_CCIPR1_I3C2SEL_PCLK3" /></input>
+        <input point="PCLK2" default="yes"><bits value="RCC_CCIPR1_I3C2SEL_PCLK2" /></input>
         <input point="MSIK"><bits value="RCC_CCIPR1_I3C2SEL_MSIK" /></input>
       </mux>
     </clock>
-    <clock point="ADCDAC" enable="auto" dynamic="no">
-      <description>ADC and DAC clock</description>
-      <limits ref="ADCCLK" />
+    <clock point="ADCDACICLK" enable="auto" dynamic="no">
+      <description>ADC and DAC intermediate clock</description>
       <mux name="ADCDAC">
         <input point="HCLK" default="yes"><bits value="RCC_CCIPR2_ADCDACSEL_HCLK" /></input>
         <input point="HSE"><bits value="RCC_CCIPR2_ADCDACSEL_HSE" /></input>
         <input point="MSIK"><bits value="RCC_CCIPR2_ADCDACSEL_MSIK" /></input>
       </mux>
+    </clock>
+    <clock point="ADCDACPRE" enable="auto" dynamic="no">
+      <description>ADC and DAC prescaled clock</description>
+      <divider name="ADCDACPRE" input="ADCDACICLK">
+        <choices>
+          <choice item="ICLK" value="1"><bits value="RCC_CCIPR2_ADCDACPRE_ICLK" /></choice>
+          <choice item="ICLKDIV2" value="2"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV2" /></choice>
+          <choice item="ICLKDIV4" value="4"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV4" /></choice>
+          <choice item="ICLKDIV8" value="8"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV8" /></choice>
+          <choice item="ICLKDIV16" value="16"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV16" /></choice>
+          <choice item="ICLKDIV32" value="32"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV32" /></choice>
+          <choice item="ICLKDIV64" value="64"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV64" /></choice>
+          <choice item="ICLKDIV128" value="128"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV128" /></choice>
+          <choice item="ICLKDIV256" value="256"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV256" /></choice>
+          <choice item="ICLKDIV512" value="512"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV512" /></choice>
+        </choices>
+      </divider>
+    </clock>
+    <clock point="ADCDAC" enable="auto" dynamic="no">
+      <description>ADC and DAC clock</description>
+      <limits ref="ADCCLK" />
+      <derived input="ADCDACPRE" frequency="%I%" />
     </clock>
     <clock point="DAC1SH" enable="auto" dynamic="no">
       <description>DAC1 sample and hold clock</description>

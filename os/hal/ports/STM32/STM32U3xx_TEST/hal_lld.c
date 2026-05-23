@@ -241,7 +241,8 @@ __STATIC_INLINE void hal_lld_set_static_clocks(void) {
                  true);
   halRegWrite32X(&RCC->CCIPR2,
                  STM32_OCTOSPI_BITS | STM32_DAC1SH_BITS |
-                 STM32_ADCDAC_BITS  | STM32_RNG_BITS    |
+                 STM32_ADCDACPRE_BITS |
+                 STM32_ADCDACICLK_BITS | STM32_RNG_BITS |
                  STM32_SAI1_BITS    | STM32_SPI3_BITS   |
                  STM32_ADF1_BITS,
                  true);

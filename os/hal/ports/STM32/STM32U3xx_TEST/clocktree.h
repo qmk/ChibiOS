@@ -564,22 +564,29 @@
 /**
  * @brief   Selects the I3C2 clock source.
  * @note    Allowed sources:
- *          - PCLK3.
+ *          - PCLK2.
  *          - MSIK.
  */
 #if !defined(STM32_CFG_I3C2_SEL) || defined(__DOXYGEN__)
-  #define STM32_CFG_I3C2_SEL                RCC_CCIPR1_I3C2SEL_PCLK3
+  #define STM32_CFG_I3C2_SEL                RCC_CCIPR1_I3C2SEL_PCLK2
 #endif
 
 /**
- * @brief   Selects the ADCDAC clock source.
+ * @brief   Selects the ADCDACICLK clock source.
  * @note    Allowed sources:
  *          - HCLK.
  *          - HSE.
  *          - MSIK.
  */
-#if !defined(STM32_CFG_ADCDAC_SEL) || defined(__DOXYGEN__)
-  #define STM32_CFG_ADCDAC_SEL              RCC_CCIPR2_ADCDACSEL_HCLK
+#if !defined(STM32_CFG_ADCDACICLK_SEL) || defined(__DOXYGEN__)
+  #define STM32_CFG_ADCDACICLK_SEL          RCC_CCIPR2_ADCDACSEL_HCLK
+#endif
+
+/**
+ * @brief   Configures the ADCDACPRE clock divider value.
+ */
+#if !defined(STM32_CFG_ADCDACPRE_VALUE) || defined(__DOXYGEN__)
+  #define STM32_CFG_ADCDACPRE_VALUE         1
 #endif
 
 /**
@@ -1143,8 +1150,8 @@
                                               (STM32_CFG_I3C1_SEL == RCC_CCIPR1_I3C1SEL_MSIK)) || \
                                              ((STM32_I3C2_ENABLED == TRUE) && \
                                               (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_MSIK)) || \
-                                             ((STM32_ADCDAC_ENABLED == TRUE) && \
-                                              (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)) || \
+                                             ((STM32_ADCDACICLK_ENABLED == TRUE) && \
+                                              (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)) || \
                                              ((STM32_RNG_ENABLED == TRUE) && \
                                               (STM32_CFG_RNG_SEL == RCC_CCIPR2_RNGSEL_MSIK)) || \
                                              ((STM32_FDCAN1_ENABLED == TRUE) && \
@@ -1379,6 +1386,16 @@
  * @brief   I3C2 clock derived enable state.
  */
 #define STM32_I3C2_ENABLED                  ((STM32_CFG_I3C2_REQUIRED == TRUE))
+
+/**
+ * @brief   ADCDACICLK clock derived enable state.
+ */
+#define STM32_ADCDACICLK_ENABLED            ((STM32_ADCDACPRE_ENABLED == TRUE))
+
+/**
+ * @brief   ADCDACPRE clock derived enable state.
+ */
+#define STM32_ADCDACPRE_ENABLED             ((STM32_ADCDAC_ENABLED == TRUE))
 
 /**
  * @brief   ADCDAC clock derived enable state.
@@ -1715,10 +1732,10 @@
 #if !defined(RCC_CCIPR2_ADCDACSEL_HSE) && !defined(__DOXYGEN__)
   #error "RCC_CCIPR2_ADCDACSEL_HSE not defined"
 #endif
-#if !((STM32_HSE_ENABLED == TRUE) || !((STM32_ADCDAC_ENABLED == TRUE) &&    \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HSE))) &&               \
+#if !((STM32_HSE_ENABLED == TRUE) || !((STM32_ADCDACICLK_ENABLED == TRUE) && \
+      (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HSE))) &&           \
     !defined(__DOXYGEN__)
-  #error "HSE not enabled, required by ADCDAC"
+  #error "HSE not enabled, required by ADCDACICLK"
 #endif
 
 #if !defined(RCC_CCIPR2_SAI1SEL_HSE) && !defined(__DOXYGEN__)
@@ -4494,8 +4511,8 @@
 /**
  * @brief   I3C2 clock register bits.
  */
-#if (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_PCLK3) || defined(__DOXYGEN__)
-  #define STM32_I3C2_BITS                   RCC_CCIPR1_I3C2SEL_PCLK3
+#if (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_PCLK2) || defined(__DOXYGEN__)
+  #define STM32_I3C2_BITS                   RCC_CCIPR1_I3C2SEL_PCLK2
 #elif (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_MSIK)
   #define STM32_I3C2_BITS                   RCC_CCIPR1_I3C2SEL_MSIK
 #else
@@ -4506,9 +4523,9 @@
  * @brief   I3C2 clock clock point.
  */
 #if ((STM32_I3C2_ENABLED == TRUE) && \
-     (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_PCLK3)) || \
+     (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_PCLK2)) || \
     defined(__DOXYGEN__)
-  #define STM32_I3C2_FREQ                   STM32_PCLK3_FREQ
+  #define STM32_I3C2_FREQ                   STM32_PCLK2_FREQ
 #elif (STM32_I3C2_ENABLED == TRUE) && \
       (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_MSIK)
   #define STM32_I3C2_FREQ                   STM32_MSIK_FREQ
@@ -4516,59 +4533,136 @@
   #define STM32_I3C2_FREQ                   0U
 #endif
 
+/*--- Macros and checks for the ADCDACICLK clock point. --------------------*/
+
+/**
+ * @brief   ADCDACICLK clock register bits.
+ */
+#if (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HCLK) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_HCLK
+#elif (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HSE)
+  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_HSE
+#elif (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)
+  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_MSIK
+#else
+  #error "invalid STM32_CFG_ADCDACICLK_SEL value specified"
+#endif
+
+/**
+ * @brief   ADC and DAC intermediate clock clock point.
+ */
+#if ((STM32_ADCDACICLK_ENABLED == TRUE) && \
+     (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HCLK)) || \
+    defined(__DOXYGEN__)
+  #define STM32_ADCDACICLK_FREQ             STM32_HCLK_FREQ
+#elif (STM32_ADCDACICLK_ENABLED == TRUE) && \
+      (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HSE)
+  #define STM32_ADCDACICLK_FREQ             STM32_HSE_FREQ
+#elif (STM32_ADCDACICLK_ENABLED == TRUE) && \
+      (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)
+  #define STM32_ADCDACICLK_FREQ             STM32_MSIK_FREQ
+#else
+  #define STM32_ADCDACICLK_FREQ             0U
+#endif
+
+/*--- Macros and checks for the ADCDACPRE clock point. ---------------------*/
+
+/**
+ * @brief   ADCDACPRE clock register bits.
+ */
+#if (STM32_CFG_ADCDACPRE_VALUE == 1) || defined(__DOXYGEN__)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLK
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 2)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV2
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 4)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV4
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 8)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV8
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 16)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV16
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 32)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV32
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 64)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV64
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 128)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV128
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 256)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV256
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#elif (STM32_CFG_ADCDACPRE_VALUE == 512)
+  #if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACPRE_BITS            RCC_CCIPR2_ADCDACPRE_ICLKDIV512
+  #else
+    #define STM32_ADCDACPRE_BITS            0U
+  #endif
+#else
+  #error "invalid STM32_CFG_ADCDACPRE_VALUE value specified"
+#endif
+
+/**
+ * @brief   ADC and DAC prescaled clock clock point.
+ */
+#if (STM32_ADCDACPRE_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_ADCDACPRE_FREQ              (STM32_ADCDACICLK_FREQ /        \
+                                             STM32_CFG_ADCDACPRE_VALUE)
+#else
+  #define STM32_ADCDACPRE_FREQ              0U
+#endif
+
 /*--- Macros and checks for the ADCDAC clock point. ------------------------*/
 
 /**
  * @brief   ADCDAC clock register bits.
  */
-#if (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HCLK) || defined(__DOXYGEN__)
-  #define STM32_ADCDAC_BITS                 RCC_CCIPR2_ADCDACSEL_HCLK
-#elif (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HSE)
-  #define STM32_ADCDAC_BITS                 RCC_CCIPR2_ADCDACSEL_HSE
-#elif (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)
-  #define STM32_ADCDAC_BITS                 RCC_CCIPR2_ADCDACSEL_MSIK
-#else
-  #error "invalid STM32_CFG_ADCDAC_SEL value specified"
-#endif
+#define STM32_ADCDAC_BITS                   0U
 
 /**
  * @brief   ADC and DAC clock clock point.
  */
-#if ((STM32_ADCDAC_ENABLED == TRUE) && \
-     (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HCLK)) || \
-    defined(__DOXYGEN__)
-  #define STM32_ADCDAC_FREQ                 STM32_HCLK_FREQ
-#elif (STM32_ADCDAC_ENABLED == TRUE) && \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HSE)
-  #define STM32_ADCDAC_FREQ                 STM32_HSE_FREQ
-#elif (STM32_ADCDAC_ENABLED == TRUE) && \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)
-  #define STM32_ADCDAC_FREQ                 STM32_MSIK_FREQ
+#if (STM32_ADCDAC_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_ADCDAC_FREQ                 STM32_ADCDACPRE_FREQ
 #else
   #define STM32_ADCDAC_FREQ                 0U
 #endif
 
-#if !defined(RCC_CCIPR2_ADCDACSEL_HCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR2_ADCDACSEL_HCLK not defined"
-#endif
-#if !(!((STM32_ADCDAC_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HCLK)) ||               \
-     (STM32_HCLK_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
-  #error "STM32_ADCDAC_FREQ above maximum frequency"
-#endif
-
-#if !(!((STM32_ADCDAC_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_HSE)) ||                \
-     (STM32_HSE_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
-  #error "STM32_ADCDAC_FREQ above maximum frequency"
-#endif
-
-#if !defined(RCC_CCIPR2_ADCDACSEL_MSIK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR2_ADCDACSEL_MSIK not defined"
-#endif
-#if !(!((STM32_ADCDAC_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_ADCDAC_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)) ||               \
-     (STM32_MSIK_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
+#if !((STM32_ADCDAC_ENABLED != TRUE) ||                                     \
+     (STM32_ADCDAC_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_ADCDAC_FREQ above maximum frequency"
 #endif
 
@@ -4830,6 +4924,8 @@
 #define STM32_I2C3_CLOCK                    STM32_I2C3_FREQ
 #define STM32_I3C1_CLOCK                    STM32_I3C1_FREQ
 #define STM32_I3C2_CLOCK                    STM32_I3C2_FREQ
+#define STM32_ADCDACICLK_CLOCK              STM32_ADCDACICLK_FREQ
+#define STM32_ADCDACPRE_CLOCK               STM32_ADCDACPRE_FREQ
 #define STM32_ADCDAC_CLOCK                  STM32_ADCDAC_FREQ
 #define STM32_DAC1SH_CLOCK                  STM32_DAC1SH_FREQ
 #define STM32_RNG_CLOCK                     STM32_RNG_FREQ
