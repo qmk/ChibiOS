@@ -330,7 +330,7 @@
 #define RCC_CCIPR1_I2C2SEL_MSIK             RCC_CCIPR1_I2C2SEL_FIELD(1U)
 
 #define RCC_CCIPR1_I3C2SEL_FIELD(n)         ((n) << RCC_CCIPR1_I3C2SEL_Pos)
-#define RCC_CCIPR1_I3C2SEL_PCLK3            RCC_CCIPR1_I3C2SEL_FIELD(0U)
+#define RCC_CCIPR1_I3C2SEL_PCLK2            RCC_CCIPR1_I3C2SEL_FIELD(0U)
 #define RCC_CCIPR1_I3C2SEL_MSIK             RCC_CCIPR1_I3C2SEL_FIELD(1U)
 
 #define RCC_CCIPR1_SPI2SEL_FIELD(n)         ((n) << RCC_CCIPR1_SPI2SEL_Pos)
@@ -1010,7 +1010,7 @@
  * @brief   I3C2 clock source.
  */
 #if !defined(STM32_I3C2SEL) || defined(__DOXYGEN__)
-#define STM32_I3C2SEL                       RCC_CCIPR1_I3C2SEL_PCLK3
+#define STM32_I3C2SEL                       RCC_CCIPR1_I3C2SEL_PCLK2
 #endif
 
 /**
@@ -2230,8 +2230,8 @@
 /**
  * @brief   I3C2 clock frequency.
  */
-#if (STM32_I3C2SEL == RCC_CCIPR1_I3C2SEL_PCLK3) || defined(__DOXYGEN__)
-  #define STM32_I3C2CLK                     hal_lld_get_clock_point(CLK_PCLK3)
+#if (STM32_I3C2SEL == RCC_CCIPR1_I3C2SEL_PCLK2) || defined(__DOXYGEN__)
+  #define STM32_I3C2CLK                     hal_lld_get_clock_point(CLK_PCLK2)
 
 #elif STM32_I3C2SEL == RCC_CCIPR1_I3C2SEL_MSIK
   #define STM32_I3C2CLK                     hal_lld_get_clock_point(CLK_MSIK)
