@@ -69,77 +69,6 @@
 /** @} */
 
 /**
- * @name    PWR register bits definitions
- * @{
- */
-#define STM32_VOS_MASK                  (3U << 9U)
-#define STM32_VOS_RANGE1                (1U << 9U)
-#define STM32_VOS_RANGE2                (2U << 9U)
-/** @} */
-
-/**
- * @name    RCC_CFGR register bits definitions
- * @{
- */
-#define STM32_SW_MASK                   (3U << 0U)
-#define STM32_SW_HSI16                  (1U << 0U)
-#define STM32_SW_HSE                    (2U << 0U)
-#define STM32_SW_PLLRCLK                (3U << 0U)
-
-#define STM32_HPRE_FIELD(n)             ((n) << 4U)
-#define STM32_HPRE_DIV1                 STM32_HPRE_FIELD(0U)
-#define STM32_HPRE_DIV2                 STM32_HPRE_FIELD(8U)
-#define STM32_HPRE_DIV4                 STM32_HPRE_FIELD(9U)
-#define STM32_HPRE_DIV8                 STM32_HPRE_FIELD(10U)
-#define STM32_HPRE_DIV16                STM32_HPRE_FIELD(11U)
-#define STM32_HPRE_DIV64                STM32_HPRE_FIELD(12U)
-#define STM32_HPRE_DIV128               STM32_HPRE_FIELD(13U)
-#define STM32_HPRE_DIV256               STM32_HPRE_FIELD(14U)
-#define STM32_HPRE_DIV512               STM32_HPRE_FIELD(15U)
-
-#define STM32_PPRE1_FIELD(n)            ((n) << 8U)
-#define STM32_PPRE1_DIV1                STM32_PPRE1_FIELD(0U)
-#define STM32_PPRE1_DIV2                STM32_PPRE1_FIELD(4U)
-#define STM32_PPRE1_DIV4                STM32_PPRE1_FIELD(5U)
-#define STM32_PPRE1_DIV8                STM32_PPRE1_FIELD(6U)
-#define STM32_PPRE1_DIV16               STM32_PPRE1_FIELD(7U)
-
-#define STM32_PPRE2_FIELD(n)            ((n) << 11U)
-#define STM32_PPRE2_DIV1                STM32_PPRE2_FIELD(0U)
-#define STM32_PPRE2_DIV2                STM32_PPRE2_FIELD(4U)
-#define STM32_PPRE2_DIV4                STM32_PPRE2_FIELD(5U)
-#define STM32_PPRE2_DIV8                STM32_PPRE2_FIELD(6U)
-#define STM32_PPRE2_DIV16               STM32_PPRE2_FIELD(7U)
-
-#define STM32_MCOSEL_MASK               (15U << 24U)
-#define STM32_MCOSEL_NOCLOCK            (0U << 24U)
-#define STM32_MCOSEL_SYSCLK             (1U << 24U)
-#define STM32_MCOSEL_HSI16              (3U << 24U)
-#define STM32_MCOSEL_HSE                (4U << 24U)
-#define STM32_MCOSEL_PLLRCLK            (5U << 24U)
-#define STM32_MCOSEL_LSI                (6U << 24U)
-#define STM32_MCOSEL_LSE                (7U << 24U)
-#define STM32_MCOSEL_HSI48              (8U << 24U)
-
-#define STM32_MCOPRE_FIELD(n)           ((n) << 28U)
-#define STM32_MCOPRE_DIV1               STM32_MCOPRE_FIELD(0U)
-#define STM32_MCOPRE_DIV2               STM32_MCOPRE_FIELD(1U)
-#define STM32_MCOPRE_DIV4               STM32_MCOPRE_FIELD(2U)
-#define STM32_MCOPRE_DIV8               STM32_MCOPRE_FIELD(3U)
-#define STM32_MCOPRE_DIV16              STM32_MCOPRE_FIELD(4U)
-/** @} */
-
-/**
- * @name    RCC_PLLCFGR register bits definitions
- * @{
- */
-#define STM32_PLLSRC_MASK               (3U << 0U)
-#define STM32_PLLSRC_NOCLOCK            (0U << 0U)
-#define STM32_PLLSRC_HSI16              (2U << 0U)
-#define STM32_PLLSRC_HSE                (3U << 0U)
-/** @} */
-
-/**
  * @name    RCC_CCIPR register bits definitions
  * @{
  */
@@ -382,8 +311,8 @@
 
 #include "clocktree.h"
 
-#if STM32_CFG_PWR_BOOST && (STM32_CFG_PWR_VOS != STM32_VOS_RANGE1)
-#error "STM32_CFG_PWR_BOOST requires STM32_CFG_PWR_VOS to be STM32_VOS_RANGE1"
+#if STM32_CFG_PWR_BOOST && (STM32_CFG_PWR_VOS != PWR_CR1_VOS_RANGE1)
+#error "STM32_CFG_PWR_BOOST requires STM32_CFG_PWR_VOS to be PWR_CR1_VOS_RANGE1"
 #endif
 
 /**

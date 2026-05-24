@@ -65,6 +65,30 @@
   }
 /** @} */
 
+/**
+ * @name    Generated support definitions
+ * @{
+ */
+#define PWR_CR1_VOS_RANGE1                  ((1U) << PWR_CR1_VOS_Pos)
+#define PWR_CR1_VOS_RANGE2                  ((2U) << PWR_CR1_VOS_Pos)
+#define RCC_PLLCFGR_PLLSRC_NOCLOCK          0U
+/** @} */
+
+/**
+ * @name    Generated mux selector constants
+ * @{
+ */
+#define RCC_CFGR_MCOSEL_NOCLOCK             ((0U) << 24U)
+#define RCC_CFGR_MCOSEL_SYSCLK              ((1U) << 24U)
+#define RCC_CFGR_MCOSEL_HSI16               ((3U) << 24U)
+#define RCC_CFGR_MCOSEL_HSE                 ((4U) << 24U)
+#define RCC_CFGR_MCOSEL_PLLRCLK             ((5U) << 24U)
+#define RCC_CFGR_MCOSEL_LSI                 ((6U) << 24U)
+#define RCC_CFGR_MCOSEL_LSE                 ((7U) << 24U)
+#define RCC_CFGR_MCOSEL_HSI48               ((8U) << 24U)
+
+/** @} */
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
@@ -84,7 +108,7 @@
  * @brief   Selects the core voltage scaling range.
  */
 #if !defined(STM32_CFG_PWR_VOS) || defined(__DOXYGEN__)
-  #define STM32_CFG_PWR_VOS                 STM32_VOS_RANGE1
+  #define STM32_CFG_PWR_VOS                 PWR_CR1_VOS_RANGE1
 #endif
 
 /**
@@ -137,7 +161,7 @@
  *          - HSE.
  */
 #if !defined(STM32_CFG_PLLIN_SEL) || defined(__DOXYGEN__)
-  #define STM32_CFG_PLLIN_SEL               STM32_PLLSRC_HSI16
+  #define STM32_CFG_PLLIN_SEL               RCC_PLLCFGR_PLLSRC_HSI
 #endif
 
 /**
@@ -183,7 +207,7 @@
  *          - PLLR.
  */
 #if !defined(STM32_CFG_SYSCLK_SEL) || defined(__DOXYGEN__)
-  #define STM32_CFG_SYSCLK_SEL              STM32_SW_PLLRCLK
+  #define STM32_CFG_SYSCLK_SEL              RCC_CFGR_SW_PLL
 #endif
 
 /**
@@ -220,7 +244,7 @@
  *          - HSI48.
  */
 #if !defined(STM32_CFG_MCODIV_SEL) || defined(__DOXYGEN__)
-  #define STM32_CFG_MCODIV_SEL              STM32_MCOSEL_NOCLOCK
+  #define STM32_CFG_MCODIV_SEL              RCC_CFGR_MCOSEL_NOCLOCK
 #endif
 
 /**
@@ -482,14 +506,8 @@
   #error "invalid STM32_CFG_CLOCK_DYNAMIC value specified"
 #endif
 
-#if !defined(STM32_VOS_RANGE1) && !defined(__DOXYGEN__)
-  #error "STM32_VOS_RANGE1 not defined"
-#endif
-#if !defined(STM32_VOS_RANGE2) && !defined(__DOXYGEN__)
-  #error "STM32_VOS_RANGE2 not defined"
-#endif
-#if !((STM32_CFG_PWR_VOS == STM32_VOS_RANGE1) ||                            \
-     (STM32_CFG_PWR_VOS == STM32_VOS_RANGE2)) && !defined(__DOXYGEN__)
+#if !((STM32_CFG_PWR_VOS == PWR_CR1_VOS_RANGE1) ||                          \
+     (STM32_CFG_PWR_VOS == PWR_CR1_VOS_RANGE2)) && !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_PWR_VOS value specified"
 #endif
 
@@ -627,7 +645,7 @@
 /*
  * Selected frequency limits.
  */
-#if ((STM32_CFG_PWR_VOS == STM32_VOS_RANGE1) && \
+#if ((STM32_CFG_PWR_VOS == PWR_CR1_VOS_RANGE1) && \
      (STM32_CFG_PWR_BOOST == TRUE)) || \
     defined(__DOXYGEN__)
 #define STM32_HSECLK_MIN                    STM32_BOOST_HSECLK_MIN
@@ -654,7 +672,7 @@
 #define STM32_FLASH_2WS_MAX                 STM32_BOOST_FLASH_2WS_MAX
 #define STM32_FLASH_3WS_MAX                 STM32_BOOST_FLASH_3WS_MAX
 #define STM32_FLASH_4WS_MAX                 STM32_BOOST_FLASH_4WS_MAX
-#elif (STM32_CFG_PWR_VOS == STM32_VOS_RANGE1)
+#elif (STM32_CFG_PWR_VOS == PWR_CR1_VOS_RANGE1)
 #define STM32_HSECLK_MIN                    STM32_VOS1_HSECLK_MIN
 #define STM32_HSECLK_MAX                    STM32_VOS1_HSECLK_MAX
 #define STM32_LSECLK_MIN                    STM32_VOS1_LSECLK_MIN
@@ -679,7 +697,7 @@
 #define STM32_FLASH_2WS_MAX                 STM32_VOS1_FLASH_2WS_MAX
 #define STM32_FLASH_3WS_MAX                 STM32_VOS1_FLASH_3WS_MAX
 #define STM32_FLASH_4WS_MAX                 STM32_VOS1_FLASH_4WS_MAX
-#elif (STM32_CFG_PWR_VOS == STM32_VOS_RANGE2)
+#elif (STM32_CFG_PWR_VOS == PWR_CR1_VOS_RANGE2)
 #define STM32_HSECLK_MIN                    STM32_VOS2_HSECLK_MIN
 #define STM32_HSECLK_MAX                    STM32_VOS2_HSECLK_MAX
 #define STM32_LSECLK_MIN                    STM32_VOS2_LSECLK_MIN
@@ -786,9 +804,9 @@
  * @brief   PLLR clock derived enable state.
  */
 #define STM32_PLLR_ENABLED                  (((STM32_SYSCLK_ENABLED == TRUE) && \
-                                              (STM32_CFG_SYSCLK_SEL == STM32_SW_PLLRCLK)) || \
+                                              (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_PLL)) || \
                                              ((STM32_MCODIV_ENABLED == TRUE) && \
-                                              (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_PLLRCLK)))
+                                              (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_PLLRCLK)))
 
 /**
  * @brief   SYSCLK clock derived enable state.
@@ -970,27 +988,27 @@
   #error "invalid STM32_CFG_HSI16_ENABLE value specified"
 #endif
 
-#if !defined(STM32_PLLSRC_HSI16) && !defined(__DOXYGEN__)
-  #error "STM32_PLLSRC_HSI16 not defined"
+#if !defined(RCC_PLLCFGR_PLLSRC_HSI) && !defined(__DOXYGEN__)
+  #error "RCC_PLLCFGR_PLLSRC_HSI not defined"
 #endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_PLLIN_ENABLED == TRUE) &&   \
-      (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSI16))) && !defined(__DOXYGEN__)
+      (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSI))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by PLLIN"
 #endif
 
-#if !defined(STM32_SW_HSI16) && !defined(__DOXYGEN__)
-  #error "STM32_SW_HSI16 not defined"
+#if !defined(RCC_CFGR_SW_HSI) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_SW_HSI not defined"
 #endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_SYSCLK_ENABLED == TRUE) &&  \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_HSI16))) && !defined(__DOXYGEN__)
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSI))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by SYSCLK"
 #endif
 
-#if !defined(STM32_MCOSEL_HSI16) && !defined(__DOXYGEN__)
-  #error "STM32_MCOSEL_HSI16 not defined"
+#if !defined(RCC_CFGR_MCOSEL_HSI16) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_MCOSEL_HSI16 not defined"
 #endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI16))) && !defined(__DOXYGEN__)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by MCODIV"
 #endif
 
@@ -1136,11 +1154,11 @@
   #error "invalid STM32_CFG_HSI48_ENABLE value specified"
 #endif
 
-#if !defined(STM32_MCOSEL_HSI48) && !defined(__DOXYGEN__)
-  #error "STM32_MCOSEL_HSI48 not defined"
+#if !defined(RCC_CFGR_MCOSEL_HSI48) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_MCOSEL_HSI48 not defined"
 #endif
 #if !((STM32_HSI48_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI48))) && !defined(__DOXYGEN__)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI48))) && !defined(__DOXYGEN__)
   #error "HSI48 not enabled, required by MCODIV"
 #endif
 
@@ -1182,19 +1200,19 @@
   #error "invalid STM32_CFG_HSE_ENABLE value specified"
 #endif
 
-#if !defined(STM32_PLLSRC_HSE) && !defined(__DOXYGEN__)
-  #error "STM32_PLLSRC_HSE not defined"
+#if !defined(RCC_PLLCFGR_PLLSRC_HSE) && !defined(__DOXYGEN__)
+  #error "RCC_PLLCFGR_PLLSRC_HSE not defined"
 #endif
 #if !((STM32_HSE_ENABLED == TRUE) || !((STM32_PLLIN_ENABLED == TRUE) &&     \
-      (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSE))) && !defined(__DOXYGEN__)
+      (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSE))) && !defined(__DOXYGEN__)
   #error "HSE not enabled, required by PLLIN"
 #endif
 
-#if !defined(STM32_SW_HSE) && !defined(__DOXYGEN__)
-  #error "STM32_SW_HSE not defined"
+#if !defined(RCC_CFGR_SW_HSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_SW_HSE not defined"
 #endif
 #if !((STM32_HSE_ENABLED == TRUE) || !((STM32_SYSCLK_ENABLED == TRUE) &&    \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_HSE))) && !defined(__DOXYGEN__)
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSE))) && !defined(__DOXYGEN__)
   #error "HSE not enabled, required by SYSCLK"
 #endif
 
@@ -1206,11 +1224,11 @@
   #error "HSE not enabled, required by HSEDIV"
 #endif
 
-#if !defined(STM32_MCOSEL_HSE) && !defined(__DOXYGEN__)
-  #error "STM32_MCOSEL_HSE not defined"
+#if !defined(RCC_CFGR_MCOSEL_HSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_MCOSEL_HSE not defined"
 #endif
 #if !((STM32_HSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSE))) && !defined(__DOXYGEN__)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSE))) && !defined(__DOXYGEN__)
   #error "HSE not enabled, required by MCODIV"
 #endif
 
@@ -1262,11 +1280,11 @@
   #error "invalid STM32_CFG_LSE_ENABLE value specified"
 #endif
 
-#if !defined(STM32_MCOSEL_LSE) && !defined(__DOXYGEN__)
-  #error "STM32_MCOSEL_LSE not defined"
+#if !defined(RCC_CFGR_MCOSEL_LSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_MCOSEL_LSE not defined"
 #endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSE))) && !defined(__DOXYGEN__)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by MCODIV"
 #endif
 
@@ -1382,11 +1400,11 @@
   #error "invalid STM32_CFG_LSI_ENABLE value specified"
 #endif
 
-#if !defined(STM32_MCOSEL_LSI) && !defined(__DOXYGEN__)
-  #error "STM32_MCOSEL_LSI not defined"
+#if !defined(RCC_CFGR_MCOSEL_LSI) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_MCOSEL_LSI not defined"
 #endif
 #if !((STM32_LSI_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSI))) && !defined(__DOXYGEN__)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSI))) && !defined(__DOXYGEN__)
   #error "LSI not enabled, required by MCODIV"
 #endif
 
@@ -1460,13 +1478,26 @@
  * @brief   PLLIN clock register bits.
  */
 #if (STM32_PLLIN_ENABLED == FALSE)
-  #define STM32_PLLIN_BITS                  STM32_PLLSRC_NOCLOCK
-#elif (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_NOCLOCK) || defined(__DOXYGEN__)
-  #define STM32_PLLIN_BITS                  STM32_PLLSRC_NOCLOCK
-#elif (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSI16)
-  #define STM32_PLLIN_BITS                  STM32_PLLSRC_HSI16
-#elif (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSE)
-  #define STM32_PLLIN_BITS                  STM32_PLLSRC_HSE
+  #define STM32_PLLIN_BITS                  RCC_PLLCFGR_PLLSRC_NOCLOCK
+#elif (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_NOCLOCK) ||                \
+      defined(__DOXYGEN__)
+  #if (STM32_PLLIN_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_PLLIN_BITS                RCC_PLLCFGR_PLLSRC_NOCLOCK
+  #else
+    #define STM32_PLLIN_BITS                0U
+  #endif
+#elif (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSI)
+  #if (STM32_PLLIN_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_PLLIN_BITS                RCC_PLLCFGR_PLLSRC_HSI
+  #else
+    #define STM32_PLLIN_BITS                0U
+  #endif
+#elif (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSE)
+  #if (STM32_PLLIN_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_PLLIN_BITS                RCC_PLLCFGR_PLLSRC_HSE
+  #else
+    #define STM32_PLLIN_BITS                0U
+  #endif
 #else
   #error "invalid STM32_CFG_PLLIN_SEL value specified"
 #endif
@@ -1475,14 +1506,14 @@
  * @brief   PLL input clock point.
  */
 #if ((STM32_PLLIN_ENABLED == TRUE) && \
-     (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_NOCLOCK)) || \
+     (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_NOCLOCK)) || \
     defined(__DOXYGEN__)
   #define STM32_PLLIN_FREQ                  STM32_NONE_FREQ
 #elif (STM32_PLLIN_ENABLED == TRUE) && \
-      (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSI16)
+      (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSI)
   #define STM32_PLLIN_FREQ                  STM32_HSI16_FREQ
 #elif (STM32_PLLIN_ENABLED == TRUE) && \
-      (STM32_CFG_PLLIN_SEL == STM32_PLLSRC_HSE)
+      (STM32_CFG_PLLIN_SEL == RCC_PLLCFGR_PLLSRC_HSE)
   #define STM32_PLLIN_FREQ                  STM32_HSE_FREQ
 #else
   #define STM32_PLLIN_FREQ                  0U
@@ -1681,12 +1712,12 @@
 /**
  * @brief   SYSCLK clock register bits.
  */
-#if (STM32_CFG_SYSCLK_SEL == STM32_SW_HSI16) || defined(__DOXYGEN__)
-  #define STM32_SYSCLK_BITS                 STM32_SW_HSI16
-#elif (STM32_CFG_SYSCLK_SEL == STM32_SW_HSE)
-  #define STM32_SYSCLK_BITS                 STM32_SW_HSE
-#elif (STM32_CFG_SYSCLK_SEL == STM32_SW_PLLRCLK)
-  #define STM32_SYSCLK_BITS                 STM32_SW_PLLRCLK
+#if (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSI) || defined(__DOXYGEN__)
+  #define STM32_SYSCLK_BITS                 RCC_CFGR_SW_HSI
+#elif (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSE)
+  #define STM32_SYSCLK_BITS                 RCC_CFGR_SW_HSE
+#elif (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_PLL)
+  #define STM32_SYSCLK_BITS                 RCC_CFGR_SW_PLL
 #else
   #error "invalid STM32_CFG_SYSCLK_SEL value specified"
 #endif
@@ -1695,36 +1726,36 @@
  * @brief   System clock clock point.
  */
 #if ((STM32_SYSCLK_ENABLED == TRUE) && \
-     (STM32_CFG_SYSCLK_SEL == STM32_SW_HSI16)) || \
+     (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSI)) || \
     defined(__DOXYGEN__)
   #define STM32_SYSCLK_FREQ                 STM32_HSI16_FREQ
 #elif (STM32_SYSCLK_ENABLED == TRUE) && \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_HSE)
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSE)
   #define STM32_SYSCLK_FREQ                 STM32_HSE_FREQ
 #elif (STM32_SYSCLK_ENABLED == TRUE) && \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_PLLRCLK)
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_PLL)
   #define STM32_SYSCLK_FREQ                 STM32_PLLR_FREQ
 #else
   #define STM32_SYSCLK_FREQ                 0U
 #endif
 
 #if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_HSI16)) ||                          \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSI)) ||                         \
      (STM32_HSI16_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_SYSCLK_FREQ above maximum frequency"
 #endif
 
 #if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_HSE)) ||                            \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSE)) ||                         \
      (STM32_HSE_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_SYSCLK_FREQ above maximum frequency"
 #endif
 
-#if !defined(STM32_SW_PLLRCLK) && !defined(__DOXYGEN__)
-  #error "STM32_SW_PLLRCLK not defined"
+#if !defined(RCC_CFGR_SW_PLL) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR_SW_PLL not defined"
 #endif
 #if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_SYSCLK_SEL == STM32_SW_PLLRCLK)) ||                        \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_PLL)) ||                         \
      (STM32_PLLR_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_SYSCLK_FREQ above maximum frequency"
 #endif
@@ -1735,23 +1766,23 @@
  * @brief   HCLK clock register bits.
  */
 #if (STM32_CFG_HCLK_VALUE == 1) || defined(__DOXYGEN__)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV1
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV1
 #elif (STM32_CFG_HCLK_VALUE == 2)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV2
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV2
 #elif (STM32_CFG_HCLK_VALUE == 4)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV4
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV4
 #elif (STM32_CFG_HCLK_VALUE == 8)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV8
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV8
 #elif (STM32_CFG_HCLK_VALUE == 16)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV16
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV16
 #elif (STM32_CFG_HCLK_VALUE == 64)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV64
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV64
 #elif (STM32_CFG_HCLK_VALUE == 128)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV128
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV128
 #elif (STM32_CFG_HCLK_VALUE == 256)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV256
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV256
 #elif (STM32_CFG_HCLK_VALUE == 512)
-  #define STM32_HCLK_BITS                   STM32_HPRE_DIV512
+  #define STM32_HCLK_BITS                   RCC_CFGR_HPRE_DIV512
 #else
   #error "invalid STM32_CFG_HCLK_VALUE value specified"
 #endif
@@ -1773,15 +1804,15 @@
  * @brief   PCLK1 clock register bits.
  */
 #if (STM32_CFG_PCLK1_VALUE == 1) || defined(__DOXYGEN__)
-  #define STM32_PCLK1_BITS                  STM32_PPRE1_DIV1
+  #define STM32_PCLK1_BITS                  RCC_CFGR_PPRE1_DIV1
 #elif (STM32_CFG_PCLK1_VALUE == 2)
-  #define STM32_PCLK1_BITS                  STM32_PPRE1_DIV2
+  #define STM32_PCLK1_BITS                  RCC_CFGR_PPRE1_DIV2
 #elif (STM32_CFG_PCLK1_VALUE == 4)
-  #define STM32_PCLK1_BITS                  STM32_PPRE1_DIV4
+  #define STM32_PCLK1_BITS                  RCC_CFGR_PPRE1_DIV4
 #elif (STM32_CFG_PCLK1_VALUE == 8)
-  #define STM32_PCLK1_BITS                  STM32_PPRE1_DIV8
+  #define STM32_PCLK1_BITS                  RCC_CFGR_PPRE1_DIV8
 #elif (STM32_CFG_PCLK1_VALUE == 16)
-  #define STM32_PCLK1_BITS                  STM32_PPRE1_DIV16
+  #define STM32_PCLK1_BITS                  RCC_CFGR_PPRE1_DIV16
 #else
   #error "invalid STM32_CFG_PCLK1_VALUE value specified"
 #endif
@@ -1803,15 +1834,15 @@
  * @brief   PCLK2 clock register bits.
  */
 #if (STM32_CFG_PCLK2_VALUE == 1) || defined(__DOXYGEN__)
-  #define STM32_PCLK2_BITS                  STM32_PPRE2_DIV1
+  #define STM32_PCLK2_BITS                  RCC_CFGR_PPRE2_DIV1
 #elif (STM32_CFG_PCLK2_VALUE == 2)
-  #define STM32_PCLK2_BITS                  STM32_PPRE2_DIV2
+  #define STM32_PCLK2_BITS                  RCC_CFGR_PPRE2_DIV2
 #elif (STM32_CFG_PCLK2_VALUE == 4)
-  #define STM32_PCLK2_BITS                  STM32_PPRE2_DIV4
+  #define STM32_PCLK2_BITS                  RCC_CFGR_PPRE2_DIV4
 #elif (STM32_CFG_PCLK2_VALUE == 8)
-  #define STM32_PCLK2_BITS                  STM32_PPRE2_DIV8
+  #define STM32_PCLK2_BITS                  RCC_CFGR_PPRE2_DIV8
 #elif (STM32_CFG_PCLK2_VALUE == 16)
-  #define STM32_PCLK2_BITS                  STM32_PPRE2_DIV16
+  #define STM32_PCLK2_BITS                  RCC_CFGR_PPRE2_DIV16
 #else
   #error "invalid STM32_CFG_PCLK2_VALUE value specified"
 #endif
@@ -1874,22 +1905,22 @@
 /**
  * @brief   MCODIV clock register bits.
  */
-#if (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_NOCLOCK) || defined(__DOXYGEN__)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_NOCLOCK
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_SYSCLK)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_SYSCLK
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI16)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_HSI16
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSE)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_HSE
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_PLLRCLK)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_PLLRCLK
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSI)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_LSI
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSE)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_LSE
-#elif (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI48)
-  #define STM32_MCODIV_BITS                 STM32_MCOSEL_HSI48
+#if (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_NOCLOCK) || defined(__DOXYGEN__)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_NOCLOCK
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_SYSCLK)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_SYSCLK
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI16)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_HSI16
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSE)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_HSE
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_PLLRCLK)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_PLLRCLK
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSI)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_LSI
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSE)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_LSE
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI48)
+  #define STM32_MCODIV_BITS                 RCC_CFGR_MCOSEL_HSI48
 #else
   #error "invalid STM32_CFG_MCODIV_SEL value specified"
 #endif
@@ -1898,29 +1929,29 @@
  * @brief   MCO source before prescaler clock point.
  */
 #if ((STM32_MCODIV_ENABLED == TRUE) && \
-     (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_NOCLOCK)) || \
+     (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_NOCLOCK)) || \
     defined(__DOXYGEN__)
   #define STM32_MCODIV_FREQ                 STM32_NONE_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_SYSCLK)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_SYSCLK)
   #define STM32_MCODIV_FREQ                 STM32_SYSCLK_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI16)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI16)
   #define STM32_MCODIV_FREQ                 STM32_HSI16_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSE)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSE)
   #define STM32_MCODIV_FREQ                 STM32_HSE_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_PLLRCLK)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_PLLRCLK)
   #define STM32_MCODIV_FREQ                 STM32_PLLR_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSI)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSI)
   #define STM32_MCODIV_FREQ                 STM32_LSI_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_LSE)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSE)
   #define STM32_MCODIV_FREQ                 STM32_LSE_FREQ
 #elif (STM32_MCODIV_ENABLED == TRUE) && \
-      (STM32_CFG_MCODIV_SEL == STM32_MCOSEL_HSI48)
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI48)
   #define STM32_MCODIV_FREQ                 STM32_HSI48_FREQ
 #else
   #define STM32_MCODIV_FREQ                 0U
@@ -1932,15 +1963,15 @@
  * @brief   MCO clock register bits.
  */
 #if (STM32_CFG_MCO_VALUE == 1) || defined(__DOXYGEN__)
-  #define STM32_MCO_BITS                    STM32_MCOPRE_DIV1
+  #define STM32_MCO_BITS                    RCC_CFGR_MCOPRE_DIV1
 #elif (STM32_CFG_MCO_VALUE == 2)
-  #define STM32_MCO_BITS                    STM32_MCOPRE_DIV2
+  #define STM32_MCO_BITS                    RCC_CFGR_MCOPRE_DIV2
 #elif (STM32_CFG_MCO_VALUE == 4)
-  #define STM32_MCO_BITS                    STM32_MCOPRE_DIV4
+  #define STM32_MCO_BITS                    RCC_CFGR_MCOPRE_DIV4
 #elif (STM32_CFG_MCO_VALUE == 8)
-  #define STM32_MCO_BITS                    STM32_MCOPRE_DIV8
+  #define STM32_MCO_BITS                    RCC_CFGR_MCOPRE_DIV8
 #elif (STM32_CFG_MCO_VALUE == 16)
-  #define STM32_MCO_BITS                    STM32_MCOPRE_DIV16
+  #define STM32_MCO_BITS                    RCC_CFGR_MCOPRE_DIV16
 #else
   #error "invalid STM32_CFG_MCO_VALUE value specified"
 #endif
@@ -1991,13 +2022,29 @@
 #if (STM32_RTC_ENABLED == FALSE)
   #define STM32_RTC_BITS                    STM32_RTCSEL_NOCLOCK
 #elif (STM32_CFG_RTC_SEL == STM32_RTCSEL_NOCLOCK) || defined(__DOXYGEN__)
-  #define STM32_RTC_BITS                    STM32_RTCSEL_NOCLOCK
+  #if (STM32_RTC_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_RTC_BITS                  STM32_RTCSEL_NOCLOCK
+  #else
+    #define STM32_RTC_BITS                  0U
+  #endif
 #elif (STM32_CFG_RTC_SEL == STM32_RTCSEL_LSE)
-  #define STM32_RTC_BITS                    STM32_RTCSEL_LSE
+  #if (STM32_RTC_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_RTC_BITS                  STM32_RTCSEL_LSE
+  #else
+    #define STM32_RTC_BITS                  0U
+  #endif
 #elif (STM32_CFG_RTC_SEL == STM32_RTCSEL_LSI)
-  #define STM32_RTC_BITS                    STM32_RTCSEL_LSI
+  #if (STM32_RTC_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_RTC_BITS                  STM32_RTCSEL_LSI
+  #else
+    #define STM32_RTC_BITS                  0U
+  #endif
 #elif (STM32_CFG_RTC_SEL == STM32_RTCSEL_HSEDIV)
-  #define STM32_RTC_BITS                    STM32_RTCSEL_HSEDIV
+  #if (STM32_RTC_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_RTC_BITS                  STM32_RTCSEL_HSEDIV
+  #else
+    #define STM32_RTC_BITS                  0U
+  #endif
 #else
   #error "invalid STM32_CFG_RTC_SEL value specified"
 #endif

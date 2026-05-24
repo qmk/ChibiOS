@@ -42,7 +42,7 @@
  */
 #define STM32_NO_INIT                       FALSE
 #define STM32_CFG_CLOCK_DYNAMIC             TRUE
-#define STM32_CFG_PWR_VOS                   STM32_VOS_RANGE1
+#define STM32_CFG_PWR_VOS                   PWR_CR1_VOS_RANGE1
 #define STM32_CFG_PWR_BOOST                 TRUE
 #define STM32_PWR_CR2                       (PWR_CR2_PLS_LEV0)
 #define STM32_PWR_CR3                       (PWR_CR3_EIWF)
@@ -66,8 +66,8 @@
 #define STM32_CFG_HSE_ENABLE                TRUE
 #define STM32_CFG_LSI_ENABLE                FALSE
 #define STM32_CFG_LSE_ENABLE                TRUE
-#define STM32_CFG_SYSCLK_SEL                STM32_SW_PLLRCLK
-#define STM32_CFG_PLLIN_SEL                 STM32_PLLSRC_HSE
+#define STM32_CFG_SYSCLK_SEL                RCC_CFGR_SW_PLL
+#define STM32_CFG_PLLIN_SEL                 RCC_PLLCFGR_PLLSRC_HSE
 #define STM32_CFG_PLLREF_VALUE              6
 #define STM32_CFG_PLLVCO_VALUE              85
 #define STM32_CFG_PLLP_VALUE                7
@@ -76,7 +76,7 @@
 #define STM32_CFG_HCLK_VALUE                1
 #define STM32_CFG_PCLK1_VALUE               2
 #define STM32_CFG_PCLK2_VALUE               1
-#define STM32_CFG_MCODIV_SEL                STM32_MCOSEL_NOCLOCK
+#define STM32_CFG_MCODIV_SEL                RCC_CFGR_MCOSEL_NOCLOCK
 #define STM32_CFG_MCO_VALUE                 1
 #define STM32_CFG_LSCO_SEL                  STM32_LSCOSEL_NOCLOCK
 

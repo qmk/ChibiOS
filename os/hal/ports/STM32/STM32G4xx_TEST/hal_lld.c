@@ -618,28 +618,28 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
 
   /* MCO clock.*/
   switch (ccp->rcc_cfgr & RCC_CFGR_MCOSEL_Msk) {
-  case STM32_MCOSEL_NOCLOCK:
+  case RCC_CFGR_MCOSEL_NOCLOCK:
     mcoclk = 0U;
     break;
-  case STM32_MCOSEL_SYSCLK:
+  case RCC_CFGR_MCOSEL_SYSCLK:
     mcoclk = sysclk;
     break;
-  case STM32_MCOSEL_HSI16:
+  case RCC_CFGR_MCOSEL_HSI16:
     mcoclk = hsi16clk;
     break;
-  case STM32_MCOSEL_HSE:
+  case RCC_CFGR_MCOSEL_HSE:
     mcoclk = hseclk;
     break;
-  case STM32_MCOSEL_PLLRCLK:
+  case RCC_CFGR_MCOSEL_PLLRCLK:
     mcoclk = pllrclk;
     break;
-  case STM32_MCOSEL_LSI:
+  case RCC_CFGR_MCOSEL_LSI:
     mcoclk = STM32_LSI_SOURCE_FREQ;
     break;
-  case STM32_MCOSEL_LSE:
+  case RCC_CFGR_MCOSEL_LSE:
     mcoclk = STM32_LSE_SOURCE_FREQ;
     break;
-  case STM32_MCOSEL_HSI48:
+  case RCC_CFGR_MCOSEL_HSI48:
     mcoclk = hsi48clk;
     break;
   default:
