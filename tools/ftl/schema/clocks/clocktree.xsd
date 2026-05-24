@@ -378,15 +378,45 @@
     </xs:complexType>
 
     <xs:complexType name="muxType">
-      <xs:sequence>
-        <xs:element name="input" type="inputType" maxOccurs="unbounded"
+      <xs:choice maxOccurs="unbounded" minOccurs="1">
+        <xs:element name="input" type="inputType" maxOccurs="1"
           minOccurs="1">
         </xs:element>
-      </xs:sequence>
+        <xs:element name="inactive" type="inactiveMuxType" maxOccurs="1"
+          minOccurs="1">
+        </xs:element>
+      </xs:choice>
       <xs:attribute name="name" use="required">
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:minLength value="1"></xs:minLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="inactiveMuxType">
+      <xs:attribute name="value" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="bits" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="when" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

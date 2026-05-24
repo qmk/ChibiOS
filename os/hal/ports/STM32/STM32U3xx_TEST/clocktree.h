@@ -594,6 +594,7 @@
  * @note    Allowed sources:
  *          - LSE.
  *          - LSI.
+ *          - inactive selection RCC_CCIPR2_DAC1SHSEL_IGNORE.
  */
 #if !defined(STM32_CFG_DAC1SH_SEL) || defined(__DOXYGEN__)
   #define STM32_CFG_DAC1SH_SEL              RCC_CCIPR2_DAC1SHSEL_LSE
@@ -604,6 +605,7 @@
  * @note    Allowed sources:
  *          - HSI48.
  *          - MSIK.
+ *          - inactive selection RCC_CCIPR2_RNGSEL_IGNORE.
  */
 #if !defined(STM32_CFG_RNG_SEL) || defined(__DOXYGEN__)
   #define STM32_CFG_RNG_SEL                 RCC_CCIPR2_RNGSEL_MSIK
@@ -614,6 +616,7 @@
  * @note    Allowed sources:
  *          - SYSCLK.
  *          - MSIK.
+ *          - inactive selection RCC_CCIPR1_FDCAN1SEL_IGNORE.
  */
 #if !defined(STM32_CFG_FDCAN1_SEL) || defined(__DOXYGEN__)
   #define STM32_CFG_FDCAN1_SEL              RCC_CCIPR1_FDCAN1SEL_SYSCLK
@@ -3842,9 +3845,17 @@
  * @brief   USART1 clock register bits.
  */
 #if (STM32_CFG_USART1_SEL == RCC_CCIPR1_USART1SEL_PCLK2) || defined(__DOXYGEN__)
-  #define STM32_USART1_BITS                 RCC_CCIPR1_USART1SEL_PCLK2
+  #if (STM32_USART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USART1_BITS               RCC_CCIPR1_USART1SEL_PCLK2
+  #else
+    #define STM32_USART1_BITS               0U
+  #endif
 #elif (STM32_CFG_USART1_SEL == RCC_CCIPR1_USART1SEL_HSI16)
-  #define STM32_USART1_BITS                 RCC_CCIPR1_USART1SEL_HSI16
+  #if (STM32_USART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USART1_BITS               RCC_CCIPR1_USART1SEL_HSI16
+  #else
+    #define STM32_USART1_BITS               0U
+  #endif
 #else
   #error "invalid STM32_CFG_USART1_SEL value specified"
 #endif
@@ -3869,9 +3880,17 @@
  * @brief   USART3 clock register bits.
  */
 #if (STM32_CFG_USART3_SEL == RCC_CCIPR1_USART3SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_USART3_BITS                 RCC_CCIPR1_USART3SEL_PCLK1
+  #if (STM32_USART3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USART3_BITS               RCC_CCIPR1_USART3SEL_PCLK1
+  #else
+    #define STM32_USART3_BITS               0U
+  #endif
 #elif (STM32_CFG_USART3_SEL == RCC_CCIPR1_USART3SEL_HSI16)
-  #define STM32_USART3_BITS                 RCC_CCIPR1_USART3SEL_HSI16
+  #if (STM32_USART3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USART3_BITS               RCC_CCIPR1_USART3SEL_HSI16
+  #else
+    #define STM32_USART3_BITS               0U
+  #endif
 #else
   #error "invalid STM32_CFG_USART3_SEL value specified"
 #endif
@@ -3896,9 +3915,17 @@
  * @brief   UART4 clock register bits.
  */
 #if (STM32_CFG_UART4_SEL == RCC_CCIPR1_UART4SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_UART4_BITS                  RCC_CCIPR1_UART4SEL_PCLK1
+  #if (STM32_UART4_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_UART4_BITS                RCC_CCIPR1_UART4SEL_PCLK1
+  #else
+    #define STM32_UART4_BITS                0U
+  #endif
 #elif (STM32_CFG_UART4_SEL == RCC_CCIPR1_UART4SEL_HSI16)
-  #define STM32_UART4_BITS                  RCC_CCIPR1_UART4SEL_HSI16
+  #if (STM32_UART4_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_UART4_BITS                RCC_CCIPR1_UART4SEL_HSI16
+  #else
+    #define STM32_UART4_BITS                0U
+  #endif
 #else
   #error "invalid STM32_CFG_UART4_SEL value specified"
 #endif
@@ -3923,9 +3950,17 @@
  * @brief   UART5 clock register bits.
  */
 #if (STM32_CFG_UART5_SEL == RCC_CCIPR1_UART5SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_UART5_BITS                  RCC_CCIPR1_UART5SEL_PCLK1
+  #if (STM32_UART5_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_UART5_BITS                RCC_CCIPR1_UART5SEL_PCLK1
+  #else
+    #define STM32_UART5_BITS                0U
+  #endif
 #elif (STM32_CFG_UART5_SEL == RCC_CCIPR1_UART5SEL_HSI16)
-  #define STM32_UART5_BITS                  RCC_CCIPR1_UART5SEL_HSI16
+  #if (STM32_UART5_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_UART5_BITS                RCC_CCIPR1_UART5SEL_HSI16
+  #else
+    #define STM32_UART5_BITS                0U
+  #endif
 #else
   #error "invalid STM32_CFG_UART5_SEL value specified"
 #endif
@@ -3951,13 +3986,29 @@
  */
 #if (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_PCLK3) ||               \
     defined(__DOXYGEN__)
-  #define STM32_LPUART1_BITS                RCC_CCIPR3_LPUART1SEL_PCLK3
+  #if (STM32_LPUART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPUART1_BITS              RCC_CCIPR3_LPUART1SEL_PCLK3
+  #else
+    #define STM32_LPUART1_BITS              0U
+  #endif
 #elif (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_HSI16)
-  #define STM32_LPUART1_BITS                RCC_CCIPR3_LPUART1SEL_HSI16
+  #if (STM32_LPUART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPUART1_BITS              RCC_CCIPR3_LPUART1SEL_HSI16
+  #else
+    #define STM32_LPUART1_BITS              0U
+  #endif
 #elif (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_LSE)
-  #define STM32_LPUART1_BITS                RCC_CCIPR3_LPUART1SEL_LSE
+  #if (STM32_LPUART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPUART1_BITS              RCC_CCIPR3_LPUART1SEL_LSE
+  #else
+    #define STM32_LPUART1_BITS              0U
+  #endif
 #elif (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_MSIK)
-  #define STM32_LPUART1_BITS                RCC_CCIPR3_LPUART1SEL_MSIK
+  #if (STM32_LPUART1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPUART1_BITS              RCC_CCIPR3_LPUART1SEL_MSIK
+  #else
+    #define STM32_LPUART1_BITS              0U
+  #endif
 #else
   #error "invalid STM32_CFG_LPUART1_SEL value specified"
 #endif
@@ -3988,13 +4039,29 @@
  * @brief   LPTIM1 clock register bits.
  */
 #if (STM32_CFG_LPTIM1_SEL == RCC_CCIPR3_LPTIM1SEL_MSIK) || defined(__DOXYGEN__)
-  #define STM32_LPTIM1_BITS                 RCC_CCIPR3_LPTIM1SEL_MSIK
+  #if (STM32_LPTIM1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM1_BITS               RCC_CCIPR3_LPTIM1SEL_MSIK
+  #else
+    #define STM32_LPTIM1_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM1_SEL == RCC_CCIPR3_LPTIM1SEL_LSI)
-  #define STM32_LPTIM1_BITS                 RCC_CCIPR3_LPTIM1SEL_LSI
+  #if (STM32_LPTIM1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM1_BITS               RCC_CCIPR3_LPTIM1SEL_LSI
+  #else
+    #define STM32_LPTIM1_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM1_SEL == RCC_CCIPR3_LPTIM1SEL_HSI16)
-  #define STM32_LPTIM1_BITS                 RCC_CCIPR3_LPTIM1SEL_HSI16
+  #if (STM32_LPTIM1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM1_BITS               RCC_CCIPR3_LPTIM1SEL_HSI16
+  #else
+    #define STM32_LPTIM1_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM1_SEL == RCC_CCIPR3_LPTIM1SEL_LSE)
-  #define STM32_LPTIM1_BITS                 RCC_CCIPR3_LPTIM1SEL_LSE
+  #if (STM32_LPTIM1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM1_BITS               RCC_CCIPR3_LPTIM1SEL_LSE
+  #else
+    #define STM32_LPTIM1_BITS               0U
+  #endif
 #else
   #error "invalid STM32_CFG_LPTIM1_SEL value specified"
 #endif
@@ -4025,13 +4092,29 @@
  * @brief   LPTIM2 clock register bits.
  */
 #if (STM32_CFG_LPTIM2_SEL == RCC_CCIPR1_LPTIM2SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_LPTIM2_BITS                 RCC_CCIPR1_LPTIM2SEL_PCLK1
+  #if (STM32_LPTIM2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM2_BITS               RCC_CCIPR1_LPTIM2SEL_PCLK1
+  #else
+    #define STM32_LPTIM2_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM2_SEL == RCC_CCIPR1_LPTIM2SEL_LSI)
-  #define STM32_LPTIM2_BITS                 RCC_CCIPR1_LPTIM2SEL_LSI
+  #if (STM32_LPTIM2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM2_BITS               RCC_CCIPR1_LPTIM2SEL_LSI
+  #else
+    #define STM32_LPTIM2_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM2_SEL == RCC_CCIPR1_LPTIM2SEL_HSI16)
-  #define STM32_LPTIM2_BITS                 RCC_CCIPR1_LPTIM2SEL_HSI16
+  #if (STM32_LPTIM2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM2_BITS               RCC_CCIPR1_LPTIM2SEL_HSI16
+  #else
+    #define STM32_LPTIM2_BITS               0U
+  #endif
 #elif (STM32_CFG_LPTIM2_SEL == RCC_CCIPR1_LPTIM2SEL_LSE)
-  #define STM32_LPTIM2_BITS                 RCC_CCIPR1_LPTIM2SEL_LSE
+  #if (STM32_LPTIM2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM2_BITS               RCC_CCIPR1_LPTIM2SEL_LSE
+  #else
+    #define STM32_LPTIM2_BITS               0U
+  #endif
 #else
   #error "invalid STM32_CFG_LPTIM2_SEL value specified"
 #endif
@@ -4063,13 +4146,29 @@
  */
 #if (STM32_CFG_LPTIM34_SEL == RCC_CCIPR3_LPTIM34SEL_MSIK) ||                \
     defined(__DOXYGEN__)
-  #define STM32_LPTIM34_BITS                RCC_CCIPR3_LPTIM34SEL_MSIK
+  #if (STM32_LPTIM34_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM34_BITS              RCC_CCIPR3_LPTIM34SEL_MSIK
+  #else
+    #define STM32_LPTIM34_BITS              0U
+  #endif
 #elif (STM32_CFG_LPTIM34_SEL == RCC_CCIPR3_LPTIM34SEL_LSI)
-  #define STM32_LPTIM34_BITS                RCC_CCIPR3_LPTIM34SEL_LSI
+  #if (STM32_LPTIM34_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM34_BITS              RCC_CCIPR3_LPTIM34SEL_LSI
+  #else
+    #define STM32_LPTIM34_BITS              0U
+  #endif
 #elif (STM32_CFG_LPTIM34_SEL == RCC_CCIPR3_LPTIM34SEL_HSI16)
-  #define STM32_LPTIM34_BITS                RCC_CCIPR3_LPTIM34SEL_HSI16
+  #if (STM32_LPTIM34_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM34_BITS              RCC_CCIPR3_LPTIM34SEL_HSI16
+  #else
+    #define STM32_LPTIM34_BITS              0U
+  #endif
 #elif (STM32_CFG_LPTIM34_SEL == RCC_CCIPR3_LPTIM34SEL_LSE)
-  #define STM32_LPTIM34_BITS                RCC_CCIPR3_LPTIM34SEL_LSE
+  #if (STM32_LPTIM34_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_LPTIM34_BITS              RCC_CCIPR3_LPTIM34SEL_LSE
+  #else
+    #define STM32_LPTIM34_BITS              0U
+  #endif
 #else
   #error "invalid STM32_CFG_LPTIM34_SEL value specified"
 #endif
@@ -4100,9 +4199,17 @@
  * @brief   SPI1 clock register bits.
  */
 #if (STM32_CFG_SPI1_SEL == RCC_CCIPR1_SPI1SEL_PCLK2) || defined(__DOXYGEN__)
-  #define STM32_SPI1_BITS                   RCC_CCIPR1_SPI1SEL_PCLK2
+  #if (STM32_SPI1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI1_BITS                 RCC_CCIPR1_SPI1SEL_PCLK2
+  #else
+    #define STM32_SPI1_BITS                 0U
+  #endif
 #elif (STM32_CFG_SPI1_SEL == RCC_CCIPR1_SPI1SEL_MSIK)
-  #define STM32_SPI1_BITS                   RCC_CCIPR1_SPI1SEL_MSIK
+  #if (STM32_SPI1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI1_BITS                 RCC_CCIPR1_SPI1SEL_MSIK
+  #else
+    #define STM32_SPI1_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_SPI1_SEL value specified"
 #endif
@@ -4127,9 +4234,17 @@
  * @brief   SPI2 clock register bits.
  */
 #if (STM32_CFG_SPI2_SEL == RCC_CCIPR1_SPI2SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_SPI2_BITS                   RCC_CCIPR1_SPI2SEL_PCLK1
+  #if (STM32_SPI2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI2_BITS                 RCC_CCIPR1_SPI2SEL_PCLK1
+  #else
+    #define STM32_SPI2_BITS                 0U
+  #endif
 #elif (STM32_CFG_SPI2_SEL == RCC_CCIPR1_SPI2SEL_MSIK)
-  #define STM32_SPI2_BITS                   RCC_CCIPR1_SPI2SEL_MSIK
+  #if (STM32_SPI2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI2_BITS                 RCC_CCIPR1_SPI2SEL_MSIK
+  #else
+    #define STM32_SPI2_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_SPI2_SEL value specified"
 #endif
@@ -4154,9 +4269,17 @@
  * @brief   SPI3 clock register bits.
  */
 #if (STM32_CFG_SPI3_SEL == RCC_CCIPR2_SPI3SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_SPI3_BITS                   RCC_CCIPR2_SPI3SEL_PCLK1
+  #if (STM32_SPI3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI3_BITS                 RCC_CCIPR2_SPI3SEL_PCLK1
+  #else
+    #define STM32_SPI3_BITS                 0U
+  #endif
 #elif (STM32_CFG_SPI3_SEL == RCC_CCIPR2_SPI3SEL_MSIK)
-  #define STM32_SPI3_BITS                   RCC_CCIPR2_SPI3SEL_MSIK
+  #if (STM32_SPI3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SPI3_BITS                 RCC_CCIPR2_SPI3SEL_MSIK
+  #else
+    #define STM32_SPI3_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_SPI3_SEL value specified"
 #endif
@@ -4182,9 +4305,17 @@
  */
 #if (STM32_CFG_OCTOSPI_SEL == RCC_CCIPR2_OCTOSPISEL_SYSCLK) ||              \
     defined(__DOXYGEN__)
-  #define STM32_OCTOSPI_BITS                RCC_CCIPR2_OCTOSPISEL_SYSCLK
+  #if (STM32_OCTOSPI_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_OCTOSPI_BITS              RCC_CCIPR2_OCTOSPISEL_SYSCLK
+  #else
+    #define STM32_OCTOSPI_BITS              0U
+  #endif
 #elif (STM32_CFG_OCTOSPI_SEL == RCC_CCIPR2_OCTOSPISEL_MSIK)
-  #define STM32_OCTOSPI_BITS                RCC_CCIPR2_OCTOSPISEL_MSIK
+  #if (STM32_OCTOSPI_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_OCTOSPI_BITS              RCC_CCIPR2_OCTOSPISEL_MSIK
+  #else
+    #define STM32_OCTOSPI_BITS              0U
+  #endif
 #else
   #error "invalid STM32_CFG_OCTOSPI_SEL value specified"
 #endif
@@ -4308,13 +4439,29 @@
  * @brief   ICLK clock register bits.
  */
 #if (STM32_CFG_ICLK_SEL == RCC_CCIPR1_ICLKSEL_HSI48) || defined(__DOXYGEN__)
-  #define STM32_ICLK_BITS                   RCC_CCIPR1_ICLKSEL_HSI48
+  #if (STM32_ICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ICLK_BITS                 RCC_CCIPR1_ICLKSEL_HSI48
+  #else
+    #define STM32_ICLK_BITS                 0U
+  #endif
 #elif (STM32_CFG_ICLK_SEL == RCC_CCIPR1_ICLKSEL_MSIK)
-  #define STM32_ICLK_BITS                   RCC_CCIPR1_ICLKSEL_MSIK
+  #if (STM32_ICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ICLK_BITS                 RCC_CCIPR1_ICLKSEL_MSIK
+  #else
+    #define STM32_ICLK_BITS                 0U
+  #endif
 #elif (STM32_CFG_ICLK_SEL == RCC_CCIPR1_ICLKSEL_HSE)
-  #define STM32_ICLK_BITS                   RCC_CCIPR1_ICLKSEL_HSE
+  #if (STM32_ICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ICLK_BITS                 RCC_CCIPR1_ICLKSEL_HSE
+  #else
+    #define STM32_ICLK_BITS                 0U
+  #endif
 #elif (STM32_CFG_ICLK_SEL == RCC_CCIPR1_ICLKSEL_SYSCLK)
-  #define STM32_ICLK_BITS                   RCC_CCIPR1_ICLKSEL_SYSCLK
+  #if (STM32_ICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ICLK_BITS                 RCC_CCIPR1_ICLKSEL_SYSCLK
+  #else
+    #define STM32_ICLK_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_ICLK_SEL value specified"
 #endif
@@ -4361,9 +4508,17 @@
  * @brief   USB clock register bits.
  */
 #if (STM32_CFG_USB_SEL == RCC_CCIPR1_USB1SEL_ICLK) || defined(__DOXYGEN__)
-  #define STM32_USB_BITS                    RCC_CCIPR1_USB1SEL_ICLK
+  #if (STM32_USB_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USB_BITS                  RCC_CCIPR1_USB1SEL_ICLK
+  #else
+    #define STM32_USB_BITS                  0U
+  #endif
 #elif (STM32_CFG_USB_SEL == RCC_CCIPR1_USB1SEL_ICLKDIV2)
-  #define STM32_USB_BITS                    RCC_CCIPR1_USB1SEL_ICLKDIV2
+  #if (STM32_USB_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_USB_BITS                  RCC_CCIPR1_USB1SEL_ICLKDIV2
+  #else
+    #define STM32_USB_BITS                  0U
+  #endif
 #else
   #error "invalid STM32_CFG_USB_SEL value specified"
 #endif
@@ -4404,9 +4559,17 @@
  * @brief   I2C1 clock register bits.
  */
 #if (STM32_CFG_I2C1_SEL == RCC_CCIPR1_I2C1SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_I2C1_BITS                   RCC_CCIPR1_I2C1SEL_PCLK1
+  #if (STM32_I2C1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C1_BITS                 RCC_CCIPR1_I2C1SEL_PCLK1
+  #else
+    #define STM32_I2C1_BITS                 0U
+  #endif
 #elif (STM32_CFG_I2C1_SEL == RCC_CCIPR1_I2C1SEL_MSIK)
-  #define STM32_I2C1_BITS                   RCC_CCIPR1_I2C1SEL_MSIK
+  #if (STM32_I2C1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C1_BITS                 RCC_CCIPR1_I2C1SEL_MSIK
+  #else
+    #define STM32_I2C1_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_I2C1_SEL value specified"
 #endif
@@ -4431,9 +4594,17 @@
  * @brief   I2C2 clock register bits.
  */
 #if (STM32_CFG_I2C2_SEL == RCC_CCIPR1_I2C2SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_I2C2_BITS                   RCC_CCIPR1_I2C2SEL_PCLK1
+  #if (STM32_I2C2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C2_BITS                 RCC_CCIPR1_I2C2SEL_PCLK1
+  #else
+    #define STM32_I2C2_BITS                 0U
+  #endif
 #elif (STM32_CFG_I2C2_SEL == RCC_CCIPR1_I2C2SEL_MSIK)
-  #define STM32_I2C2_BITS                   RCC_CCIPR1_I2C2SEL_MSIK
+  #if (STM32_I2C2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C2_BITS                 RCC_CCIPR1_I2C2SEL_MSIK
+  #else
+    #define STM32_I2C2_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_I2C2_SEL value specified"
 #endif
@@ -4458,9 +4629,17 @@
  * @brief   I2C3 clock register bits.
  */
 #if (STM32_CFG_I2C3_SEL == RCC_CCIPR3_I2C3SEL_PCLK3) || defined(__DOXYGEN__)
-  #define STM32_I2C3_BITS                   RCC_CCIPR3_I2C3SEL_PCLK3
+  #if (STM32_I2C3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C3_BITS                 RCC_CCIPR3_I2C3SEL_PCLK3
+  #else
+    #define STM32_I2C3_BITS                 0U
+  #endif
 #elif (STM32_CFG_I2C3_SEL == RCC_CCIPR3_I2C3SEL_MSIK)
-  #define STM32_I2C3_BITS                   RCC_CCIPR3_I2C3SEL_MSIK
+  #if (STM32_I2C3_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I2C3_BITS                 RCC_CCIPR3_I2C3SEL_MSIK
+  #else
+    #define STM32_I2C3_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_I2C3_SEL value specified"
 #endif
@@ -4485,9 +4664,17 @@
  * @brief   I3C1 clock register bits.
  */
 #if (STM32_CFG_I3C1_SEL == RCC_CCIPR1_I3C1SEL_PCLK1) || defined(__DOXYGEN__)
-  #define STM32_I3C1_BITS                   RCC_CCIPR1_I3C1SEL_PCLK1
+  #if (STM32_I3C1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I3C1_BITS                 RCC_CCIPR1_I3C1SEL_PCLK1
+  #else
+    #define STM32_I3C1_BITS                 0U
+  #endif
 #elif (STM32_CFG_I3C1_SEL == RCC_CCIPR1_I3C1SEL_MSIK)
-  #define STM32_I3C1_BITS                   RCC_CCIPR1_I3C1SEL_MSIK
+  #if (STM32_I3C1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I3C1_BITS                 RCC_CCIPR1_I3C1SEL_MSIK
+  #else
+    #define STM32_I3C1_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_I3C1_SEL value specified"
 #endif
@@ -4512,9 +4699,17 @@
  * @brief   I3C2 clock register bits.
  */
 #if (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_PCLK2) || defined(__DOXYGEN__)
-  #define STM32_I3C2_BITS                   RCC_CCIPR1_I3C2SEL_PCLK2
+  #if (STM32_I3C2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I3C2_BITS                 RCC_CCIPR1_I3C2SEL_PCLK2
+  #else
+    #define STM32_I3C2_BITS                 0U
+  #endif
 #elif (STM32_CFG_I3C2_SEL == RCC_CCIPR1_I3C2SEL_MSIK)
-  #define STM32_I3C2_BITS                   RCC_CCIPR1_I3C2SEL_MSIK
+  #if (STM32_I3C2_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_I3C2_BITS                 RCC_CCIPR1_I3C2SEL_MSIK
+  #else
+    #define STM32_I3C2_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_I3C2_SEL value specified"
 #endif
@@ -4540,11 +4735,23 @@
  */
 #if (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HCLK) ||              \
     defined(__DOXYGEN__)
-  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_HCLK
+  #if (STM32_ADCDACICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACICLK_BITS           RCC_CCIPR2_ADCDACSEL_HCLK
+  #else
+    #define STM32_ADCDACICLK_BITS           0U
+  #endif
 #elif (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_HSE)
-  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_HSE
+  #if (STM32_ADCDACICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACICLK_BITS           RCC_CCIPR2_ADCDACSEL_HSE
+  #else
+    #define STM32_ADCDACICLK_BITS           0U
+  #endif
 #elif (STM32_CFG_ADCDACICLK_SEL == RCC_CCIPR2_ADCDACSEL_MSIK)
-  #define STM32_ADCDACICLK_BITS             RCC_CCIPR2_ADCDACSEL_MSIK
+  #if (STM32_ADCDACICLK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADCDACICLK_BITS           RCC_CCIPR2_ADCDACSEL_MSIK
+  #else
+    #define STM32_ADCDACICLK_BITS           0U
+  #endif
 #else
   #error "invalid STM32_CFG_ADCDACICLK_SEL value specified"
 #endif
@@ -4671,20 +4878,21 @@
 /**
  * @brief   DAC1SH clock register bits.
  */
-#if (STM32_DAC1SH_ENABLED == FALSE)
-  #define STM32_DAC1SH_BITS                 RCC_CCIPR2_DAC1SHSEL_IGNORE
-#elif (STM32_CFG_DAC1SH_SEL == RCC_CCIPR2_DAC1SHSEL_LSE) || defined(__DOXYGEN__)
+#if (STM32_CFG_DAC1SH_SEL == RCC_CCIPR2_DAC1SHSEL_LSE) || defined(__DOXYGEN__)
   #if (STM32_DAC1SH_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_DAC1SH_BITS               (0U | RCC_CCIPR2_DAC1SHSEL_LSE)
+    #define STM32_DAC1SH_BITS               RCC_CCIPR2_DAC1SHSEL_LSE
   #else
-    #define STM32_DAC1SH_BITS               RCC_CCIPR2_DAC1SHSEL_IGNORE
+    #define STM32_DAC1SH_BITS               0U
   #endif
 #elif (STM32_CFG_DAC1SH_SEL == RCC_CCIPR2_DAC1SHSEL_LSI)
   #if (STM32_DAC1SH_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_DAC1SH_BITS               (0U | RCC_CCIPR2_DAC1SHSEL_LSI)
+    #define STM32_DAC1SH_BITS               RCC_CCIPR2_DAC1SHSEL_LSI
   #else
-    #define STM32_DAC1SH_BITS               RCC_CCIPR2_DAC1SHSEL_IGNORE
+    #define STM32_DAC1SH_BITS               0U
   #endif
+#elif (STM32_DAC1SH_ENABLED == FALSE) &&                                    \
+      (STM32_CFG_DAC1SH_SEL == RCC_CCIPR2_DAC1SHSEL_IGNORE)
+  #define STM32_DAC1SH_BITS                 0U
 #else
   #error "invalid STM32_CFG_DAC1SH_SEL value specified"
 #endif
@@ -4708,20 +4916,21 @@
 /**
  * @brief   RNG clock register bits.
  */
-#if (STM32_RNG_ENABLED == FALSE)
-  #define STM32_RNG_BITS                    RCC_CCIPR2_RNGSEL_IGNORE
-#elif (STM32_CFG_RNG_SEL == RCC_CCIPR2_RNGSEL_HSI48) || defined(__DOXYGEN__)
+#if (STM32_CFG_RNG_SEL == RCC_CCIPR2_RNGSEL_HSI48) || defined(__DOXYGEN__)
   #if (STM32_RNG_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_RNG_BITS                  (0U | RCC_CCIPR2_RNGSEL_HSI48)
+    #define STM32_RNG_BITS                  RCC_CCIPR2_RNGSEL_HSI48
   #else
-    #define STM32_RNG_BITS                  RCC_CCIPR2_RNGSEL_IGNORE
+    #define STM32_RNG_BITS                  0U
   #endif
 #elif (STM32_CFG_RNG_SEL == RCC_CCIPR2_RNGSEL_MSIK)
   #if (STM32_RNG_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_RNG_BITS                  (0U | RCC_CCIPR2_RNGSEL_MSIK)
+    #define STM32_RNG_BITS                  RCC_CCIPR2_RNGSEL_MSIK
   #else
-    #define STM32_RNG_BITS                  RCC_CCIPR2_RNGSEL_IGNORE
+    #define STM32_RNG_BITS                  0U
   #endif
+#elif (STM32_RNG_ENABLED == FALSE) &&                                       \
+      (STM32_CFG_RNG_SEL == RCC_CCIPR2_RNGSEL_IGNORE)
+  #define STM32_RNG_BITS                    0U
 #else
   #error "invalid STM32_CFG_RNG_SEL value specified"
 #endif
@@ -4745,21 +4954,22 @@
 /**
  * @brief   FDCAN1 clock register bits.
  */
-#if (STM32_FDCAN1_ENABLED == FALSE)
-  #define STM32_FDCAN1_BITS                 RCC_CCIPR1_FDCAN1SEL_IGNORE
-#elif (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCAN1SEL_SYSCLK) ||              \
-      defined(__DOXYGEN__)
+#if (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCAN1SEL_SYSCLK) ||                \
+    defined(__DOXYGEN__)
   #if (STM32_FDCAN1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_FDCAN1_BITS               (0U | RCC_CCIPR1_FDCAN1SEL_SYSCLK)
+    #define STM32_FDCAN1_BITS               RCC_CCIPR1_FDCAN1SEL_SYSCLK
   #else
-    #define STM32_FDCAN1_BITS               RCC_CCIPR1_FDCAN1SEL_IGNORE
+    #define STM32_FDCAN1_BITS               0U
   #endif
 #elif (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCAN1SEL_MSIK)
   #if (STM32_FDCAN1_ENABLED == TRUE) || defined(__DOXYGEN__)
-    #define STM32_FDCAN1_BITS               (0U | RCC_CCIPR1_FDCAN1SEL_MSIK)
+    #define STM32_FDCAN1_BITS               RCC_CCIPR1_FDCAN1SEL_MSIK
   #else
-    #define STM32_FDCAN1_BITS               RCC_CCIPR1_FDCAN1SEL_IGNORE
+    #define STM32_FDCAN1_BITS               0U
   #endif
+#elif (STM32_FDCAN1_ENABLED == FALSE) &&                                    \
+      (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCAN1SEL_IGNORE)
+  #define STM32_FDCAN1_BITS                 0U
 #else
   #error "invalid STM32_CFG_FDCAN1_SEL value specified"
 #endif
@@ -4784,11 +4994,23 @@
  * @brief   SAI1 clock register bits.
  */
 #if (STM32_CFG_SAI1_SEL == RCC_CCIPR2_SAI1SEL_MSIK) || defined(__DOXYGEN__)
-  #define STM32_SAI1_BITS                   RCC_CCIPR2_SAI1SEL_MSIK
+  #if (STM32_SAI1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SAI1_BITS                 RCC_CCIPR2_SAI1SEL_MSIK
+  #else
+    #define STM32_SAI1_BITS                 0U
+  #endif
 #elif (STM32_CFG_SAI1_SEL == RCC_CCIPR2_SAI1SEL_AUDIOCLK)
-  #define STM32_SAI1_BITS                   RCC_CCIPR2_SAI1SEL_AUDIOCLK
+  #if (STM32_SAI1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SAI1_BITS                 RCC_CCIPR2_SAI1SEL_AUDIOCLK
+  #else
+    #define STM32_SAI1_BITS                 0U
+  #endif
 #elif (STM32_CFG_SAI1_SEL == RCC_CCIPR2_SAI1SEL_HSE)
-  #define STM32_SAI1_BITS                   RCC_CCIPR2_SAI1SEL_HSE
+  #if (STM32_SAI1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SAI1_BITS                 RCC_CCIPR2_SAI1SEL_HSE
+  #else
+    #define STM32_SAI1_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_SAI1_SEL value specified"
 #endif
@@ -4816,13 +5038,29 @@
  * @brief   ADF1 clock register bits.
  */
 #if (STM32_CFG_ADF1_SEL == RCC_CCIPR2_ADF1SEL_HCLK) || defined(__DOXYGEN__)
-  #define STM32_ADF1_BITS                   RCC_CCIPR2_ADF1SEL_HCLK
+  #if (STM32_ADF1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADF1_BITS                 RCC_CCIPR2_ADF1SEL_HCLK
+  #else
+    #define STM32_ADF1_BITS                 0U
+  #endif
 #elif (STM32_CFG_ADF1_SEL == RCC_CCIPR2_ADF1SEL_AUDIOCLK)
-  #define STM32_ADF1_BITS                   RCC_CCIPR2_ADF1SEL_AUDIOCLK
+  #if (STM32_ADF1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADF1_BITS                 RCC_CCIPR2_ADF1SEL_AUDIOCLK
+  #else
+    #define STM32_ADF1_BITS                 0U
+  #endif
 #elif (STM32_CFG_ADF1_SEL == RCC_CCIPR2_ADF1SEL_HSE)
-  #define STM32_ADF1_BITS                   RCC_CCIPR2_ADF1SEL_HSE
+  #if (STM32_ADF1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADF1_BITS                 RCC_CCIPR2_ADF1SEL_HSE
+  #else
+    #define STM32_ADF1_BITS                 0U
+  #endif
 #elif (STM32_CFG_ADF1_SEL == RCC_CCIPR2_ADF1SEL_SAI1)
-  #define STM32_ADF1_BITS                   RCC_CCIPR2_ADF1SEL_SAI1
+  #if (STM32_ADF1_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_ADF1_BITS                 RCC_CCIPR2_ADF1SEL_SAI1
+  #else
+    #define STM32_ADF1_BITS                 0U
+  #endif
 #else
   #error "invalid STM32_CFG_ADF1_SEL value specified"
 #endif

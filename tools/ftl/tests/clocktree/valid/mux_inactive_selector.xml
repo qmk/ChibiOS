@@ -1,0 +1,38 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="MUXED_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the muxed clock.</description>
+      </config>
+    </configs>
+  </settings>
+  <clocks>
+    <clock point="OSC" enable="always" dynamic="no">
+      <description>fixed oscillator</description>
+      <derived frequency="4000000U" />
+    </clock>
+    <clock point="MUXED" enable="auto" dynamic="no">
+      <description>mux with inactive selector</description>
+      <mux name="MUXEDSEL">
+        <input point="OSC" default="yes">
+          <bits value="MUXEDSEL_OSC" />
+        </input>
+        <inactive value="MUXEDSEL_IGNORE" bits="0U"
+                  when="TST_MUXED_ENABLED == FALSE" />
+      </mux>
+    </clock>
+  </clocks>
+  <sinks>
+    <sink name="MUXED_REQUIRED" input="MUXED"
+          condition="TST_CFG_MUXED_REQUIRED == TRUE">
+      <description>Local option demands the muxed clock.</description>
+    </sink>
+  </sinks>
+</clocktree>

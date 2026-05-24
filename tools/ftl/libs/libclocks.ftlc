@@ -631,17 +631,37 @@ function ParseClockPoint(clock, sourceonly)
     /* It is a muxed clock.*/
     local muxname = clock.mux[0].@name[0]
     local muxinputs = []
+    local muxbranches = []
+    local muxvalues = []
     local muxdefault = ""
     list clock.mux.input as input
       local inputpoint = input.@point[0]
       local inputbits = GetBitsValue(input)
       local inputdefault = (input.@default[0]!"no")?string
+      if muxvalues?seq_contains(inputbits)
+        stop ">>>> Duplicate selector value '" + inputbits + "' in clock mux '" + clockname + "'"
+      endif
+      local muxvalues = muxvalues + [inputbits]
       if inputdefault == "yes"
         local muxdefault = inputbits
       endif
       local muxinputs = muxinputs + [{"point":inputpoint, "bits":inputbits, "default":inputdefault}]
+      local muxbranches = muxbranches + [{"type":"input", "point":inputpoint, "value":inputbits, "bits":inputbits, "default":inputdefault, "condition":""}]
     endlist
-    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+    if muxinputs?size == 0
+      stop ">>>> Missing input for clock mux '" + clockname + "'"
+    endif
+    list clock.mux.inactive as inactive
+      local inactivevalue = inactive.@value[0]?string
+      local inactivebits = (inactive.@bits[0]!"0U")?string
+      local inactivecondition = inactive.@when[0]?string
+      if muxvalues?seq_contains(inactivevalue)
+        stop ">>>> Duplicate selector value '" + inactivevalue + "' in clock mux '" + clockname + "'"
+      endif
+      local muxvalues = muxvalues + [inactivevalue]
+      local muxbranches = muxbranches + [{"type":"inactive", "point":"", "value":inactivevalue, "bits":inactivebits, "default":"no", "condition":inactivecondition}]
+    endlist
+    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "branches":muxbranches, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
 
   elseif clock.divider[0]??
     /* It is a divided clock.*/
@@ -1026,6 +1046,11 @@ macro EmitConfigurations()
       local notes = " * @note    Allowed sources:\n"
       list point["inputs"] as input
         local notes = notes + " *          - " + input["point"] + ".\n"
+      endlist
+      list point["branches"] as branch
+        if branch["type"] == "inactive"
+          local notes = notes + " *          - inactive selection " + branch["value"] + ".\n"
+        endif
       endlist
       local default = point["default"]
       if default == ""
@@ -1990,23 +2015,26 @@ macro EmitClockBits(point)
  * @brief   ${point["name"]} clock register bits.
  */
 """
-    list point["inputs"] as input
-      if input?is_first
+    list point["branches"] as branch
+      if branch["type"] == "input"
+        local condition = "(" + selmacro + " == " + branch["value"] + ")"
+        local conditiondoxygen = condition + " || defined(__DOXYGEN__)"
+      else
+        local condition = "(" + branch["condition"] + ") && (" + selmacro + " == " + branch["value"] + ")"
+        local conditiondoxygen = condition
+      endif
+      if branch?is_first
         if disabledbits != "" && point["enable"] != "always"
           ppcode.EmitPPIfAt(expression="(" + enmacro + " == FALSE)", level=0)
           ppcode.EmitPPDefineAt(name=bitsmacro, value=disabledbits, level=1)
-          ppcode.EmitPPElifAt(expression="(" + selmacro + " == " + input["bits"] + ") || defined(__DOXYGEN__)", level=0)
+          ppcode.EmitPPElifAt(expression=conditiondoxygen, level=0)
         else
-          ppcode.EmitPPIfAt(expression="(" + selmacro + " == " + input["bits"] + ") || defined(__DOXYGEN__)", level=0)
+          ppcode.EmitPPIfAt(expression=conditiondoxygen, level=0)
         endif
       else
-        ppcode.EmitPPElifAt(expression="(" + selmacro + " == " + input["bits"] + ")", level=0)
+        ppcode.EmitPPElifAt(expression=condition, level=0)
       endif
-      if point["bits"]?size > 0
-        EmitTargetBitsDefinitionAt(point=point, bits=input["bits"], target="", indent=1)
-      else
-        ppcode.EmitPPDefineAt(name=bitsmacro, value=input["bits"], level=1)
-      endif
+      EmitTargetBitsDefinitionAt(point=point, bits=branch["bits"], target="", indent=1)
     endlist
     ppcode.EmitPPElseAt(level=0)
     ppcode.EmitPPErrorAt(message="\"invalid " + selmacro + " value specified\"", level=1)

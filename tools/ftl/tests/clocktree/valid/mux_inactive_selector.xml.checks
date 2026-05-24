@@ -1,0 +1,5 @@
+# Inactive selector values are accepted as selector values but emit bits.
+TST_CFG_MUXED_SEL                 MUXEDSEL_OSC
+(TST_CFG_MUXED_SEL == MUXEDSEL_IGNORE)
+# The sentinel is never emitted as the register bit value.
+ABSENT:#define TST_MUXED_BITS                  MUXEDSEL_IGNORE

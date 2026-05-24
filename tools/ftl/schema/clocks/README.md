@@ -121,6 +121,26 @@ Clock definitions with enable-state bits use a clock-level `<bits enabled="..."
 disabled="..."/>` element. Those bits are combined with selection bits when the
 clock has a mux/divider/multiplier selection.
 
+## Dynamic Reconfiguration Contract
+
+Dynamic mode is intentionally not a promise that every RCC selector can be
+changed arbitrarily at runtime. The XML describes the static clock topology and
+the startup/default selector configuration. Dynamic reconfiguration code may
+change the frequency of supported dynamic clock points, but the new runtime
+configuration must remain compatible with that static topology.
+
+In particular, runtime clock changes must not disable or invalidate sources
+selected by statically configured peripheral muxes. Peripheral drivers normally
+read their effective clock when started; they do not own or change those RCC
+selectors. The dynamic update path is therefore expected to recalculate
+effective frequencies for the supported dynamic points, while user/HAL clock
+management code is responsible for choosing runtime configurations that still
+preserve the configured peripheral clock sources.
+
+Do not mark a clock point as dynamic just because its register field exists.
+Use dynamic points only where the port provides a readback/recalculation path
+and where runtime changes are part of the supported clock-management API.
+
 ## Clock Demand Modeling Procedure
 
 Use `enable="always"` only for clock points that are intrinsically required by

@@ -911,26 +911,29 @@
     </clock>
     <clock point="DAC1SH" enable="auto" dynamic="no">
       <description>DAC1 sample and hold clock</description>
-      <bits enabled="0U" disabled="RCC_CCIPR2_DAC1SHSEL_IGNORE" />
       <mux name="DAC1SH">
         <input point="LSE" default="yes"><bits value="RCC_CCIPR2_DAC1SHSEL_LSE" /></input>
         <input point="LSI"><bits value="RCC_CCIPR2_DAC1SHSEL_LSI" /></input>
+        <inactive value="RCC_CCIPR2_DAC1SHSEL_IGNORE" bits="0U"
+                  when="STM32_DAC1SH_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="RNG" enable="auto" dynamic="no">
       <description>RNG clock</description>
-      <bits enabled="0U" disabled="RCC_CCIPR2_RNGSEL_IGNORE" />
       <mux name="RNG">
         <input point="HSI48"><bits value="RCC_CCIPR2_RNGSEL_HSI48" /></input>
         <input point="MSIK" default="yes"><bits value="RCC_CCIPR2_RNGSEL_MSIK" /></input>
+        <inactive value="RCC_CCIPR2_RNGSEL_IGNORE" bits="0U"
+                  when="STM32_RNG_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="FDCAN1" enable="auto" dynamic="no">
       <description>FDCAN1 clock</description>
-      <bits enabled="0U" disabled="RCC_CCIPR1_FDCAN1SEL_IGNORE" />
       <mux name="FDCAN1">
         <input point="SYSCLK" default="yes"><bits value="RCC_CCIPR1_FDCAN1SEL_SYSCLK" /></input>
         <input point="MSIK"><bits value="RCC_CCIPR1_FDCAN1SEL_MSIK" /></input>
+        <inactive value="RCC_CCIPR1_FDCAN1SEL_IGNORE" bits="0U"
+                  when="STM32_FDCAN1_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="SAI1" enable="auto" dynamic="no">
