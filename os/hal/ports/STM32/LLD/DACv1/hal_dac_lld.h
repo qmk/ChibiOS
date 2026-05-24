@@ -620,7 +620,11 @@ typedef enum {
  * @name    DAC trigger modes
  * @{
  */
+#if defined(DAC_CR_TSEL1_3)
+#define DAC_TRG_MASK                    15U
+#else
 #define DAC_TRG_MASK                    7U
+#endif
 #define DAC_TRG(n)                      (n)
 /** @} */
 

@@ -74,6 +74,7 @@
 *****************************************************************************
 
 *** 21.11.5 ***
+- FIX: DACv1 trigger mask sized for 3 or 4 bit trigger source identifier
 - NEW: STM32U0xx support.
 - NEW: STM32U3xx support.
 - FIX: Fixed OSLIB Jobs Queues: return JOB_NULL descriptors to the free pool
