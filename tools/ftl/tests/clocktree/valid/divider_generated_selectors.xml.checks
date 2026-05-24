@@ -1,0 +1,5 @@
+# Divider choices can generate register selector macros.
+#define RCC_CFGR_HPRE_DIV1                  ((0U) << 2U)
+#define RCC_CFGR_HPRE_DIV2                  ((8U) << 2U)
+TST_CFG_HCLK_VALUE                1
+#define TST_HCLK_BITS                     RCC_CFGR_HPRE_DIV1

@@ -148,6 +148,11 @@ function GetBitsValue(node)
   stop ">>>> Selection bits must use one untargeted bits element"
 endfunction
 
+/* Builds a generated selector macro name from a field name and selector label.*/
+function GetGeneratedSelectorMacro(field, label)
+  return field + "_" + label
+endfunction
+
 /* Builds one preprocessor expression from nested conditional terms.*/
 function BuildAndExpression(terms)
   local expression = ""
@@ -262,22 +267,40 @@ endfunction
 function ParseScaler(scaler)
   local kind = ""
   local data = {}
+  local field = (scaler.@field[0]!"")?string
+  local offset = (scaler.@offset[0]!"")?string
+  local selectors = []
   if scaler.value[0]??
     local kind = "value"
     local value = scaler.value[0]
-    local data = {"min":(value.@min[0]!"")?string, "max":(value.@max[0]!"")?string, "default":(value.@default[0]!"")?string, "bits":GetBitsValue(value)}
+    local data = {"min":(value.@min[0]!"")?string, "max":(value.@max[0]!"")?string, "default":(value.@default[0]!"")?string, "bits":GetBitsValue(value), "field":field, "offset":offset, "selectors":selectors}
   elseif scaler.set[0]??
     local kind = "set"
     local set = scaler.set[0]
-    local data = {"values":(set.@values[0]!"")?string, "default":(set.@default[0]!"")?string, "bits":GetBitsValue(set)}
+    local data = {"values":(set.@values[0]!"")?string, "default":(set.@default[0]!"")?string, "bits":GetBitsValue(set), "field":field, "offset":offset, "selectors":selectors}
   elseif scaler.choices[0]??
     local kind = "choices"
     local default = (scaler.choices[0].@default[0]!"")?string
     local choices = []
     list scaler.choices.choice as choice
-      local choices = choices + [{"item":choice.@item[0]?string, "value":choice.@value[0]?string, "bits":GetBitsValue(choice)}]
+      local item = choice.@item[0]?string
+      local value = choice.@value[0]?string
+      local encoding = (choice.@encoding[0]!"")?string
+      if choice.bits[0]??
+        if encoding != ""
+          stop ">>>> Choice '" + item + "' mixes explicit bits and selector encoding"
+        endif
+        local bits = GetBitsValue(choice)
+      else
+        if field == "" || offset == "" || encoding == ""
+          stop ">>>> Missing selector encoding for choice '" + item + "'"
+        endif
+        local bits = GetGeneratedSelectorMacro(field, item)
+        local selectors = selectors + [{"kind":"encoded", "field":field, "macro":bits, "encoding":encoding, "offset":offset}]
+      endif
+      local choices = choices + [{"item":item, "value":value, "bits":bits}]
     endlist
-    local data = {"choices":choices, "default":default}
+    local data = {"choices":choices, "default":default, "field":field, "offset":offset, "selectors":selectors}
   endif
 
   return {"kind":kind, "data":data}
@@ -630,14 +653,30 @@ function ParseClockPoint(clock, sourceonly)
   elseif clock.mux[0]??
     /* It is a muxed clock.*/
     local muxname = clock.mux[0].@name[0]
+    local muxfield = (clock.mux[0].@field[0]!"")?string
+    local muxoffset = (clock.mux[0].@offset[0]!"")?string
     local muxinputs = []
     local muxbranches = []
     local muxvalues = []
+    local muxselectors = []
     local muxdefault = ""
     list clock.mux.input as input
-      local inputpoint = input.@point[0]
-      local inputbits = GetBitsValue(input)
+      local inputpoint = input.@point[0]?string
+      local inputlabel = (input.@label[0]!inputpoint)?string
+      local inputencoding = (input.@encoding[0]!"")?string
       local inputdefault = (input.@default[0]!"no")?string
+      if input.bits[0]??
+        if inputencoding != ""
+          stop ">>>> Input '" + inputpoint + "' mixes explicit bits and selector encoding in clock mux '" + clockname + "'"
+        endif
+        local inputbits = GetBitsValue(input)
+      else
+        if muxfield == "" || muxoffset == "" || inputencoding == ""
+          stop ">>>> Missing selector encoding for input '" + inputpoint + "' in clock mux '" + clockname + "'"
+        endif
+        local inputbits = GetGeneratedSelectorMacro(muxfield, inputlabel)
+        local muxselectors = muxselectors + [{"kind":"encoded", "field":muxfield, "macro":inputbits, "encoding":inputencoding, "offset":muxoffset}]
+      endif
       if muxvalues?seq_contains(inputbits)
         stop ">>>> Duplicate selector value '" + inputbits + "' in clock mux '" + clockname + "'"
       endif
@@ -652,7 +691,16 @@ function ParseClockPoint(clock, sourceonly)
       stop ">>>> Missing input for clock mux '" + clockname + "'"
     endif
     list clock.mux.inactive as inactive
-      local inactivevalue = inactive.@value[0]?string
+      local hasinactivevalue = inactive.@value[0]??
+      local inactivelabel = (inactive.@label[0]!"")?string
+      if muxfield != "" && inactivelabel != "" && hasinactivevalue
+        local inactivevalue = GetGeneratedSelectorMacro(muxfield, inactivelabel)
+        local muxselectors = muxselectors + [{"kind":"raw", "field":"", "macro":inactivevalue, "value":inactive.@value[0]?string}]
+      elseif hasinactivevalue
+        local inactivevalue = inactive.@value[0]?string
+      else
+        stop ">>>> Missing selector value for inactive branch in clock mux '" + clockname + "'"
+      endif
       local inactivebits = (inactive.@bits[0]!"0U")?string
       local inactivecondition = inactive.@when[0]?string
       if muxvalues?seq_contains(inactivevalue)
@@ -661,7 +709,7 @@ function ParseClockPoint(clock, sourceonly)
       local muxvalues = muxvalues + [inactivevalue]
       local muxbranches = muxbranches + [{"type":"inactive", "point":"", "value":inactivevalue, "bits":inactivebits, "default":"no", "condition":inactivecondition}]
     endlist
-    return {"type":"mux", "name":clockname, "muxname":muxname, "inputs":muxinputs, "branches":muxbranches, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+    return {"type":"mux", "name":clockname, "muxname":muxname, "field":muxfield, "inputs":muxinputs, "branches":muxbranches, "selectors":muxselectors, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
 
   elseif clock.divider[0]??
     /* It is a divided clock.*/
@@ -826,6 +874,98 @@ ${("    " + name)?right_pad(76)}\
     endlist
     emit """
   }
+"""
+  endif
+endmacro
+
+/* Returns true if any mux has generated selector constants.*/
+function HasGeneratedMuxSelectors()
+  list model["muxes"] as mux
+    if mux["selectors"]?size > 0
+      return true
+    endif
+  endlist
+
+  return false
+endfunction
+
+/* Returns true if any scaler has generated selector constants.*/
+function HasGeneratedScalerSelectors()
+  list model["dividers"] as divider
+    if divider["data"]["selectors"]?size > 0
+      return true
+    endif
+  endlist
+  list model["multipliers"] as multiplier
+    if multiplier["data"]["selectors"]?size > 0
+      return true
+    endif
+  endlist
+
+  return false
+endfunction
+
+/* Emits generated selector constants for one group of fields.*/
+macro EmitGeneratedSelectors(selectors)
+  list selectors as selector
+    if selector["kind"] == "encoded"
+      ppcode.EmitPPDefine(name=selector["macro"], value="((" + selector["encoding"] + ") << " + selector["offset"] + ")")
+    else
+      ppcode.EmitPPDefine(name=selector["macro"], value=selector["value"])
+    endif
+  endlist
+endmacro
+
+/* Emits generated mux selector constants.*/
+macro EmitMuxSelectorConstants()
+  if HasGeneratedMuxSelectors()
+    emit """
+/**
+ * @name    Generated mux selector constants
+ * @{
+ */
+"""
+    list model["muxes"] as mux
+      if mux["selectors"]?size > 0
+        EmitGeneratedSelectors(selectors=mux["selectors"])
+        sep
+          emit "\e"
+        endsep
+      endif
+    endlist
+    emit """
+/** @} */
+"""
+  endif
+endmacro
+
+/* Emits generated scaler selector constants.*/
+macro EmitScalerSelectorConstants()
+  if HasGeneratedScalerSelectors()
+    emit """
+/**
+ * @name    Generated scaler selector constants
+ * @{
+ */
+"""
+    list model["dividers"] as divider
+      if divider["data"]["selectors"]?size > 0
+        EmitGeneratedSelectors(selectors=divider["data"]["selectors"])
+        sep
+          emit "\e"
+        endsep
+      endif
+    endlist
+    list model["multipliers"] as multiplier
+      if multiplier["data"]["selectors"]?size > 0
+        EmitGeneratedSelectors(selectors=multiplier["data"]["selectors"])
+        sep
+          emit "\e"
+        endsep
+      endif
+    endlist
+    emit """
+/** @} */
 """
   endif
 endmacro

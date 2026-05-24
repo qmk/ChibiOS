@@ -67,6 +67,202 @@
   }
 /** @} */
 
+/**
+ * @name    Generated mux selector constants
+ * @{
+ */
+#define RCC_CFGR1_SW_MSIS                   ((0U) << 0U)
+#define RCC_CFGR1_SW_HSI16                  ((1U) << 0U)
+#define RCC_CFGR1_SW_HSE                    ((2U) << 0U)
+
+#define RCC_CFGR1_MCO1SEL_OFF               ((0U) << 24U)
+#define RCC_CFGR1_MCO1SEL_SYSCLK            ((1U) << 24U)
+#define RCC_CFGR1_MCO1SEL_MSIS              ((2U) << 24U)
+#define RCC_CFGR1_MCO1SEL_HSI16             ((3U) << 24U)
+#define RCC_CFGR1_MCO1SEL_HSE               ((4U) << 24U)
+#define RCC_CFGR1_MCO1SEL_LSI               ((5U) << 24U)
+#define RCC_CFGR1_MCO1SEL_LSE               ((6U) << 24U)
+#define RCC_CFGR1_MCO1SEL_HSI48             ((7U) << 24U)
+#define RCC_CFGR1_MCO1SEL_MSIK              ((8U) << 24U)
+
+#define RCC_CFGR1_MCO2SEL_OFF               ((0U) << 16U)
+#define RCC_CFGR1_MCO2SEL_SYSCLK            ((1U) << 16U)
+#define RCC_CFGR1_MCO2SEL_MSIS              ((2U) << 16U)
+#define RCC_CFGR1_MCO2SEL_HSI16             ((3U) << 16U)
+#define RCC_CFGR1_MCO2SEL_HSE               ((4U) << 16U)
+#define RCC_CFGR1_MCO2SEL_LSI               ((5U) << 16U)
+#define RCC_CFGR1_MCO2SEL_LSE               ((6U) << 16U)
+#define RCC_CFGR1_MCO2SEL_HSI48             ((7U) << 16U)
+#define RCC_CFGR1_MCO2SEL_MSIK              ((8U) << 16U)
+
+#define RCC_BDCR_RTCSEL_NOCLOCK             ((0U) << 8U)
+#define RCC_BDCR_RTCSEL_LSE                 ((1U) << 8U)
+#define RCC_BDCR_RTCSEL_LSI                 ((2U) << 8U)
+#define RCC_BDCR_RTCSEL_HSEDIV              ((3U) << 8U)
+
+#define RCC_BDCR_LSCOSEL_NOCLOCK            ((0U) << 24U)
+#define RCC_BDCR_LSCOSEL_LSI                ((1U) << 24U)
+#define RCC_BDCR_LSCOSEL_LSE                ((3U) << 24U)
+
+#define RCC_CCIPR1_USART1SEL_PCLK2          ((0U) << 0U)
+#define RCC_CCIPR1_USART1SEL_HSI16          ((1U) << 0U)
+
+#define RCC_CCIPR1_USART3SEL_PCLK1          ((0U) << 2U)
+#define RCC_CCIPR1_USART3SEL_HSI16          ((1U) << 2U)
+
+#define RCC_CCIPR1_UART4SEL_PCLK1           ((0U) << 4U)
+#define RCC_CCIPR1_UART4SEL_HSI16           ((1U) << 4U)
+
+#define RCC_CCIPR1_UART5SEL_PCLK1           ((0U) << 6U)
+#define RCC_CCIPR1_UART5SEL_HSI16           ((1U) << 6U)
+
+#define RCC_CCIPR3_LPUART1SEL_PCLK3         ((0U) << 0U)
+#define RCC_CCIPR3_LPUART1SEL_HSI16         ((1U) << 0U)
+#define RCC_CCIPR3_LPUART1SEL_LSE           ((2U) << 0U)
+#define RCC_CCIPR3_LPUART1SEL_MSIK          ((3U) << 0U)
+
+#define RCC_CCIPR3_LPTIM1SEL_MSIK           ((0U) << 10U)
+#define RCC_CCIPR3_LPTIM1SEL_LSI            ((1U) << 10U)
+#define RCC_CCIPR3_LPTIM1SEL_HSI16          ((2U) << 10U)
+#define RCC_CCIPR3_LPTIM1SEL_LSE            ((3U) << 10U)
+
+#define RCC_CCIPR1_LPTIM2SEL_PCLK1          ((0U) << 18U)
+#define RCC_CCIPR1_LPTIM2SEL_LSI            ((1U) << 18U)
+#define RCC_CCIPR1_LPTIM2SEL_HSI16          ((2U) << 18U)
+#define RCC_CCIPR1_LPTIM2SEL_LSE            ((3U) << 18U)
+
+#define RCC_CCIPR3_LPTIM34SEL_MSIK          ((0U) << 8U)
+#define RCC_CCIPR3_LPTIM34SEL_LSI           ((1U) << 8U)
+#define RCC_CCIPR3_LPTIM34SEL_HSI16         ((2U) << 8U)
+#define RCC_CCIPR3_LPTIM34SEL_LSE           ((3U) << 8U)
+
+#define RCC_CCIPR1_SPI1SEL_PCLK2            ((0U) << 20U)
+#define RCC_CCIPR1_SPI1SEL_MSIK             ((1U) << 20U)
+
+#define RCC_CCIPR1_SPI2SEL_PCLK1            ((0U) << 16U)
+#define RCC_CCIPR1_SPI2SEL_MSIK             ((1U) << 16U)
+
+#define RCC_CCIPR2_SPI3SEL_PCLK1            ((0U) << 3U)
+#define RCC_CCIPR2_SPI3SEL_MSIK             ((1U) << 3U)
+
+#define RCC_CCIPR2_OCTOSPISEL_SYSCLK        ((0U) << 20U)
+#define RCC_CCIPR2_OCTOSPISEL_MSIK          ((1U) << 20U)
+
+#define RCC_CCIPR1_SYSTICKSEL_HCLKDIV8      ((0U) << 22U)
+#define RCC_CCIPR1_SYSTICKSEL_LSI           ((1U) << 22U)
+#define RCC_CCIPR1_SYSTICKSEL_LSE           ((2U) << 22U)
+
+#define RCC_CCIPR1_ICLKSEL_HSI48            ((0U) << 26U)
+#define RCC_CCIPR1_ICLKSEL_MSIK             ((1U) << 26U)
+#define RCC_CCIPR1_ICLKSEL_HSE              ((2U) << 26U)
+#define RCC_CCIPR1_ICLKSEL_SYSCLK           ((3U) << 26U)
+
+#define RCC_CCIPR1_USB1SEL_ICLK             ((0U) << 28U)
+#define RCC_CCIPR1_USB1SEL_ICLKDIV2         ((1U) << 28U)
+
+#define RCC_CCIPR1_I2C1SEL_PCLK1            ((0U) << 10U)
+#define RCC_CCIPR1_I2C1SEL_MSIK             ((1U) << 10U)
+
+#define RCC_CCIPR1_I2C2SEL_PCLK1            ((0U) << 12U)
+#define RCC_CCIPR1_I2C2SEL_MSIK             ((1U) << 12U)
+
+#define RCC_CCIPR3_I2C3SEL_PCLK3            ((0U) << 6U)
+#define RCC_CCIPR3_I2C3SEL_MSIK             ((1U) << 6U)
+
+#define RCC_CCIPR1_I3C1SEL_PCLK1            ((0U) << 8U)
+#define RCC_CCIPR1_I3C1SEL_MSIK             ((1U) << 8U)
+
+#define RCC_CCIPR1_I3C2SEL_PCLK2            ((0U) << 14U)
+#define RCC_CCIPR1_I3C2SEL_MSIK             ((1U) << 14U)
+
+#define RCC_CCIPR2_ADCDACSEL_HCLK           ((0U) << 16U)
+#define RCC_CCIPR2_ADCDACSEL_HSE            ((1U) << 16U)
+#define RCC_CCIPR2_ADCDACSEL_MSIK           ((2U) << 16U)
+
+#define RCC_CCIPR2_DAC1SHSEL_LSE            ((0U) << 19U)
+#define RCC_CCIPR2_DAC1SHSEL_LSI            ((1U) << 19U)
+#define RCC_CCIPR2_DAC1SHSEL_IGNORE         0xFFFFFFFFU
+
+#define RCC_CCIPR2_RNGSEL_HSI48             ((0U) << 11U)
+#define RCC_CCIPR2_RNGSEL_MSIK              ((1U) << 11U)
+#define RCC_CCIPR2_RNGSEL_IGNORE            0xFFFFFFFFU
+
+#define RCC_CCIPR1_FDCAN1SEL_SYSCLK         ((0U) << 24U)
+#define RCC_CCIPR1_FDCAN1SEL_MSIK           ((1U) << 24U)
+#define RCC_CCIPR1_FDCAN1SEL_IGNORE         0xFFFFFFFFU
+
+#define RCC_CCIPR2_SAI1SEL_MSIK             ((0U) << 5U)
+#define RCC_CCIPR2_SAI1SEL_AUDIOCLK         ((1U) << 5U)
+#define RCC_CCIPR2_SAI1SEL_HSE              ((2U) << 5U)
+
+#define RCC_CCIPR2_ADF1SEL_HCLK             ((0U) << 0U)
+#define RCC_CCIPR2_ADF1SEL_AUDIOCLK         ((1U) << 0U)
+#define RCC_CCIPR2_ADF1SEL_HSE              ((2U) << 0U)
+#define RCC_CCIPR2_ADF1SEL_SAI1             ((3U) << 0U)
+/** @} */
+
+/**
+ * @name    Generated scaler selector constants
+ * @{
+ */
+#define RCC_CFGR2_HPRE_DIV1                 ((0U) << 0U)
+#define RCC_CFGR2_HPRE_DIV2                 ((8U) << 0U)
+#define RCC_CFGR2_HPRE_DIV4                 ((9U) << 0U)
+#define RCC_CFGR2_HPRE_DIV8                 ((10U) << 0U)
+#define RCC_CFGR2_HPRE_DIV16                ((11U) << 0U)
+#define RCC_CFGR2_HPRE_DIV64                ((12U) << 0U)
+#define RCC_CFGR2_HPRE_DIV128               ((13U) << 0U)
+#define RCC_CFGR2_HPRE_DIV256               ((14U) << 0U)
+#define RCC_CFGR2_HPRE_DIV512               ((15U) << 0U)
+
+#define RCC_CFGR2_PPRE1_DIV1                ((0U) << 4U)
+#define RCC_CFGR2_PPRE1_DIV2                ((4U) << 4U)
+#define RCC_CFGR2_PPRE1_DIV4                ((5U) << 4U)
+#define RCC_CFGR2_PPRE1_DIV8                ((6U) << 4U)
+#define RCC_CFGR2_PPRE1_DIV16               ((7U) << 4U)
+
+#define RCC_CFGR2_PPRE2_DIV1                ((0U) << 8U)
+#define RCC_CFGR2_PPRE2_DIV2                ((4U) << 8U)
+#define RCC_CFGR2_PPRE2_DIV4                ((5U) << 8U)
+#define RCC_CFGR2_PPRE2_DIV8                ((6U) << 8U)
+#define RCC_CFGR2_PPRE2_DIV16               ((7U) << 8U)
+
+#define RCC_CFGR3_PPRE3_DIV1                ((0U) << 4U)
+#define RCC_CFGR3_PPRE3_DIV2                ((4U) << 4U)
+#define RCC_CFGR3_PPRE3_DIV4                ((5U) << 4U)
+#define RCC_CFGR3_PPRE3_DIV8                ((6U) << 4U)
+#define RCC_CFGR3_PPRE3_DIV16               ((7U) << 4U)
+
+#define RCC_CFGR1_MCO1PRE_DIV1              ((0U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV2              ((1U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV4              ((2U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV8              ((3U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV16             ((4U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV32             ((5U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV64             ((6U) << 28U)
+#define RCC_CFGR1_MCO1PRE_DIV128            ((7U) << 28U)
+
+#define RCC_CFGR1_MCO2PRE_DIV1              ((0U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV2              ((1U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV4              ((2U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV8              ((3U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV16             ((4U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV32             ((5U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV64             ((6U) << 20U)
+#define RCC_CFGR1_MCO2PRE_DIV128            ((7U) << 20U)
+
+#define RCC_CCIPR2_ADCDACPRE_ICLK           ((0U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV2       ((1U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV4       ((8U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV8       ((9U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV16      ((10U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV32      ((11U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV64      ((12U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV128     ((13U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV256     ((14U) << 12U)
+#define RCC_CCIPR2_ADCDACPRE_ICLKDIV512     ((15U) << 12U)
+/** @} */
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/

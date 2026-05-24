@@ -1,0 +1,5 @@
+# Inactive selector macros can be generated as raw selector sentinels.
+#define RCC_CCIPR_MUXEDSEL_OSC              ((0U) << 6U)
+#define RCC_CCIPR_MUXEDSEL_IGNORE           0xFFFFFFFFU
+(TST_CFG_MUXED_SEL == RCC_CCIPR_MUXEDSEL_IGNORE)
+#define TST_MUXED_BITS                    0U

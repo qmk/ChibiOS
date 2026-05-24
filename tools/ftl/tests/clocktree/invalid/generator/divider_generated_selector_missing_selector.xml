@@ -1,0 +1,28 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+    </configs>
+  </settings>
+  <clocks>
+    <clock point="SYSCLK" enable="always" dynamic="no">
+      <description>system clock</description>
+      <derived frequency="16000000U" />
+    </clock>
+    <clock point="HCLK" enable="always" dynamic="no">
+      <description>AHB clock</description>
+      <divider name="HPRE" input="SYSCLK" field="RCC_CFGR_HPRE" offset="2U">
+        <choices>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" />
+        </choices>
+      </divider>
+    </clock>
+  </clocks>
+</clocktree>

@@ -1,0 +1,5 @@
+# Selector values are generated from the mux field, encoding and offset.
+#define RCC_CCIPR_SERIALSEL_PCLK            ((0U) << 4U)
+#define RCC_CCIPR_SERIALSEL_OSC             ((1U) << 4U)
+TST_CFG_SERIAL_SEL                RCC_CCIPR_SERIALSEL_PCLK
+#define TST_SERIAL_BITS                   RCC_CCIPR_SERIALSEL_PCLK

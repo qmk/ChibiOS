@@ -525,39 +525,39 @@
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>system clock</description>
       <limits ref="SYSCLK" />
-      <mux name="SW">
-        <input point="MSIS" default="yes"><bits value="RCC_CFGR1_SW_MSIS" /></input>
-        <input point="HSI16"><bits value="RCC_CFGR1_SW_HSI16" /></input>
-        <input point="HSE"><bits value="RCC_CFGR1_SW_HSE" /></input>
+      <mux name="SW" field="RCC_CFGR1_SW" offset="0U">
+        <input point="MSIS" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
+        <input point="HSE" encoding="2U" />
       </mux>
     </clock>
     <clock point="HCLK" enable="always" dynamic="yes">
       <description>AHB clock</description>
       <limits ref="HCLK" />
-      <divider name="HPRE" input="SYSCLK">
+      <divider name="HPRE" input="SYSCLK" field="RCC_CFGR2_HPRE" offset="0U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR2_HPRE_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR2_HPRE_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR2_HPRE_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR2_HPRE_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR2_HPRE_DIV16" /></choice>
-          <choice item="DIV64" value="64"><bits value="RCC_CFGR2_HPRE_DIV64" /></choice>
-          <choice item="DIV128" value="128"><bits value="RCC_CFGR2_HPRE_DIV128" /></choice>
-          <choice item="DIV256" value="256"><bits value="RCC_CFGR2_HPRE_DIV256" /></choice>
-          <choice item="DIV512" value="512"><bits value="RCC_CFGR2_HPRE_DIV512" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="8U" />
+          <choice item="DIV4" value="4" encoding="9U" />
+          <choice item="DIV8" value="8" encoding="10U" />
+          <choice item="DIV16" value="16" encoding="11U" />
+          <choice item="DIV64" value="64" encoding="12U" />
+          <choice item="DIV128" value="128" encoding="13U" />
+          <choice item="DIV256" value="256" encoding="14U" />
+          <choice item="DIV512" value="512" encoding="15U" />
         </choices>
       </divider>
     </clock>
     <clock point="PCLK1" enable="always" dynamic="yes">
       <description>APB1 clock</description>
       <limits ref="PCLK1" />
-      <divider name="PPRE1" input="HCLK">
+      <divider name="PPRE1" input="HCLK" field="RCC_CFGR2_PPRE1" offset="4U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR2_PPRE1_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR2_PPRE1_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR2_PPRE1_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR2_PPRE1_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR2_PPRE1_DIV16" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
         </choices>
       </divider>
     </clock>
@@ -569,13 +569,13 @@
     <clock point="PCLK2" enable="always" dynamic="yes">
       <description>APB2 clock</description>
       <limits ref="PCLK2" />
-      <divider name="PPRE2" input="HCLK">
+      <divider name="PPRE2" input="HCLK" field="RCC_CFGR2_PPRE2" offset="8U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR2_PPRE2_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR2_PPRE2_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR2_PPRE2_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR2_PPRE2_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR2_PPRE2_DIV16" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
         </choices>
       </divider>
     </clock>
@@ -587,13 +587,13 @@
     <clock point="PCLK3" enable="always" dynamic="yes">
       <description>APB3 clock</description>
       <limits ref="PCLK3" />
-      <divider name="PPRE3" input="HCLK">
+      <divider name="PPRE3" input="HCLK" field="RCC_CFGR3_PPRE3" offset="4U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR3_PPRE3_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR3_PPRE3_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR3_PPRE3_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR3_PPRE3_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR3_PPRE3_DIV16" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
         </choices>
       </divider>
     </clock>
@@ -607,177 +607,177 @@
     </clock>
     <clock point="MCO1DIV" enable="always" dynamic="no">
       <description>MCO1 selected source before prescaler</description>
-      <mux name="MCO1">
-        <input point="NONE" default="yes"><bits value="RCC_CFGR1_MCO1SEL_OFF" /></input>
-        <input point="SYSCLK"><bits value="RCC_CFGR1_MCO1SEL_SYSCLK" /></input>
-        <input point="MSIS"><bits value="RCC_CFGR1_MCO1SEL_MSIS" /></input>
-        <input point="HSI16"><bits value="RCC_CFGR1_MCO1SEL_HSI16" /></input>
-        <input point="HSE"><bits value="RCC_CFGR1_MCO1SEL_HSE" /></input>
-        <input point="LSI"><bits value="RCC_CFGR1_MCO1SEL_LSI" /></input>
-        <input point="LSE"><bits value="RCC_CFGR1_MCO1SEL_LSE" /></input>
-        <input point="HSI48"><bits value="RCC_CFGR1_MCO1SEL_HSI48" /></input>
-        <input point="MSIK"><bits value="RCC_CFGR1_MCO1SEL_MSIK" /></input>
+      <mux name="MCO1" field="RCC_CFGR1_MCO1SEL" offset="24U">
+        <input point="NONE" label="OFF" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="MSIS" encoding="2U" />
+        <input point="HSI16" encoding="3U" />
+        <input point="HSE" encoding="4U" />
+        <input point="LSI" encoding="5U" />
+        <input point="LSE" encoding="6U" />
+        <input point="HSI48" encoding="7U" />
+        <input point="MSIK" encoding="8U" />
       </mux>
     </clock>
     <clock point="MCO1" enable="always" dynamic="yes">
       <description>MCO1 output pin</description>
-      <divider name="MCO1PRE" input="MCO1DIV">
+      <divider name="MCO1PRE" input="MCO1DIV" field="RCC_CFGR1_MCO1PRE" offset="28U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR1_MCO1PRE_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR1_MCO1PRE_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR1_MCO1PRE_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR1_MCO1PRE_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR1_MCO1PRE_DIV16" /></choice>
-          <choice item="DIV32" value="32"><bits value="RCC_CFGR1_MCO1PRE_DIV32" /></choice>
-          <choice item="DIV64" value="64"><bits value="RCC_CFGR1_MCO1PRE_DIV64" /></choice>
-          <choice item="DIV128" value="128"><bits value="RCC_CFGR1_MCO1PRE_DIV128" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+          <choice item="DIV4" value="4" encoding="2U" />
+          <choice item="DIV8" value="8" encoding="3U" />
+          <choice item="DIV16" value="16" encoding="4U" />
+          <choice item="DIV32" value="32" encoding="5U" />
+          <choice item="DIV64" value="64" encoding="6U" />
+          <choice item="DIV128" value="128" encoding="7U" />
         </choices>
       </divider>
     </clock>
     <clock point="MCO2DIV" enable="always" dynamic="no">
       <description>MCO2 selected source before prescaler</description>
-      <mux name="MCO2">
-        <input point="NONE" default="yes"><bits value="RCC_CFGR1_MCO2SEL_OFF" /></input>
-        <input point="SYSCLK"><bits value="RCC_CFGR1_MCO2SEL_SYSCLK" /></input>
-        <input point="MSIS"><bits value="RCC_CFGR1_MCO2SEL_MSIS" /></input>
-        <input point="HSI16"><bits value="RCC_CFGR1_MCO2SEL_HSI16" /></input>
-        <input point="HSE"><bits value="RCC_CFGR1_MCO2SEL_HSE" /></input>
-        <input point="LSI"><bits value="RCC_CFGR1_MCO2SEL_LSI" /></input>
-        <input point="LSE"><bits value="RCC_CFGR1_MCO2SEL_LSE" /></input>
-        <input point="HSI48"><bits value="RCC_CFGR1_MCO2SEL_HSI48" /></input>
-        <input point="MSIK"><bits value="RCC_CFGR1_MCO2SEL_MSIK" /></input>
+      <mux name="MCO2" field="RCC_CFGR1_MCO2SEL" offset="16U">
+        <input point="NONE" label="OFF" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="MSIS" encoding="2U" />
+        <input point="HSI16" encoding="3U" />
+        <input point="HSE" encoding="4U" />
+        <input point="LSI" encoding="5U" />
+        <input point="LSE" encoding="6U" />
+        <input point="HSI48" encoding="7U" />
+        <input point="MSIK" encoding="8U" />
       </mux>
     </clock>
     <clock point="MCO2" enable="always" dynamic="yes">
       <description>MCO2 output pin</description>
-      <divider name="MCO2PRE" input="MCO2DIV">
+      <divider name="MCO2PRE" input="MCO2DIV" field="RCC_CFGR1_MCO2PRE" offset="20U">
         <choices>
-          <choice item="DIV1" value="1"><bits value="RCC_CFGR1_MCO2PRE_DIV1" /></choice>
-          <choice item="DIV2" value="2"><bits value="RCC_CFGR1_MCO2PRE_DIV2" /></choice>
-          <choice item="DIV4" value="4"><bits value="RCC_CFGR1_MCO2PRE_DIV4" /></choice>
-          <choice item="DIV8" value="8"><bits value="RCC_CFGR1_MCO2PRE_DIV8" /></choice>
-          <choice item="DIV16" value="16"><bits value="RCC_CFGR1_MCO2PRE_DIV16" /></choice>
-          <choice item="DIV32" value="32"><bits value="RCC_CFGR1_MCO2PRE_DIV32" /></choice>
-          <choice item="DIV64" value="64"><bits value="RCC_CFGR1_MCO2PRE_DIV64" /></choice>
-          <choice item="DIV128" value="128"><bits value="RCC_CFGR1_MCO2PRE_DIV128" /></choice>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+          <choice item="DIV4" value="4" encoding="2U" />
+          <choice item="DIV8" value="8" encoding="3U" />
+          <choice item="DIV16" value="16" encoding="4U" />
+          <choice item="DIV32" value="32" encoding="5U" />
+          <choice item="DIV64" value="64" encoding="6U" />
+          <choice item="DIV128" value="128" encoding="7U" />
         </choices>
       </divider>
     </clock>
     <clock point="RTC" enable="always" dynamic="no">
       <description>RTC clock</description>
-      <mux name="RTC">
-        <input point="NONE" default="yes"><bits value="RCC_BDCR_RTCSEL_NOCLOCK" /></input>
-        <input point="LSE"><bits value="RCC_BDCR_RTCSEL_LSE" /></input>
-        <input point="LSI"><bits value="RCC_BDCR_RTCSEL_LSI" /></input>
-        <input point="HSEDIV"><bits value="RCC_BDCR_RTCSEL_HSEDIV" /></input>
+      <mux name="RTC" field="RCC_BDCR_RTCSEL" offset="8U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" default="yes" />
+        <input point="LSE" encoding="1U" />
+        <input point="LSI" encoding="2U" />
+        <input point="HSEDIV" encoding="3U" />
       </mux>
     </clock>
     <clock point="LSCO" enable="always" dynamic="no">
       <description>LSCO output pin</description>
-      <mux name="LSCO">
-        <input point="NONE" default="yes"><bits value="RCC_BDCR_LSCOSEL_NOCLOCK" /></input>
-        <input point="LSI"><bits value="RCC_BDCR_LSCOSEL_LSI" /></input>
-        <input point="LSE"><bits value="RCC_BDCR_LSCOSEL_LSE" /></input>
+      <mux name="LSCO" field="RCC_BDCR_LSCOSEL" offset="24U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="USART1" enable="auto" dynamic="no">
       <description>USART1 clock</description>
-      <mux name="USART1">
-        <input point="PCLK2" default="yes"><bits value="RCC_CCIPR1_USART1SEL_PCLK2" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR1_USART1SEL_HSI16" /></input>
+      <mux name="USART1" field="RCC_CCIPR1_USART1SEL" offset="0U">
+        <input point="PCLK2" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
       </mux>
     </clock>
     <clock point="USART3" enable="auto" dynamic="no">
       <description>USART3 clock</description>
-      <mux name="USART3">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_USART3SEL_PCLK1" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR1_USART3SEL_HSI16" /></input>
+      <mux name="USART3" field="RCC_CCIPR1_USART3SEL" offset="2U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
       </mux>
     </clock>
     <clock point="UART4" enable="auto" dynamic="no">
       <description>UART4 clock</description>
-      <mux name="UART4">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_UART4SEL_PCLK1" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR1_UART4SEL_HSI16" /></input>
+      <mux name="UART4" field="RCC_CCIPR1_UART4SEL" offset="4U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
       </mux>
     </clock>
     <clock point="UART5" enable="auto" dynamic="no">
       <description>UART5 clock</description>
-      <mux name="UART5">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_UART5SEL_PCLK1" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR1_UART5SEL_HSI16" /></input>
+      <mux name="UART5" field="RCC_CCIPR1_UART5SEL" offset="6U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
       </mux>
     </clock>
     <clock point="LPUART1" enable="auto" dynamic="no">
       <description>LPUART1 clock</description>
-      <mux name="LPUART1">
-        <input point="PCLK3" default="yes"><bits value="RCC_CCIPR3_LPUART1SEL_PCLK3" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR3_LPUART1SEL_HSI16" /></input>
-        <input point="LSE"><bits value="RCC_CCIPR3_LPUART1SEL_LSE" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR3_LPUART1SEL_MSIK" /></input>
+      <mux name="LPUART1" field="RCC_CCIPR3_LPUART1SEL" offset="0U">
+        <input point="PCLK3" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
+        <input point="LSE" encoding="2U" />
+        <input point="MSIK" encoding="3U" />
       </mux>
     </clock>
     <clock point="LPTIM1" enable="auto" dynamic="no">
       <description>LPTIM1 clock</description>
-      <mux name="LPTIM1">
-        <input point="MSIK" default="yes"><bits value="RCC_CCIPR3_LPTIM1SEL_MSIK" /></input>
-        <input point="LSI"><bits value="RCC_CCIPR3_LPTIM1SEL_LSI" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR3_LPTIM1SEL_HSI16" /></input>
-        <input point="LSE"><bits value="RCC_CCIPR3_LPTIM1SEL_LSE" /></input>
+      <mux name="LPTIM1" field="RCC_CCIPR3_LPTIM1SEL" offset="10U">
+        <input point="MSIK" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="LPTIM2" enable="auto" dynamic="no">
       <description>LPTIM2 clock</description>
-      <mux name="LPTIM2">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_LPTIM2SEL_PCLK1" /></input>
-        <input point="LSI"><bits value="RCC_CCIPR1_LPTIM2SEL_LSI" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR1_LPTIM2SEL_HSI16" /></input>
-        <input point="LSE"><bits value="RCC_CCIPR1_LPTIM2SEL_LSE" /></input>
+      <mux name="LPTIM2" field="RCC_CCIPR1_LPTIM2SEL" offset="18U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="LPTIM34" enable="auto" dynamic="no">
       <description>LPTIM3 and LPTIM4 clock</description>
-      <mux name="LPTIM34">
-        <input point="MSIK" default="yes"><bits value="RCC_CCIPR3_LPTIM34SEL_MSIK" /></input>
-        <input point="LSI"><bits value="RCC_CCIPR3_LPTIM34SEL_LSI" /></input>
-        <input point="HSI16"><bits value="RCC_CCIPR3_LPTIM34SEL_HSI16" /></input>
-        <input point="LSE"><bits value="RCC_CCIPR3_LPTIM34SEL_LSE" /></input>
+      <mux name="LPTIM34" field="RCC_CCIPR3_LPTIM34SEL" offset="8U">
+        <input point="MSIK" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="SPI1" enable="auto" dynamic="no">
       <description>SPI1 clock</description>
-      <mux name="SPI1">
-        <input point="PCLK2" default="yes"><bits value="RCC_CCIPR1_SPI1SEL_PCLK2" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_SPI1SEL_MSIK" /></input>
+      <mux name="SPI1" field="RCC_CCIPR1_SPI1SEL" offset="20U">
+        <input point="PCLK2" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="SPI2" enable="auto" dynamic="no">
       <description>SPI2 clock</description>
-      <mux name="SPI2">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_SPI2SEL_PCLK1" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_SPI2SEL_MSIK" /></input>
+      <mux name="SPI2" field="RCC_CCIPR1_SPI2SEL" offset="16U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="SPI3" enable="auto" dynamic="no">
       <description>SPI3 clock</description>
-      <mux name="SPI3">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR2_SPI3SEL_PCLK1" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR2_SPI3SEL_MSIK" /></input>
+      <mux name="SPI3" field="RCC_CCIPR2_SPI3SEL" offset="3U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="OCTOSPI" enable="auto" dynamic="no">
       <description>OCTOSPI clock</description>
-      <mux name="OCTOSPI">
-        <input point="SYSCLK" default="yes"><bits value="RCC_CCIPR2_OCTOSPISEL_SYSCLK" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR2_OCTOSPISEL_MSIK" /></input>
+      <mux name="OCTOSPI" field="RCC_CCIPR2_OCTOSPISEL" offset="20U">
+        <input point="SYSCLK" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="SYSTICK" enable="always" dynamic="no">
       <description>SYSTICK clock</description>
-      <mux name="SYSTICK">
-        <input point="HCLKDIV8" default="yes"><bits value="RCC_CCIPR1_SYSTICKSEL_HCLKDIV8" /></input>
-        <input point="LSI"><bits value="RCC_CCIPR1_SYSTICKSEL_LSI" /></input>
-        <input point="LSE"><bits value="RCC_CCIPR1_SYSTICKSEL_LSE" /></input>
+      <mux name="SYSTICK" field="RCC_CCIPR1_SYSTICKSEL" offset="22U">
+        <input point="HCLKDIV8" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="LSE" encoding="2U" />
       </mux>
     </clock>
     <clock point="TIM16IC" enable="always" dynamic="no">
@@ -822,11 +822,11 @@
     </clock>
     <clock point="ICLK" enable="auto" dynamic="no">
       <description>ICLK clock</description>
-      <mux name="ICLK">
-        <input point="HSI48"><bits value="RCC_CCIPR1_ICLKSEL_HSI48" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_ICLKSEL_MSIK" /></input>
-        <input point="HSE"><bits value="RCC_CCIPR1_ICLKSEL_HSE" /></input>
-        <input point="SYSCLK" default="yes"><bits value="RCC_CCIPR1_ICLKSEL_SYSCLK" /></input>
+      <mux name="ICLK" field="RCC_CCIPR1_ICLKSEL" offset="26U">
+        <input point="HSI48" encoding="0U" />
+        <input point="MSIK" encoding="1U" />
+        <input point="HSE" encoding="2U" />
+        <input point="SYSCLK" encoding="3U" default="yes" />
       </mux>
     </clock>
     <clock point="ICLKDIV2" enable="auto" dynamic="no">
@@ -835,9 +835,9 @@
     </clock>
     <clock point="USB" enable="auto" dynamic="no">
       <description>USB clock</description>
-      <mux name="USB1">
-        <input point="ICLK"><bits value="RCC_CCIPR1_USB1SEL_ICLK" /></input>
-        <input point="ICLKDIV2" default="yes"><bits value="RCC_CCIPR1_USB1SEL_ICLKDIV2" /></input>
+      <mux name="USB1" field="RCC_CCIPR1_USB1SEL" offset="28U">
+        <input point="ICLK" encoding="0U" />
+        <input point="ICLKDIV2" encoding="1U" default="yes" />
       </mux>
     </clock>
     <clock point="SDMMC1" enable="auto" dynamic="no">
@@ -846,61 +846,61 @@
     </clock>
     <clock point="I2C1" enable="auto" dynamic="no">
       <description>I2C1 clock</description>
-      <mux name="I2C1">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_I2C1SEL_PCLK1" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_I2C1SEL_MSIK" /></input>
+      <mux name="I2C1" field="RCC_CCIPR1_I2C1SEL" offset="10U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="I2C2" enable="auto" dynamic="no">
       <description>I2C2 clock</description>
-      <mux name="I2C2">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_I2C2SEL_PCLK1" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_I2C2SEL_MSIK" /></input>
+      <mux name="I2C2" field="RCC_CCIPR1_I2C2SEL" offset="12U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="I2C3" enable="auto" dynamic="no">
       <description>I2C3 clock</description>
-      <mux name="I2C3">
-        <input point="PCLK3" default="yes"><bits value="RCC_CCIPR3_I2C3SEL_PCLK3" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR3_I2C3SEL_MSIK" /></input>
+      <mux name="I2C3" field="RCC_CCIPR3_I2C3SEL" offset="6U">
+        <input point="PCLK3" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="I3C1" enable="auto" dynamic="no">
       <description>I3C1 clock</description>
-      <mux name="I3C1">
-        <input point="PCLK1" default="yes"><bits value="RCC_CCIPR1_I3C1SEL_PCLK1" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_I3C1SEL_MSIK" /></input>
+      <mux name="I3C1" field="RCC_CCIPR1_I3C1SEL" offset="8U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="I3C2" enable="auto" dynamic="no">
       <description>I3C2 clock</description>
-      <mux name="I3C2">
-        <input point="PCLK2" default="yes"><bits value="RCC_CCIPR1_I3C2SEL_PCLK2" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_I3C2SEL_MSIK" /></input>
+      <mux name="I3C2" field="RCC_CCIPR1_I3C2SEL" offset="14U">
+        <input point="PCLK2" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
       </mux>
     </clock>
     <clock point="ADCDACICLK" enable="auto" dynamic="no">
       <description>ADC and DAC intermediate clock</description>
-      <mux name="ADCDAC">
-        <input point="HCLK" default="yes"><bits value="RCC_CCIPR2_ADCDACSEL_HCLK" /></input>
-        <input point="HSE"><bits value="RCC_CCIPR2_ADCDACSEL_HSE" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR2_ADCDACSEL_MSIK" /></input>
+      <mux name="ADCDAC" field="RCC_CCIPR2_ADCDACSEL" offset="16U">
+        <input point="HCLK" encoding="0U" default="yes" />
+        <input point="HSE" encoding="1U" />
+        <input point="MSIK" encoding="2U" />
       </mux>
     </clock>
     <clock point="ADCDACPRE" enable="auto" dynamic="no">
       <description>ADC and DAC prescaled clock</description>
-      <divider name="ADCDACPRE" input="ADCDACICLK">
+      <divider name="ADCDACPRE" input="ADCDACICLK" field="RCC_CCIPR2_ADCDACPRE" offset="12U">
         <choices>
-          <choice item="ICLK" value="1"><bits value="RCC_CCIPR2_ADCDACPRE_ICLK" /></choice>
-          <choice item="ICLKDIV2" value="2"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV2" /></choice>
-          <choice item="ICLKDIV4" value="4"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV4" /></choice>
-          <choice item="ICLKDIV8" value="8"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV8" /></choice>
-          <choice item="ICLKDIV16" value="16"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV16" /></choice>
-          <choice item="ICLKDIV32" value="32"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV32" /></choice>
-          <choice item="ICLKDIV64" value="64"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV64" /></choice>
-          <choice item="ICLKDIV128" value="128"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV128" /></choice>
-          <choice item="ICLKDIV256" value="256"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV256" /></choice>
-          <choice item="ICLKDIV512" value="512"><bits value="RCC_CCIPR2_ADCDACPRE_ICLKDIV512" /></choice>
+          <choice item="ICLK" value="1" encoding="0U" />
+          <choice item="ICLKDIV2" value="2" encoding="1U" />
+          <choice item="ICLKDIV4" value="4" encoding="8U" />
+          <choice item="ICLKDIV8" value="8" encoding="9U" />
+          <choice item="ICLKDIV16" value="16" encoding="10U" />
+          <choice item="ICLKDIV32" value="32" encoding="11U" />
+          <choice item="ICLKDIV64" value="64" encoding="12U" />
+          <choice item="ICLKDIV128" value="128" encoding="13U" />
+          <choice item="ICLKDIV256" value="256" encoding="14U" />
+          <choice item="ICLKDIV512" value="512" encoding="15U" />
         </choices>
       </divider>
     </clock>
@@ -911,46 +911,46 @@
     </clock>
     <clock point="DAC1SH" enable="auto" dynamic="no">
       <description>DAC1 sample and hold clock</description>
-      <mux name="DAC1SH">
-        <input point="LSE" default="yes"><bits value="RCC_CCIPR2_DAC1SHSEL_LSE" /></input>
-        <input point="LSI"><bits value="RCC_CCIPR2_DAC1SHSEL_LSI" /></input>
-        <inactive value="RCC_CCIPR2_DAC1SHSEL_IGNORE" bits="0U"
+      <mux name="DAC1SH" field="RCC_CCIPR2_DAC1SHSEL" offset="19U">
+        <input point="LSE" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <inactive label="IGNORE" value="0xFFFFFFFFU" bits="0U"
                   when="STM32_DAC1SH_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="RNG" enable="auto" dynamic="no">
       <description>RNG clock</description>
-      <mux name="RNG">
-        <input point="HSI48"><bits value="RCC_CCIPR2_RNGSEL_HSI48" /></input>
-        <input point="MSIK" default="yes"><bits value="RCC_CCIPR2_RNGSEL_MSIK" /></input>
-        <inactive value="RCC_CCIPR2_RNGSEL_IGNORE" bits="0U"
+      <mux name="RNG" field="RCC_CCIPR2_RNGSEL" offset="11U">
+        <input point="HSI48" encoding="0U" />
+        <input point="MSIK" encoding="1U" default="yes" />
+        <inactive label="IGNORE" value="0xFFFFFFFFU" bits="0U"
                   when="STM32_RNG_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="FDCAN1" enable="auto" dynamic="no">
       <description>FDCAN1 clock</description>
-      <mux name="FDCAN1">
-        <input point="SYSCLK" default="yes"><bits value="RCC_CCIPR1_FDCAN1SEL_SYSCLK" /></input>
-        <input point="MSIK"><bits value="RCC_CCIPR1_FDCAN1SEL_MSIK" /></input>
-        <inactive value="RCC_CCIPR1_FDCAN1SEL_IGNORE" bits="0U"
+      <mux name="FDCAN1" field="RCC_CCIPR1_FDCAN1SEL" offset="24U">
+        <input point="SYSCLK" encoding="0U" default="yes" />
+        <input point="MSIK" encoding="1U" />
+        <inactive label="IGNORE" value="0xFFFFFFFFU" bits="0U"
                   when="STM32_FDCAN1_ENABLED == FALSE" />
       </mux>
     </clock>
     <clock point="SAI1" enable="auto" dynamic="no">
       <description>SAI1 clock</description>
-      <mux name="SAI1">
-        <input point="MSIK" default="yes"><bits value="RCC_CCIPR2_SAI1SEL_MSIK" /></input>
-        <input point="AUDIOCLK"><bits value="RCC_CCIPR2_SAI1SEL_AUDIOCLK" /></input>
-        <input point="HSE"><bits value="RCC_CCIPR2_SAI1SEL_HSE" /></input>
+      <mux name="SAI1" field="RCC_CCIPR2_SAI1SEL" offset="5U">
+        <input point="MSIK" encoding="0U" default="yes" />
+        <input point="AUDIOCLK" encoding="1U" />
+        <input point="HSE" encoding="2U" />
       </mux>
     </clock>
     <clock point="ADF1" enable="auto" dynamic="no">
       <description>ADF1 clock</description>
-      <mux name="ADF1">
-        <input point="HCLK" default="yes"><bits value="RCC_CCIPR2_ADF1SEL_HCLK" /></input>
-        <input point="AUDIOCLK"><bits value="RCC_CCIPR2_ADF1SEL_AUDIOCLK" /></input>
-        <input point="HSE"><bits value="RCC_CCIPR2_ADF1SEL_HSE" /></input>
-        <input point="SAI1"><bits value="RCC_CCIPR2_ADF1SEL_SAI1" /></input>
+      <mux name="ADF1" field="RCC_CCIPR2_ADF1SEL" offset="0U">
+        <input point="HCLK" encoding="0U" default="yes" />
+        <input point="AUDIOCLK" encoding="1U" />
+        <input point="HSE" encoding="2U" />
+        <input point="SAI1" encoding="3U" />
       </mux>
     </clock>
   </clocks>
