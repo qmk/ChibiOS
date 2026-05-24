@@ -612,6 +612,45 @@ function ParseConfigurations()
   return configs
 endfunction
 
+/* Returns a generated derived configuration macro name.*/
+function GetDerivedConfigMacro(name)
+  return premacro + "DCFG_" + name
+endfunction
+
+/* Parses derived configuration settings.*/
+function ParseDerivedConfigurations(definitions, configs)
+  local names = []
+  list definitions as definition
+    local names = names + [definition["name"]]
+  endlist
+  list configs as config
+    local names = names + [config["name"]]
+  endlist
+
+  local dconfigs = []
+  if doc1.clocktree.settings["derived-configs"][0]??
+    list doc1.clocktree.settings["derived-configs"]["derived-config"] as config
+      local basename = config.@name[0]?string
+      local name = GetDerivedConfigMacro(basename)
+      local type = config.@type[0]?string
+      local value = config.@value[0]?string
+
+      if names?seq_contains(name)
+        stop ">>>> Duplicate derived configuration '" + name + "'"
+      endif
+      local names = names + [name]
+
+      if type != "expression"
+        stop ">>>> Unknown derived configuration type '" + type + "' for configuration '" + name + "'"
+      endif
+
+      local dconfigs = dconfigs + [{"name":name, "type":type, "value":value}]
+    endlist
+  endif
+
+  return dconfigs
+endfunction
+
 /* Parses terminal clock sinks.*/
 function ParseSinks(clocknames)
   local names = []
@@ -703,6 +742,7 @@ function ParseClockPoint(clock, sourceonly)
     local muxname = clock.mux[0].@name[0]
     local muxfield = (clock.mux[0].@field[0]!"")?string
     local muxoffset = (clock.mux[0].@offset[0]!"")?string
+    local muxsetting = (clock.mux[0].@setting[0]!"")?string
     local muxinputs = []
     local muxbranches = []
     local muxvalues = []
@@ -757,21 +797,23 @@ function ParseClockPoint(clock, sourceonly)
       local muxvalues = muxvalues + [inactivevalue]
       local muxbranches = muxbranches + [{"type":"inactive", "point":"", "value":inactivevalue, "bits":inactivebits, "default":"no", "condition":inactivecondition}]
     endlist
-    return {"type":"mux", "name":clockname, "muxname":muxname, "field":muxfield, "inputs":muxinputs, "branches":muxbranches, "selectors":muxselectors, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
+    return {"type":"mux", "name":clockname, "muxname":muxname, "field":muxfield, "setting":muxsetting, "inputs":muxinputs, "branches":muxbranches, "selectors":muxselectors, "default":muxdefault, "description":clockdescr, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits}
 
   elseif clock.divider[0]??
     /* It is a divided clock.*/
     local divname = clock.divider[0].@name[0]
     local divinput = clock.divider[0].@input[0]?string
+    local divsetting = (clock.divider[0].@setting[0]!"")?string
     local divparsed = ParseScaler(clock.divider[0])
-    return {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "kind":divparsed["kind"], "data":divparsed["data"]}
+    return {"type":"divider", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "divname":divname, "input":divinput, "setting":divsetting, "kind":divparsed["kind"], "data":divparsed["data"]}
 
   elseif clock.multiplier[0]??
     /* It is a multiplied clock.*/
     local mulname = clock.multiplier[0].@name[0]
     local mulinput = clock.multiplier[0].@input[0]?string
+    local mulsetting = (clock.multiplier[0].@setting[0]!"")?string
     local mulparsed = ParseScaler(clock.multiplier[0])
-    return {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "kind":mulparsed["kind"], "data":mulparsed["data"]}
+    return {"type":"multiplier", "description":clockdescr, "name":clockname, "enable":clockenable, "enable_default":clockdefault, "dynamic":clockdynamic, "bits":clockbits, "limits":clocklimits, "mulname":mulname, "input":mulinput, "setting":mulsetting, "kind":mulparsed["kind"], "data":mulparsed["data"]}
   endif
 
   stop ">>>> Unknown clock point type for '" + clockname + "'"
@@ -781,6 +823,7 @@ endfunction
 function Initialize()
   local definitions = ParseDefinitions()
   local configs = ParseConfigurations()
+  local dconfigs = ParseDerivedConfigurations(definitions, configs)
   local limitmodel = ParseLimitModel()
   local clocknames = []
   local clocks = []
@@ -865,7 +908,7 @@ function Initialize()
     endif
   endlist
 
-  return {"definitions":definitions, "configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "sinks":sinks}
+  return {"definitions":definitions, "configs":configs, "derived_configs":dconfigs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "sinks":sinks}
 endfunction
 
 /* Static data parsed at startup.*/
@@ -1126,6 +1169,24 @@ function GetRuntimeFrequencyExpression(name)
   return GetClockFrequencyMacro(name)
 endfunction
 
+/* Returns the selector/configuration macro used by a mux clock point.*/
+function GetMuxSettingMacro(point)
+  if (point["setting"]!"") != ""
+    return point["setting"]
+  endif
+
+  return precfg + point["name"] + postchoices
+endfunction
+
+/* Returns the selector/configuration macro used by a scaler clock point.*/
+function GetScalerSettingMacro(point)
+  if (point["setting"]!"") != ""
+    return point["setting"]
+  endif
+
+  return precfg + point["name"] + postvalues
+endfunction
+
 /* Emits current clock point values in static or dynamic form as configured.*/
 macro EmitCurrentClockDefinitions()
   local points = model["clocks"]
@@ -1167,7 +1228,7 @@ function GetDemandConditions(point)
       endif
     elseif downstream["type"] == "mux"
       local enmacro = GetEnableMacro(downstream)
-      local selmacro = precfg + downstream["name"] + postchoices
+      local selmacro = GetMuxSettingMacro(downstream)
       list downstream["inputs"] as input
         if input["point"] == point["name"]
           local conditions = conditions + [{"demander":downstream["name"], "terms":[enmacro + " == TRUE", selmacro + " == " + input["bits"]], "requires":AddExternalMacroRequirements(["TRUE"], [input["bits"]])}]
@@ -1220,6 +1281,23 @@ macro EmitGenericConfigurations()
   endlist
 endmacro
 
+/* Emits derived configuration macros.*/
+macro EmitDerivedConfigurationMacros()
+  if model["derived_configs"]?size > 0
+    emit """
+/*
+ * Derived configuration macros.
+ */
+"""
+    list model["derived_configs"] as config
+      ppcode.EmitPPDefine(name=config["name"], value=config["value"])
+      sep
+        emit "\e"
+      endsep
+    endlist
+  endif
+endmacro
+
 /* Emits clock point configuration settings in XML order.*/
 macro EmitConfigurations()
   local configs = []
@@ -1227,9 +1305,9 @@ macro EmitConfigurations()
     if point["enable"] == "manual"
       local configs = configs + [{"type":"enable", "point":point}]
     endif
-    if point["type"] == "mux"
+    if point["type"] == "mux" && (point["setting"]!"") == ""
       local configs = configs + [{"type":"mux", "point":point}]
-    elseif point["type"] == "divider" || point["type"] == "multiplier"
+    elseif (point["type"] == "divider" || point["type"] == "multiplier") && (point["setting"]!"") == ""
       local configs = configs + [{"type":"value", "point":point}]
     endif
   endlist
@@ -1251,7 +1329,7 @@ macro EmitConfigurations()
         local default = "FALSE"
       endif
     elseif config["type"] == "mux"
-      local name = precfg + point["name"] + postchoices
+      local name = GetMuxSettingMacro(point)
       local brief = "Selects the " + point["name"] + " clock source."
       local notes = " * @note    Allowed sources:\n"
       list point["inputs"] as input
@@ -1267,7 +1345,7 @@ macro EmitConfigurations()
         stop ">>>> Missing default input for clock mux '" + point["name"] + "'"
       endif
     else
-      local name = precfg + point["name"] + postvalues
+      local name = GetScalerSettingMacro(point)
       local notes = ""
       if point["type"] == "divider"
         local brief = "Configures the " + point["name"] + " clock divider value."
@@ -1933,7 +2011,7 @@ macro EmitClockChecks(point)
   endif
 
   if point["type"] == "divider" || point["type"] == "multiplier"
-    local valmacro = precfg + point["name"] + postvalues
+    local valmacro = GetScalerSettingMacro(point)
     local checks = []
     local requires = []
     if point["kind"] == "value"
@@ -2028,7 +2106,7 @@ macro EmitClockFrequencyChecks(point)
     endif
 
     if point["type"] == "mux"
-      local selmacro = precfg + point["name"] + postchoices
+      local selmacro = GetMuxSettingMacro(point)
       local emitted = false
 
       if minval != ""
@@ -2237,7 +2315,7 @@ macro EmitClockBits(point)
       EmitBitsDefinitions(point=point, valuebits=[{"target":"", "value":"0U"}])
     endif
   elseif point["type"] == "mux"
-    local selmacro = precfg + point["name"] + postchoices
+    local selmacro = GetMuxSettingMacro(point)
     local enmacro = GetEnableMacro(point)
     local disabledbits = GetMuxDisabledBits(point)
     emit """
@@ -2270,7 +2348,7 @@ macro EmitClockBits(point)
     ppcode.EmitPPErrorAt(message="\"invalid " + selmacro + " value specified\"", level=1)
     ppcode.EmitPPEndifAt(level=0)
   elseif point["type"] == "divider" || point["type"] == "multiplier"
-    local valmacro = precfg + point["name"] + postvalues
+    local valmacro = GetScalerSettingMacro(point)
     emit """
 /**
  * @brief   ${point["name"]} clock register bits.
@@ -2338,7 +2416,7 @@ macro EmitClockFrequency(point)
       EmitFrequencyDefinition(point=point, frequency=frequency)
     endif
   elseif point["type"] == "mux"
-    local selmacro = precfg + point["name"] + postchoices
+    local selmacro = GetMuxSettingMacro(point)
     local freqmacro = premacro + point["name"] + postclocks
     local enmacro = GetEnableMacro(point)
     list point["inputs"] as input
@@ -2355,12 +2433,12 @@ macro EmitClockFrequency(point)
     ppcode.EmitPPDefineAt(name=freqmacro, value="0U", level=1)
     ppcode.EmitPPEndifAt(level=0)
   elseif point["type"] == "divider"
-    local valmacro = precfg + point["name"] + postvalues
+    local valmacro = GetScalerSettingMacro(point)
     local inputfreq = GetDefaultFrequencyExpression(point["input"])
     local frequency = "(" + inputfreq + " / " + valmacro + ")"
     EmitFrequencyDefinition(point=point, frequency=frequency)
   elseif point["type"] == "multiplier"
-    local valmacro = precfg + point["name"] + postvalues
+    local valmacro = GetScalerSettingMacro(point)
     local inputfreq = GetDefaultFrequencyExpression(point["input"])
     local frequency = "(" + inputfreq + " * " + valmacro + ")"
     EmitFrequencyDefinition(point=point, frequency=frequency)
@@ -2376,11 +2454,15 @@ endmacro
 /* Emits checks, register bits and calculated frequencies in XML order.*/
 macro EmitDerivedConstants()
   EmitGenericConfigChecks()
-  if model["configs"]?size > 0 && model["limits"]["limits"]?size > 0
+  if HasGenericConfigChecks() && model["derived_configs"]?size > 0
+    emit "\e"
+  endif
+  EmitDerivedConfigurationMacros()
+  if (HasGenericConfigChecks() || model["derived_configs"]?size > 0) && model["limits"]["limits"]?size > 0
     emit "\e"
   endif
   EmitLimitDefinitions()
-  if model["configs"]?size > 0 || model["limits"]["limits"]?size > 0
+  if model["configs"]?size > 0 || model["derived_configs"]?size > 0 || model["limits"]["limits"]?size > 0
     emit "\e"
   endif
   EmitEnableDefinitions()

@@ -15,6 +15,10 @@
         <xs:selector xpath="settings/definitions/define"></xs:selector>
         <xs:field xpath="@name"></xs:field>
       </xs:key>
+      <xs:key name="derivedConfigNameKey">
+        <xs:selector xpath="settings/derived-configs/derived-config"></xs:selector>
+        <xs:field xpath="@name"></xs:field>
+      </xs:key>
       <xs:key name="enumNameKey">
         <xs:selector xpath="settings/enums/enum"></xs:selector>
         <xs:field xpath="@name"></xs:field>
@@ -419,6 +423,15 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="setting" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+            <xs:pattern value="[A-Za-z_][A-Za-z0-9_]*"></xs:pattern>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="inactiveMuxType">
@@ -495,6 +508,15 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+      <xs:attribute name="setting" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+            <xs:pattern value="[A-Za-z_][A-Za-z0-9_]*"></xs:pattern>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="multiplierType">
@@ -532,6 +554,15 @@
             <xs:minLength value="1"></xs:minLength>
             <xs:whiteSpace value="collapse"></xs:whiteSpace>
             <xs:pattern value="(0|[1-9][0-9]*)(U|UL)?"></xs:pattern>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="setting" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+            <xs:pattern value="[A-Za-z_][A-Za-z0-9_]*"></xs:pattern>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
@@ -886,6 +917,7 @@
         <xs:element name="enums" type="enumsType" maxOccurs="1" minOccurs="0"></xs:element>
         <xs:element name="definitions" type="definitionsType" maxOccurs="1" minOccurs="0"></xs:element>
         <xs:element name="configs" type="configsType" maxOccurs="1" minOccurs="1"></xs:element>
+        <xs:element name="derived-configs" type="derivedConfigsType" maxOccurs="1" minOccurs="0"></xs:element>
         <xs:element name="states" type="statesType" maxOccurs="1" minOccurs="0"></xs:element>
         <xs:element name="limit-set" type="limitSetType" maxOccurs="1" minOccurs="0"></xs:element>
         <xs:element name="limit-values" type="limitValuesType" maxOccurs="1" minOccurs="0"></xs:element>
@@ -972,6 +1004,39 @@
       <xs:sequence>
         <xs:element name="config" type="configType" maxOccurs="unbounded" minOccurs="1"></xs:element>
       </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="derivedConfigsType">
+      <xs:sequence>
+        <xs:element name="derived-config" type="derivedConfigType" maxOccurs="unbounded" minOccurs="1"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="derivedConfigType">
+      <xs:attribute name="name" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+            <xs:pattern value="[A-Za-z_][A-Za-z0-9_]*"></xs:pattern>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="expression"></xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="value" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"></xs:minLength>
+            <xs:whiteSpace value="collapse"></xs:whiteSpace>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="configType">

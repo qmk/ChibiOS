@@ -1,0 +1,9 @@
+# Derived configs are emitted as internal macros.
+#define TST_DCFG_SRC_SEL
+#define TST_DCFG_DIV_VALUE
+
+# Mux/divider machinery uses the derived configs instead of generated user settings.
+#if (TST_DCFG_SRC_SEL == TEST_RANGE_SRC0) ||
+#if (TST_DCFG_DIV_VALUE == 1) || defined(__DOXYGEN__)
+ABSENT:TST_CFG_MUX_SEL
+ABSENT:TST_CFG_DIV_VALUE

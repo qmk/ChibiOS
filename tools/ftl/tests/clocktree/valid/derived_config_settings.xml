@@ -1,0 +1,57 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <definitions>
+      <define name="TEST_RANGE_SRC0_DIV1" value="0U" />
+      <define name="TEST_RANGE_SRC0_DIV2" value="1U" />
+      <define name="TEST_RANGE_SRC1_DIV1" value="4U" />
+      <define name="TEST_RANGE_SRC1_DIV2" value="5U" />
+    </definitions>
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="RANGE" type="set" default="TEST_RANGE_SRC1_DIV1"
+              values="TEST_RANGE_SRC0_DIV1 TEST_RANGE_SRC0_DIV2 TEST_RANGE_SRC1_DIV1 TEST_RANGE_SRC1_DIV2">
+        <description>Selects the encoded source and divider range.</description>
+      </config>
+    </configs>
+    <derived-configs>
+      <derived-config name="SRC_SEL" type="expression"
+                      value="(TST_CFG_RANGE &amp; 4U)" />
+      <derived-config name="DIV_VALUE" type="expression"
+                      value="((TST_CFG_RANGE &amp; 1U) + 1U)" />
+    </derived-configs>
+  </settings>
+  <clocks>
+    <clock point="SRC0" enable="auto" dynamic="no">
+      <description>first source</description>
+      <derived frequency="8000000U" />
+    </clock>
+    <clock point="SRC1" enable="auto" dynamic="no">
+      <description>second source</description>
+      <derived frequency="4000000U" />
+    </clock>
+    <clock point="MUX" enable="auto" dynamic="no">
+      <description>decoded source selection</description>
+      <mux name="MUX" field="TEST_RANGE" offset="0U"
+           setting="TST_DCFG_SRC_SEL">
+        <input point="SRC0" encoding="0U" />
+        <input point="SRC1" encoding="4U" default="yes" />
+      </mux>
+    </clock>
+    <clock point="DIV" enable="always" dynamic="no">
+      <description>decoded divider value</description>
+      <divider name="DIV" input="MUX" field="TEST_RANGE" offset="0U"
+               setting="TST_DCFG_DIV_VALUE">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+        </choices>
+      </divider>
+    </clock>
+  </clocks>
+</clocktree>

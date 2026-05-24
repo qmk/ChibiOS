@@ -13,7 +13,7 @@
         <item name="RANGE3_12M" value="3U" />
         <item name="RANGE4_4M" value="4U" />
         <item name="RANGE5_2M" value="5U" />
-        <item name="RANGE6_1330K" value="6U" />
+        <item name="RANGE6_1333K" value="6U" />
         <item name="RANGE7_1M" value="7U" />
         <item name="RANGE8_3072K" value="8U" />
         <item name="RANGE9_1536K" value="9U" />
@@ -31,7 +31,7 @@
         <item name="RANGE3_12M" value="3U" />
         <item name="RANGE4_4M" value="4U" />
         <item name="RANGE5_2M" value="5U" />
-        <item name="RANGE6_1330K" value="6U" />
+        <item name="RANGE6_1333K" value="6U" />
         <item name="RANGE7_1M" value="7U" />
         <item name="RANGE8_3072K" value="8U" />
         <item name="RANGE9_1536K" value="9U" />
@@ -58,12 +58,12 @@
       </config>
       <config name="MSIS_RANGE" type="set"
               default="RCC_ICSCR1_MSISRANGE_RANGE4_4M"
-              values="RCC_ICSCR1_MSISRANGE_RANGE0_48M RCC_ICSCR1_MSISRANGE_RANGE1_24M RCC_ICSCR1_MSISRANGE_RANGE2_16M RCC_ICSCR1_MSISRANGE_RANGE3_12M RCC_ICSCR1_MSISRANGE_RANGE4_4M RCC_ICSCR1_MSISRANGE_RANGE5_2M RCC_ICSCR1_MSISRANGE_RANGE6_1330K RCC_ICSCR1_MSISRANGE_RANGE7_1M RCC_ICSCR1_MSISRANGE_RANGE8_3072K RCC_ICSCR1_MSISRANGE_RANGE9_1536K RCC_ICSCR1_MSISRANGE_RANGE10_1024K RCC_ICSCR1_MSISRANGE_RANGE11_768K RCC_ICSCR1_MSISRANGE_RANGE12_400K RCC_ICSCR1_MSISRANGE_RANGE13_200K RCC_ICSCR1_MSISRANGE_RANGE14_133K RCC_ICSCR1_MSISRANGE_RANGE15_100K">
+              values="RCC_ICSCR1_MSISRANGE_RANGE0_48M RCC_ICSCR1_MSISRANGE_RANGE1_24M RCC_ICSCR1_MSISRANGE_RANGE2_16M RCC_ICSCR1_MSISRANGE_RANGE3_12M RCC_ICSCR1_MSISRANGE_RANGE4_4M RCC_ICSCR1_MSISRANGE_RANGE5_2M RCC_ICSCR1_MSISRANGE_RANGE6_1333K RCC_ICSCR1_MSISRANGE_RANGE7_1M RCC_ICSCR1_MSISRANGE_RANGE8_3072K RCC_ICSCR1_MSISRANGE_RANGE9_1536K RCC_ICSCR1_MSISRANGE_RANGE10_1024K RCC_ICSCR1_MSISRANGE_RANGE11_768K RCC_ICSCR1_MSISRANGE_RANGE12_400K RCC_ICSCR1_MSISRANGE_RANGE13_200K RCC_ICSCR1_MSISRANGE_RANGE14_133K RCC_ICSCR1_MSISRANGE_RANGE15_100K">
         <description>Selects the MSIS frequency range.</description>
       </config>
       <config name="MSIK_RANGE" type="set"
               default="RCC_ICSCR1_MSIKRANGE_RANGE4_4M"
-              values="RCC_ICSCR1_MSIKRANGE_RANGE0_48M RCC_ICSCR1_MSIKRANGE_RANGE1_24M RCC_ICSCR1_MSIKRANGE_RANGE2_16M RCC_ICSCR1_MSIKRANGE_RANGE3_12M RCC_ICSCR1_MSIKRANGE_RANGE4_4M RCC_ICSCR1_MSIKRANGE_RANGE5_2M RCC_ICSCR1_MSIKRANGE_RANGE6_1330K RCC_ICSCR1_MSIKRANGE_RANGE7_1M RCC_ICSCR1_MSIKRANGE_RANGE8_3072K RCC_ICSCR1_MSIKRANGE_RANGE9_1536K RCC_ICSCR1_MSIKRANGE_RANGE10_1024K RCC_ICSCR1_MSIKRANGE_RANGE11_768K RCC_ICSCR1_MSIKRANGE_RANGE12_400K RCC_ICSCR1_MSIKRANGE_RANGE13_200K RCC_ICSCR1_MSIKRANGE_RANGE14_133K RCC_ICSCR1_MSIKRANGE_RANGE15_100K">
+              values="RCC_ICSCR1_MSIKRANGE_RANGE0_48M RCC_ICSCR1_MSIKRANGE_RANGE1_24M RCC_ICSCR1_MSIKRANGE_RANGE2_16M RCC_ICSCR1_MSIKRANGE_RANGE3_12M RCC_ICSCR1_MSIKRANGE_RANGE4_4M RCC_ICSCR1_MSIKRANGE_RANGE5_2M RCC_ICSCR1_MSIKRANGE_RANGE6_1333K RCC_ICSCR1_MSIKRANGE_RANGE7_1M RCC_ICSCR1_MSIKRANGE_RANGE8_3072K RCC_ICSCR1_MSIKRANGE_RANGE9_1536K RCC_ICSCR1_MSIKRANGE_RANGE10_1024K RCC_ICSCR1_MSIKRANGE_RANGE11_768K RCC_ICSCR1_MSIKRANGE_RANGE12_400K RCC_ICSCR1_MSIKRANGE_RANGE13_200K RCC_ICSCR1_MSIKRANGE_RANGE14_133K RCC_ICSCR1_MSIKRANGE_RANGE15_100K">
         <description>Selects the MSIK frequency range.</description>
       </config>
       <config name="MSIBIAS" type="set"
@@ -72,124 +72,88 @@
         <description>Selects the MSI bias mode.</description>
       </config>
     </configs>
+    <derived-configs>
+      <derived-config name="MSISRC_SEL" type="expression"
+                      value="(STM32_CFG_MSIS_RANGE &amp; (12U &lt;&lt; RCC_ICSCR1_MSISRANGE_Pos))" />
+      <derived-config name="MSISDIV_VALUE" type="expression"
+                      value="((((STM32_CFG_MSIS_RANGE &gt;&gt; RCC_ICSCR1_MSISRANGE_Pos) &amp; 3U) + 1U))" />
+      <derived-config name="MSIKRC_SEL" type="expression"
+                      value="(STM32_CFG_MSIK_RANGE &amp; (12U &lt;&lt; RCC_ICSCR1_MSIKRANGE_Pos))" />
+      <derived-config name="MSIKDIV_VALUE" type="expression"
+                      value="((((STM32_CFG_MSIK_RANGE &gt;&gt; RCC_ICSCR1_MSIKRANGE_Pos) &amp; 3U) + 1U))" />
+    </derived-configs>
   </settings>
   <sources>
-    <source point="MSIS" enable="auto" dynamic="yes">
-      <description>MSI system oscillator</description>
-      <bits target="CR" enabled="RCC_CR_MSISON" disabled="0U" />
-      <frequencies>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE0_48M" value="48000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE0_48M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE1_24M" value="24000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE1_24M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE2_16M" value="16000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE2_16M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE3_12M" value="12000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE3_12M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE4_4M" value="4000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE4_4M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE5_2M" value="2000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE5_2M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE6_1330K" value="1330000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE6_1330K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE7_1M" value="1000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE7_1M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE8_3072K" value="3072000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE8_3072K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE9_1536K" value="1536000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE9_1536K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE10_1024K" value="1024000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE10_1024K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE11_768K" value="768000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE11_768K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE12_400K" value="400000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE12_400K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE13_200K" value="200000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE13_200K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE14_133K" value="133000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE14_133K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE15_100K" value="100000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE15_100K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <default value="4000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSISRANGE_RANGE4_4M | STM32_CFG_MSIBIAS)" />
-        </default>
-      </frequencies>
+    <source point="MSIRC0" enable="auto" dynamic="no" frequency="48000000U">
+      <description>48 MHz internal MSI RC oscillator</description>
     </source>
-    <source point="MSIK" enable="auto" dynamic="yes">
-      <description>MSI kernel oscillator</description>
-      <bits target="CR" enabled="RCC_CR_MSIKON" disabled="0U" />
-      <frequencies>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE0_48M" value="48000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE0_48M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE1_24M" value="24000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE1_24M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE2_16M" value="16000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE2_16M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE3_12M" value="12000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE3_12M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE4_4M" value="4000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE4_4M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE5_2M" value="2000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE5_2M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE6_1330K" value="1330000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE6_1330K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE7_1M" value="1000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE7_1M | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE8_3072K" value="3072000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE8_3072K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE9_1536K" value="1536000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE9_1536K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE10_1024K" value="1024000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE10_1024K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE11_768K" value="768000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE11_768K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE12_400K" value="400000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE12_400K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE13_200K" value="200000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE13_200K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE14_133K" value="133000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE14_133K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <case when="STM32_CFG_MSIK_RANGE == RCC_ICSCR1_MSIKRANGE_RANGE15_100K" value="100000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE15_100K | STM32_CFG_MSIBIAS)" />
-        </case>
-        <default value="4000000U">
-          <bits target="ICSCR1" value="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | RCC_ICSCR1_MSIKRANGE_RANGE4_4M | STM32_CFG_MSIBIAS)" />
-        </default>
-      </frequencies>
+    <source point="MSIRC1" enable="auto" dynamic="no" frequency="4000000U">
+      <description>4 MHz internal MSI RC oscillator</description>
+    </source>
+    <source point="MSIRC2" enable="auto" dynamic="no" frequency="3072000U">
+      <description>3.072 MHz internal MSI RC oscillator</description>
+    </source>
+    <source point="MSIRC3" enable="auto" dynamic="no" frequency="400000U">
+      <description>400 kHz internal MSI RC oscillator</description>
     </source>
   </sources>
   <clocks>
+    <clock point="MSISRC" enable="auto" dynamic="no">
+      <description>MSIS internal RC selection</description>
+      <mux name="MSISRC" field="RCC_ICSCR1_MSISRANGE" offset="28U"
+           setting="STM32_DCFG_MSISRC_SEL">
+        <input point="MSIRC0" encoding="0U" />
+        <input point="MSIRC1" encoding="4U" default="yes" />
+        <input point="MSIRC2" encoding="8U" />
+        <input point="MSIRC3" encoding="12U" />
+      </mux>
+    </clock>
+    <clock point="MSISDIV" enable="auto" dynamic="no">
+      <description>MSIS range divider</description>
+      <divider name="MSISDIV" input="MSISRC" field="RCC_ICSCR1_MSISRANGE"
+               offset="28U" setting="STM32_DCFG_MSISDIV_VALUE">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+          <choice item="DIV3" value="3" encoding="2U" />
+          <choice item="DIV4" value="4" encoding="3U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="MSIS" enable="auto" dynamic="yes">
+      <description>MSI system oscillator</description>
+      <bits target="CR" enabled="RCC_CR_MSISON" disabled="0U" />
+      <bits target="ICSCR1" enabled="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | STM32_CFG_MSIBIAS)" disabled="0U" />
+      <derived input="MSISDIV" frequency="%I%" />
+    </clock>
+    <clock point="MSIKRC" enable="auto" dynamic="no">
+      <description>MSIK internal RC selection</description>
+      <mux name="MSIKRC" field="RCC_ICSCR1_MSIKRANGE" offset="24U"
+           setting="STM32_DCFG_MSIKRC_SEL">
+        <input point="MSIRC0" encoding="0U" />
+        <input point="MSIRC1" encoding="4U" default="yes" />
+        <input point="MSIRC2" encoding="8U" />
+        <input point="MSIRC3" encoding="12U" />
+      </mux>
+    </clock>
+    <clock point="MSIKDIV" enable="auto" dynamic="no">
+      <description>MSIK range divider</description>
+      <divider name="MSIKDIV" input="MSIKRC" field="RCC_ICSCR1_MSIKRANGE"
+               offset="24U" setting="STM32_DCFG_MSIKDIV_VALUE">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+          <choice item="DIV3" value="3" encoding="2U" />
+          <choice item="DIV4" value="4" encoding="3U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="MSIK" enable="auto" dynamic="yes">
+      <description>MSI kernel oscillator</description>
+      <bits target="CR" enabled="RCC_CR_MSIKON" disabled="0U" />
+      <bits target="ICSCR1" enabled="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | STM32_CFG_MSIBIAS)" disabled="0U" />
+      <derived input="MSIKDIV" frequency="%I%" />
+    </clock>
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>system clock</description>
       <mux name="SW">
