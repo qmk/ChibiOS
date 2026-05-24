@@ -13,6 +13,9 @@
     </enums>
     <definitions>
       <define name="RCC_PLLCFGR_PLLSRC_NOCLOCK" value="0U" />
+      <define name="RCC_BDCR_LSCOSEL_NOCLOCK" value="0U" />
+      <define name="RCC_BDCR_LSCOSEL_LSI" value="RCC_BDCR_LSCOEN" />
+      <define name="RCC_BDCR_LSCOSEL_LSE" value="(RCC_BDCR_LSCOEN | RCC_BDCR_LSCOSEL)" />
     </definitions>
     <configs>
       <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
@@ -372,172 +375,178 @@
     <clock point="LSCO" enable="always" dynamic="no">
       <description>LSCO output pin</description>
       <mux name="LSCOSEL">
-        <input point="NONE" default="yes"><bits value="STM32_LSCOSEL_NOCLOCK" /></input>
-        <input point="LSI"><bits value="STM32_LSCOSEL_LSI" /></input>
-        <input point="LSE"><bits value="STM32_LSCOSEL_LSE" /></input>
+        <input point="NONE" label="NOCLOCK" default="yes">
+          <bits value="RCC_BDCR_LSCOSEL_NOCLOCK" />
+        </input>
+        <input point="LSI">
+          <bits value="RCC_BDCR_LSCOSEL_LSI" />
+        </input>
+        <input point="LSE">
+          <bits value="RCC_BDCR_LSCOSEL_LSE" />
+        </input>
       </mux>
     </clock>
     <clock point="RTC" enable="auto" dynamic="no">
       <description>RTC</description>
-      <mux name="RTCSEL">
-        <input point="NONE" default="yes"><bits value="STM32_RTCSEL_NOCLOCK" /></input>
-        <input point="LSE"><bits value="STM32_RTCSEL_LSE" /></input>
-        <input point="LSI"><bits value="STM32_RTCSEL_LSI" /></input>
-        <input point="HSEDIV"><bits value="STM32_RTCSEL_HSEDIV" /></input>
+      <mux name="RTCSEL" field="RCC_BDCR_RTCSEL" offset="8U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" default="yes" />
+        <input point="LSE" encoding="1U" />
+        <input point="LSI" encoding="2U" />
+        <input point="HSEDIV" encoding="3U" />
       </mux>
     </clock>
     <clock point="USART1" enable="always" dynamic="no">
       <description>USART1</description>
-      <mux name="USART1SEL">
-        <input point="PCLK2"><bits value="STM32_USART1SEL_PCLK2" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_USART1SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_USART1SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_USART1SEL_LSE" /></input>
+      <mux name="USART1SEL" field="RCC_CCIPR_USART1SEL" offset="0U">
+        <input point="PCLK2" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="USART2" enable="always" dynamic="no">
       <description>USART2</description>
-      <mux name="USART2SEL">
-        <input point="PCLK1"><bits value="STM32_USART2SEL_PCLK1" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_USART2SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_USART2SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_USART2SEL_LSE" /></input>
+      <mux name="USART2SEL" field="RCC_CCIPR_USART2SEL" offset="2U">
+        <input point="PCLK1" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="USART3" enable="always" dynamic="no">
       <description>USART3</description>
-      <mux name="USART3SEL">
-        <input point="PCLK1"><bits value="STM32_USART3SEL_PCLK1" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_USART3SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_USART3SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_USART3SEL_LSE" /></input>
+      <mux name="USART3SEL" field="RCC_CCIPR_USART3SEL" offset="4U">
+        <input point="PCLK1" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="UART4" enable="always" dynamic="no">
       <description>UART4</description>
-      <mux name="UART4SEL">
-        <input point="PCLK1"><bits value="STM32_UART4SEL_PCLK1" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_UART4SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_UART4SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_UART4SEL_LSE" /></input>
+      <mux name="UART4SEL" field="RCC_CCIPR_UART4SEL" offset="6U">
+        <input point="PCLK1" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="UART5" enable="always" dynamic="no">
       <description>UART5</description>
-      <mux name="UART5SEL">
-        <input point="PCLK1"><bits value="STM32_UART5SEL_PCLK1" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_UART5SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_UART5SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_UART5SEL_LSE" /></input>
+      <mux name="UART5SEL" field="RCC_CCIPR_UART5SEL" offset="8U">
+        <input point="PCLK1" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="LPUART1" enable="always" dynamic="no">
       <description>LPUART1</description>
-      <mux name="LPUART1SEL">
-        <input point="PCLK1"><bits value="STM32_LPUART1SEL_PCLK1" /></input>
-        <input point="SYSCLK" default="yes"><bits value="STM32_LPUART1SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_LPUART1SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_LPUART1SEL_LSE" /></input>
+      <mux name="LPUART1SEL" field="RCC_CCIPR_LPUART1SEL" offset="10U">
+        <input point="PCLK1" encoding="0U" />
+        <input point="SYSCLK" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="I2C1" enable="always" dynamic="no">
       <description>I2C1</description>
-      <mux name="I2C1SEL">
-        <input point="PCLK1" default="yes"><bits value="STM32_I2C1SEL_PCLK1" /></input>
-        <input point="SYSCLK"><bits value="STM32_I2C1SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_I2C1SEL_HSI16" /></input>
+      <mux name="I2C1SEL" field="RCC_CCIPR_I2C1SEL" offset="12U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
       </mux>
     </clock>
     <clock point="I2C2" enable="always" dynamic="no">
       <description>I2C2</description>
-      <mux name="I2C2SEL">
-        <input point="PCLK1" default="yes"><bits value="STM32_I2C2SEL_PCLK1" /></input>
-        <input point="SYSCLK"><bits value="STM32_I2C2SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_I2C2SEL_HSI16" /></input>
+      <mux name="I2C2SEL" field="RCC_CCIPR_I2C2SEL" offset="14U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
       </mux>
     </clock>
     <clock point="I2C3" enable="always" dynamic="no">
       <description>I2C3</description>
-      <mux name="I2C3SEL">
-        <input point="PCLK1" default="yes"><bits value="STM32_I2C3SEL_PCLK1" /></input>
-        <input point="SYSCLK"><bits value="STM32_I2C3SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_I2C3SEL_HSI16" /></input>
+      <mux name="I2C3SEL" field="RCC_CCIPR_I2C3SEL" offset="16U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
       </mux>
     </clock>
     <clock point="I2C4" enable="always" dynamic="no">
       <description>I2C4</description>
-      <mux name="I2C4SEL">
-        <input point="PCLK1" default="yes"><bits value="STM32_I2C4SEL_PCLK1" /></input>
-        <input point="SYSCLK"><bits value="STM32_I2C4SEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_I2C4SEL_HSI16" /></input>
+      <mux name="I2C4SEL" field="RCC_CCIPR2_I2C4SEL" offset="0U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
       </mux>
     </clock>
     <clock point="LPTIM1" enable="always" dynamic="no">
       <description>LPTIM1</description>
-      <mux name="LPTIM1SEL">
-        <input point="PCLK1" default="yes"><bits value="STM32_LPTIM1SEL_PCLK1" /></input>
-        <input point="LSI"><bits value="STM32_LPTIM1SEL_LSI" /></input>
-        <input point="HSI16"><bits value="STM32_LPTIM1SEL_HSI16" /></input>
-        <input point="LSE"><bits value="STM32_LPTIM1SEL_LSE" /></input>
+      <mux name="LPTIM1SEL" field="RCC_CCIPR_LPTIM1SEL" offset="18U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSE" encoding="3U" />
       </mux>
     </clock>
     <clock point="SAI1" enable="always" dynamic="no">
       <description>SAI1</description>
-      <mux name="SAI1SEL">
-        <input point="SYSCLK" default="yes"><bits value="STM32_SAI1SEL_SYSCLK" /></input>
-        <input point="PLLQ"><bits value="STM32_SAI1SEL_PLLQCLK" /></input>
-        <input point="CKIN"><bits value="STM32_SAI1SEL_CKIN" /></input>
-        <input point="HSI16"><bits value="STM32_SAI1SEL_HSI16" /></input>
+      <mux name="SAI1SEL" field="RCC_CCIPR_SAI1SEL" offset="20U">
+        <input point="SYSCLK" encoding="0U" default="yes" />
+        <input point="PLLQ" label="PLLQCLK" encoding="1U" />
+        <input point="CKIN" encoding="2U" />
+        <input point="HSI16" encoding="3U" />
       </mux>
     </clock>
     <clock point="I2S23" enable="always" dynamic="no">
       <description>I2S23</description>
-      <mux name="I2S23SEL">
-        <input point="SYSCLK" default="yes"><bits value="STM32_I2S23SEL_SYSCLK" /></input>
-        <input point="PLLQ"><bits value="STM32_I2S23SEL_PLLQCLK" /></input>
-        <input point="CKIN"><bits value="STM32_I2S23SEL_CKIN" /></input>
-        <input point="HSI16"><bits value="STM32_I2S23SEL_HSI16" /></input>
+      <mux name="I2S23SEL" field="RCC_CCIPR_I2S23SEL" offset="22U">
+        <input point="SYSCLK" encoding="0U" default="yes" />
+        <input point="PLLQ" label="PLLQCLK" encoding="1U" />
+        <input point="CKIN" encoding="2U" />
+        <input point="HSI16" encoding="3U" />
       </mux>
     </clock>
     <clock point="FDCAN" enable="always" dynamic="no">
       <description>FDCAN</description>
-      <mux name="FDCANSEL">
-        <input point="HSE" default="yes"><bits value="STM32_FDCANSEL_HSE" /></input>
-        <input point="PLLQ"><bits value="STM32_FDCANSEL_PLLQCLK" /></input>
-        <input point="PCLK1"><bits value="STM32_FDCANSEL_PCLK1" /></input>
+      <mux name="FDCANSEL" field="RCC_CCIPR_FDCANSEL" offset="24U">
+        <input point="HSE" encoding="0U" default="yes" />
+        <input point="PLLQ" label="PLLQCLK" encoding="1U" />
+        <input point="PCLK1" encoding="2U" />
       </mux>
     </clock>
     <clock point="CLK48" enable="always" dynamic="no">
       <description>48MHz clock</description>
-      <mux name="CLK48SEL">
-        <input point="HSI48" default="yes"><bits value="STM32_CLK48SEL_HSI48" /></input>
-        <input point="PLLQ"><bits value="STM32_CLK48SEL_PLLQCLK" /></input>
+      <mux name="CLK48SEL" field="RCC_CCIPR_CLK48SEL" offset="26U">
+        <input point="HSI48" encoding="0U" default="yes" />
+        <input point="PLLQ" label="PLLQCLK" encoding="2U" />
       </mux>
     </clock>
     <clock point="ADC12" enable="always" dynamic="no">
       <description>ADC12</description>
       <limits ref="ADCCLK" />
-      <mux name="ADC12SEL">
-        <input point="NONE"><bits value="STM32_ADC12SEL_NOCLK" /></input>
-        <input point="PLLP" default="yes"><bits value="STM32_ADC12SEL_PLLPCLK" /></input>
-        <input point="SYSCLK"><bits value="STM32_ADC12SEL_SYSCLK" /></input>
+      <mux name="ADC12SEL" field="RCC_CCIPR_ADC12SEL" offset="28U">
+        <input point="NONE" label="NOCLK" encoding="0U" />
+        <input point="PLLP" label="PLLPCLK" encoding="1U" default="yes" />
+        <input point="SYSCLK" encoding="2U" />
       </mux>
     </clock>
     <clock point="ADC345" enable="always" dynamic="no">
       <description>ADC345</description>
       <limits ref="ADCCLK" />
-      <mux name="ADC345SEL">
-        <input point="NONE"><bits value="STM32_ADC345SEL_NOCLK" /></input>
-        <input point="PLLP" default="yes"><bits value="STM32_ADC345SEL_PLLPCLK" /></input>
-        <input point="SYSCLK"><bits value="STM32_ADC345SEL_SYSCLK" /></input>
+      <mux name="ADC345SEL" field="RCC_CCIPR_ADC345SEL" offset="30U">
+        <input point="NONE" label="NOCLK" encoding="0U" />
+        <input point="PLLP" label="PLLPCLK" encoding="1U" default="yes" />
+        <input point="SYSCLK" encoding="2U" />
       </mux>
     </clock>
     <clock point="QSPI" enable="always" dynamic="no">
       <description>QSPI</description>
-      <mux name="QSPISEL">
-        <input point="SYSCLK" default="yes"><bits value="STM32_QSPISEL_SYSCLK" /></input>
-        <input point="HSI16"><bits value="STM32_QSPISEL_HSI16" /></input>
-        <input point="PLLQ"><bits value="STM32_QSPISEL_PLLQCLK" /></input>
+      <mux name="QSPISEL" field="RCC_CCIPR2_QSPISEL" offset="20U">
+        <input point="SYSCLK" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
+        <input point="PLLQ" label="PLLQCLK" encoding="2U" />
       </mux>
     </clock>
     <clock point="RNG" enable="always" dynamic="no">
