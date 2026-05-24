@@ -958,6 +958,7 @@ endfunction
 macro EmitDefinitions()
   if model["definitions"]?size > 0
     emit """
+
 /**
  * @name    Generated support definitions
  * @{
@@ -987,6 +988,7 @@ endmacro
 macro EmitMuxSelectorConstants()
   if HasGeneratedMuxSelectors()
     emit """
+
 /**
  * @name    Generated mux selector constants
  * @{
@@ -1010,6 +1012,7 @@ endmacro
 macro EmitScalerSelectorConstants()
   if HasGeneratedScalerSelectors()
     emit """
+
 /**
  * @name    Generated scaler selector constants
  * @{
