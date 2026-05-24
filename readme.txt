@@ -77,6 +77,7 @@
 *****************************************************************************
 
 *** Next ***
+- FIX: DACv1 trigger mask sized for 3 or 4 bit trigger source identifier
 - NEW: Thread mode for EP0 handling in USB HAL driver.
 - NEW: ADC driver in XHAL.
 - NEW: RTC driver in XHAL.
