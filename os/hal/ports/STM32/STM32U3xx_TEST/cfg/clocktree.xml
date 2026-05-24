@@ -5,6 +5,90 @@
     <prefixes clock_points="CLK_" macros="STM32_" cfgs="STM32_CFG_" />
     <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
               selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <enums>
+      <enum name="RCC_MSIRC0">
+        <item name="FREE" value="0" />
+        <item name="PLL_LSE" value="1" />
+        <item name="PLL_HSE" value="2" />
+        <item name="PLL_LSE_FAST" value="3" />
+        <item name="PLL_HSE_FAST" value="4" />
+      </enum>
+      <enum name="RCC_MSIRC1">
+        <item name="FREE" value="0" />
+        <item name="PLL_LSE" value="1" />
+        <item name="PLL_HSE" value="2" />
+        <item name="PLL_LSE_FAST" value="3" />
+        <item name="PLL_HSE_FAST" value="4" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIS">
+        <item name="IRC0_DIV1" value="0" />
+        <item name="IRC0_DIV2" value="1" />
+        <item name="IRC0_DIV4" value="2" />
+        <item name="IRC0_DIV8" value="3" />
+        <item name="IRC1_DIV1" value="4" />
+        <item name="IRC1_DIV2" value="5" />
+        <item name="IRC1_DIV4" value="6" />
+        <item name="IRC1_DIV8" value="7" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIK">
+        <item name="IRC0_DIV1" value="0" />
+        <item name="IRC0_DIV2" value="1" />
+        <item name="IRC0_DIV4" value="2" />
+        <item name="IRC0_DIV8" value="3" />
+        <item name="IRC1_DIV1" value="4" />
+        <item name="IRC1_DIV2" value="5" />
+        <item name="IRC1_DIV4" value="6" />
+        <item name="IRC1_DIV8" value="7" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIHSINDIV" field="RCC_ICSCR1_MSIHSINDIV_Pos">
+        <item name="HSE16" value="0U" />
+        <item name="HSE32" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIPLL1SEL" field="RCC_ICSCR1_MSIPLL1SEL_Pos">
+        <item name="LSE" value="0U" />
+        <item name="HSE" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIPLL0SEL" field="RCC_ICSCR1_MSIPLL0SEL_Pos">
+        <item name="LSE" value="0U" />
+        <item name="HSE" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIBIAS" field="RCC_ICSCR1_MSIBIAS_Pos">
+        <item name="CONTINUOUS" value="0U" />
+        <item name="SAMPLING" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIRGSEL" field="RCC_ICSCR1_MSIRGSEL_Pos">
+        <item name="CSR" value="0U" />
+        <item name="ICSCR1" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSIKSEL" field="RCC_ICSCR1_MSIKSEL_Pos">
+        <item name="MSIRC0" value="0U" />
+        <item name="MSIRC1" value="1U" />
+      </enum>
+      <enum name="RCC_ICSCR1_MSISSEL" field="RCC_ICSCR1_MSISSEL_Pos">
+        <item name="MSIRC0" value="0U" />
+        <item name="MSIRC1" value="1U" />
+      </enum>
+      <enum name="RCC_CFGR1_STOPWUCK" field="RCC_CFGR1_STOPWUCK_Pos">
+        <item name="MSIS" value="0U" />
+        <item name="HSI16" value="1U" />
+      </enum>
+      <enum name="RCC_CFGR1_STOPKERWUCK" field="RCC_CFGR1_STOPKERWUCK_Pos">
+        <item name="MSIK" value="0U" />
+        <item name="HSI16" value="1U" />
+      </enum>
+      <enum name="RCC_CCIPR1_TIMICSEL" field="RCC_CCIPR1_TIMICSEL_Pos">
+        <item name="NOCLOCK" value="0U" />
+        <item name="HSI256_MSIS1024_MSIS4" value="4U" />
+        <item name="HSI256_MSIS1024_MSIK4" value="5U" />
+        <item name="HSI256_MSIK1024_MSIS4" value="6U" />
+        <item name="HSI256_MSIK1024_MSIK4" value="7U" />
+      </enum>
+    </enums>
+    <definitions>
+      <define name="RCC_ICSCR1_MSIPLL1N_FIELD(n)" value="((n) &lt;&lt; RCC_ICSCR1_MSIPLL1N_Pos)" />
+      <define name="RCC_ICSCR1_MSIKDIV_FIELD(n)" value="((n) &lt;&lt; RCC_ICSCR1_MSIKDIV_Pos)" />
+      <define name="RCC_ICSCR1_MSISDIV_FIELD(n)" value="((n) &lt;&lt; RCC_ICSCR1_MSISDIV_Pos)" />
+    </definitions>
     <configs>
       <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
               role="dynamic_mode">
@@ -25,6 +109,9 @@
       <config name="MSIPLL1N_VALUE" type="set" default="0"
               values="0 1 2 3">
         <description>Selects the MSIRC1 PLL correction factor.</description>
+      </config>
+      <config name="AUDIOCLK" type="value" default="0U">
+        <description>Sets the external audio clock input frequency.</description>
       </config>
       <config name="MSIS_SRCDIV" type="set" default="RCC_ICSCR1_MSIS_IRC0_DIV1"
               values="RCC_ICSCR1_MSIS_IRC0_DIV1 RCC_ICSCR1_MSIS_IRC0_DIV2 RCC_ICSCR1_MSIS_IRC0_DIV4 RCC_ICSCR1_MSIS_IRC0_DIV8 RCC_ICSCR1_MSIS_IRC1_DIV1 RCC_ICSCR1_MSIS_IRC1_DIV2 RCC_ICSCR1_MSIS_IRC1_DIV4 RCC_ICSCR1_MSIS_IRC1_DIV8">
@@ -166,7 +253,7 @@
     <source point="NONE" enable="never" dynamic="no" frequency="0U">
       <description>pseudo-clock for disabled sources</description>
     </source>
-    <source point="AUDIOCLK" enable="always" dynamic="no" frequency="STM32_AUDIOCLK">
+    <source point="AUDIOCLK" enable="always" dynamic="no" frequency="STM32_CFG_AUDIOCLK">
       <description>external audio clock input</description>
     </source>
     <source point="HSI16" enable="manual" dynamic="yes" frequency="16000000U">

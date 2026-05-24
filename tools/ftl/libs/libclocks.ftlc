@@ -500,6 +500,54 @@ function ParseLimitModel()
   return {"states":states, "limits":limits, "values":values}
 endfunction
 
+/* Parses arbitrary support definitions and structured enumerations.*/
+function ParseDefinitions()
+  local names = []
+  local definitions = []
+
+  list doc1.clocktree.settings.enums.enum as enum
+    local enumname = enum.@name[0]?string
+    local field = (enum.@field[0]!"")?string
+    local itemnames = []
+
+    list enum.item as item
+      local itemname = item.@name[0]?string
+      local name = enumname + "_" + itemname
+      local value = item.@value[0]?string
+
+      if itemnames?seq_contains(itemname)
+        stop ">>>> Duplicate item '" + itemname + "' in enumeration '" + enumname + "'"
+      endif
+      local itemnames = itemnames + [itemname]
+
+      if names?seq_contains(name)
+        stop ">>>> Duplicate definition '" + name + "'"
+      endif
+      local names = names + [name]
+
+      if field != ""
+        local value = "((" + value + ") << " + field + ")"
+      endif
+
+      local definitions = definitions + [{"name":name, "value":value}]
+    endlist
+  endlist
+
+  list doc1.clocktree.settings.definitions.define as define
+    local name = define.@name[0]?string
+    local value = define.@value[0]?string
+
+    if names?seq_contains(name)
+      stop ">>>> Duplicate definition '" + name + "'"
+    endif
+    local names = names + [name]
+
+    local definitions = definitions + [{"name":name, "value":value}]
+  endlist
+
+  return definitions
+endfunction
+
 /* Parses the generic configuration settings.*/
 function ParseConfigurations()
   local names = []
@@ -731,6 +779,7 @@ endfunction
 
 /* Initializes the parsed clock tree data model.*/
 function Initialize()
+  local definitions = ParseDefinitions()
   local configs = ParseConfigurations()
   local limitmodel = ParseLimitModel()
   local clocknames = []
@@ -816,7 +865,7 @@ function Initialize()
     endif
   endlist
 
-  return {"configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "sinks":sinks}
+  return {"definitions":definitions, "configs":configs, "limits":limitmodel, "clocknames":clocknames, "clocks":clocks, "points":points, "muxes":muxes, "dividers":dividers, "multipliers":multipliers, "sinks":sinks}
 endfunction
 
 /* Static data parsed at startup.*/
@@ -904,6 +953,24 @@ function HasGeneratedScalerSelectors()
 
   return false
 endfunction
+
+/* Emits arbitrary support definitions from the XML settings section.*/
+macro EmitDefinitions()
+  if model["definitions"]?size > 0
+    emit """
+/**
+ * @name    Generated support definitions
+ * @{
+ */
+"""
+    list model["definitions"] as definition
+      ppcode.EmitPPDefine(name=definition["name"], value=definition["value"])
+    endlist
+    emit """
+/** @} */
+"""
+  endif
+endmacro
 
 /* Emits generated selector constants for one group of fields.*/
 macro EmitGeneratedSelectors(selectors)
@@ -1263,9 +1330,29 @@ function FormatConditionTerm(term)
 endfunction
 
 /* Adds one explicitly referenced external macro to a requirements list.*/
+function GetDefinedMacroName(name)
+  if name?contains("(")
+    return name?keep_before("(")
+  endif
+
+  return name
+endfunction
+
+/* Returns true if a macro is generated as an XML support definition.*/
+function IsGeneratedDefinition(name)
+  list model["definitions"] as definition
+    if GetDefinedMacroName(definition["name"]) == name
+      return true
+    endif
+  endlist
+
+  return false
+endfunction
+
+/* Adds one explicitly referenced external macro to a requirements list.*/
 function AddExternalMacroRequirement(requires, ref)
   local text = ref?trim
-  if text?matches("^[A-Za-z_][A-Za-z0-9_]*$") && text != "__DOXYGEN__" && !requires?seq_contains(text)
+  if text?matches("^[A-Za-z_][A-Za-z0-9_]*$") && text != "__DOXYGEN__" && !IsGeneratedDefinition(text) && !requires?seq_contains(text)
     return requires + [text]
   endif
 

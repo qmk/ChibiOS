@@ -71,58 +71,6 @@
 /** @} */
 
 /**
- * @name    MSIRC0 96MHz oscillator settings
- * @{
- */
-/* Note, combines settings in RCC_CR and RCC_ICSCR.*/
-#define RCC_MSIRC0_FREE                     0
-#define RCC_MSIRC0_PLL_LSE                  1
-#define RCC_MSIRC0_PLL_HSE                  2
-#define RCC_MSIRC0_PLL_LSE_FAST             3
-#define RCC_MSIRC0_PLL_HSE_FAST             4
-/** @} */
-
-/**
- * @name    MSIRC1 24MHz oscillator settings
- * @{
- */
-/* Note, combines settings in RCC_CR and RCC_ICSCR.*/
-#define RCC_MSIRC1_FREE                     0
-#define RCC_MSIRC1_PLL_LSE                  1
-#define RCC_MSIRC1_PLL_HSE                  2
-#define RCC_MSIRC1_PLL_LSE_FAST             3
-#define RCC_MSIRC1_PLL_HSE_FAST             4
-/** @} */
-
-/**
- * @name    Source and divider for MSIS
- * @{
- */
-#define RCC_ICSCR1_MSIS_IRC0_DIV1           0       /* 96MHz */
-#define RCC_ICSCR1_MSIS_IRC0_DIV2           1       /* 48MHz */
-#define RCC_ICSCR1_MSIS_IRC0_DIV4           2       /* 24MHz */
-#define RCC_ICSCR1_MSIS_IRC0_DIV8           3       /* 12MHz */
-#define RCC_ICSCR1_MSIS_IRC1_DIV1           4       /* ~24MHz */
-#define RCC_ICSCR1_MSIS_IRC1_DIV2           5       /* ~12MHz */
-#define RCC_ICSCR1_MSIS_IRC1_DIV4           6       /* ~6MHz */
-#define RCC_ICSCR1_MSIS_IRC1_DIV8           7       /* ~3MHz */
-/** @} */
-
-/**
- * @name    Source and divider for MSIK
- * @{
- */
-#define RCC_ICSCR1_MSIK_IRC0_DIV1           0       /* 96MHz */
-#define RCC_ICSCR1_MSIK_IRC0_DIV2           1       /* 48MHz */
-#define RCC_ICSCR1_MSIK_IRC0_DIV4           2       /* 24MHz */
-#define RCC_ICSCR1_MSIK_IRC0_DIV8           3       /* 12MHz */
-#define RCC_ICSCR1_MSIK_IRC1_DIV1           4       /* ~24MHz */
-#define RCC_ICSCR1_MSIK_IRC1_DIV2           5       /* ~12MHz */
-#define RCC_ICSCR1_MSIK_IRC1_DIV4           6       /* ~6MHz */
-#define RCC_ICSCR1_MSIK_IRC1_DIV8           7       /* ~3MHz */
-/** @} */
-
-/**
  * @name    PWR_VOSR register helpers
  * @{
  */
@@ -142,58 +90,6 @@
 #define FLASH_ACR_LATENCY_2WS               FLASH_ACR_LATENCY_FIELD(2U)
 #define FLASH_ACR_LATENCY_3WS               FLASH_ACR_LATENCY_FIELD(3U)
 #define FLASH_ACR_LATENCY_4WS               FLASH_ACR_LATENCY_FIELD(4U)
-/** @} */
-
-/**
- * @name    RCC_ICSCR1 register helpers
- * @{
- */
-#define RCC_ICSCR1_MSIHSINDIV_FIELD(n)      ((n) << RCC_ICSCR1_MSIHSINDIV_Pos)
-#define RCC_ICSCR1_MSIHSINDIV_HSE16         RCC_ICSCR1_MSIHSINDIV_FIELD(0U)
-#define RCC_ICSCR1_MSIHSINDIV_HSE32         RCC_ICSCR1_MSIHSINDIV_FIELD(1U)
-
-#define RCC_ICSCR1_MSIPLL1SEL_FIELD(n)      ((n) << RCC_ICSCR1_MSIPLL1SEL_Pos)
-#define RCC_ICSCR1_MSIPLL1SEL_LSE           RCC_ICSCR1_MSIPLL1SEL_FIELD(0U)
-#define RCC_ICSCR1_MSIPLL1SEL_HSE           RCC_ICSCR1_MSIPLL1SEL_FIELD(1U)
-
-#define RCC_ICSCR1_MSIPLL0SEL_FIELD(n)      ((n) << RCC_ICSCR1_MSIPLL0SEL_Pos)
-#define RCC_ICSCR1_MSIPLL0SEL_LSE           RCC_ICSCR1_MSIPLL0SEL_FIELD(0U)
-#define RCC_ICSCR1_MSIPLL0SEL_HSE           RCC_ICSCR1_MSIPLL0SEL_FIELD(1U)
-
-#define RCC_ICSCR1_MSIBIAS_FIELD(n)         ((n) << RCC_ICSCR1_MSIBIAS_Pos)
-#define RCC_ICSCR1_MSIBIAS_CONTINUOUS       RCC_ICSCR1_MSIBIAS_FIELD(0U)
-#define RCC_ICSCR1_MSIBIAS_SAMPLING         RCC_ICSCR1_MSIBIAS_FIELD(1U)
-
-#define RCC_ICSCR1_MSIRGSEL_FIELD(n)        ((n) << RCC_ICSCR1_MSIRGSEL_Pos)
-#define RCC_ICSCR1_MSIRGSEL_CSR             RCC_ICSCR1_MSIRGSEL_FIELD(0U)
-#define RCC_ICSCR1_MSIRGSEL_ICSCR1          RCC_ICSCR1_MSIRGSEL_FIELD(1U)
-
-#define RCC_ICSCR1_MSIPLL1N_FIELD(n)        ((n) << RCC_ICSCR1_MSIPLL1N_Pos)
-
-#define RCC_ICSCR1_MSIKDIV_FIELD(n)         ((n) << RCC_ICSCR1_MSIKDIV_Pos)
-
-#define RCC_ICSCR1_MSIKSEL_FIELD(n)         ((n) << RCC_ICSCR1_MSIKSEL_Pos)
-#define RCC_ICSCR1_MSIKSEL_MSIRC0           RCC_ICSCR1_MSIKSEL_FIELD(0U)
-#define RCC_ICSCR1_MSIKSEL_MSIRC1           RCC_ICSCR1_MSIKSEL_FIELD(1U)
-
-#define RCC_ICSCR1_MSISDIV_FIELD(n)         ((n) << RCC_ICSCR1_MSISDIV_Pos)
-
-#define RCC_ICSCR1_MSISSEL_FIELD(n)         ((n) << RCC_ICSCR1_MSISSEL_Pos)
-#define RCC_ICSCR1_MSISSEL_MSIRC0           RCC_ICSCR1_MSISSEL_FIELD(0U)
-#define RCC_ICSCR1_MSISSEL_MSIRC1           RCC_ICSCR1_MSISSEL_FIELD(1U)
-/** @} */
-
-/**
- * @name    RCC_CFGR1 register helpers
- * @{
- */
-#define RCC_CFGR1_STOPWUCK_FIELD(n)         ((n) << RCC_CFGR1_STOPWUCK_Pos)
-#define RCC_CFGR1_STOPWUCK_MSIS             RCC_CFGR1_STOPWUCK_FIELD(0U)
-#define RCC_CFGR1_STOPWUCK_HSI16            RCC_CFGR1_STOPWUCK_FIELD(1U)
-
-#define RCC_CFGR1_STOPKERWUCK_FIELD(n)      ((n) << RCC_CFGR1_STOPKERWUCK_Pos)
-#define RCC_CFGR1_STOPKERWUCK_MSIK          RCC_CFGR1_STOPKERWUCK_FIELD(0U)
-#define RCC_CFGR1_STOPKERWUCK_HSI16         RCC_CFGR1_STOPKERWUCK_FIELD(1U)
 /** @} */
 
 /**
@@ -218,18 +114,6 @@
 #define RCC_CFGR4_BOOSTDIV_DIV16            RCC_CFGR4_BOOSTDIV_FIELD(8U)
 /** @} */
 
-/**
- * @name    RCC_CCIPR1 register helpers
- * @{
- */
-#define RCC_CCIPR1_TIMICSEL_FIELD(n)        ((n) << RCC_CCIPR1_TIMICSEL_Pos)
-#define RCC_CCIPR1_TIMICSEL_NOCLOCK         RCC_CCIPR1_TIMICSEL_FIELD(0U)
-#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4   RCC_CCIPR1_TIMICSEL_FIELD(4U)
-#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4   RCC_CCIPR1_TIMICSEL_FIELD(5U)
-#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4   RCC_CCIPR1_TIMICSEL_FIELD(6U)
-#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4   RCC_CCIPR1_TIMICSEL_FIELD(7U)
-/** @} */
-
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/
@@ -243,13 +127,6 @@
  */
 #if !defined(STM32_NO_INIT) || defined(__DOXYGEN__)
 #define STM32_NO_INIT                       FALSE
-#endif
-
-/**
- * @brief   External audio clock frequency.
- */
-#if !defined(STM32_AUDIOCLK) || defined(__DOXYGEN__)
-#define STM32_AUDIOCLK                      0U
 #endif
 
 /**

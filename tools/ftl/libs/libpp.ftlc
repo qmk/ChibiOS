@@ -332,15 +332,26 @@ macro EmitPPEndifAt(level)
   emit GetPPIndentAt(level) + "#endif\n"
 endmacro
 
+/* Builds a #define prefix, preserving a separator for long macro names.*/
+function GetPPDefinePrefix(name, level)
+  local prefix = GetPPIndentAt(level) + "#define " + name
+
+  if prefix?length >= ppValueColumn
+    return prefix + " "
+  endif
+
+  return prefix?right_pad(ppValueColumn)
+endfunction
+
 /* Emits a #define directive using the configured value column.*/
 macro EmitPPDefine(name, value)
-  local prefix = (GetPPIndent() + "#define " + name)?right_pad(ppValueColumn)
+  local prefix = GetPPDefinePrefix(name, ppDepth)
   EmitPPWrapped(prefix=prefix, value=value)
 endmacro
 
 /* Emits a #define directive at an explicit nesting level without changing state.*/
 macro EmitPPDefineAt(name, value, level)
-  local prefix = (GetPPIndentAt(level) + "#define " + name)?right_pad(ppValueColumn)
+  local prefix = GetPPDefinePrefix(name, level)
   EmitPPWrapped(prefix=prefix, value=value)
 endmacro
 

@@ -68,6 +68,64 @@
 /** @} */
 
 /**
+ * @name    Generated support definitions
+ * @{
+ */
+#define RCC_MSIRC0_FREE                     0
+#define RCC_MSIRC0_PLL_LSE                  1
+#define RCC_MSIRC0_PLL_HSE                  2
+#define RCC_MSIRC0_PLL_LSE_FAST             3
+#define RCC_MSIRC0_PLL_HSE_FAST             4
+#define RCC_MSIRC1_FREE                     0
+#define RCC_MSIRC1_PLL_LSE                  1
+#define RCC_MSIRC1_PLL_HSE                  2
+#define RCC_MSIRC1_PLL_LSE_FAST             3
+#define RCC_MSIRC1_PLL_HSE_FAST             4
+#define RCC_ICSCR1_MSIS_IRC0_DIV1           0
+#define RCC_ICSCR1_MSIS_IRC0_DIV2           1
+#define RCC_ICSCR1_MSIS_IRC0_DIV4           2
+#define RCC_ICSCR1_MSIS_IRC0_DIV8           3
+#define RCC_ICSCR1_MSIS_IRC1_DIV1           4
+#define RCC_ICSCR1_MSIS_IRC1_DIV2           5
+#define RCC_ICSCR1_MSIS_IRC1_DIV4           6
+#define RCC_ICSCR1_MSIS_IRC1_DIV8           7
+#define RCC_ICSCR1_MSIK_IRC0_DIV1           0
+#define RCC_ICSCR1_MSIK_IRC0_DIV2           1
+#define RCC_ICSCR1_MSIK_IRC0_DIV4           2
+#define RCC_ICSCR1_MSIK_IRC0_DIV8           3
+#define RCC_ICSCR1_MSIK_IRC1_DIV1           4
+#define RCC_ICSCR1_MSIK_IRC1_DIV2           5
+#define RCC_ICSCR1_MSIK_IRC1_DIV4           6
+#define RCC_ICSCR1_MSIK_IRC1_DIV8           7
+#define RCC_ICSCR1_MSIHSINDIV_HSE16         ((0U) << RCC_ICSCR1_MSIHSINDIV_Pos)
+#define RCC_ICSCR1_MSIHSINDIV_HSE32         ((1U) << RCC_ICSCR1_MSIHSINDIV_Pos)
+#define RCC_ICSCR1_MSIPLL1SEL_LSE           ((0U) << RCC_ICSCR1_MSIPLL1SEL_Pos)
+#define RCC_ICSCR1_MSIPLL1SEL_HSE           ((1U) << RCC_ICSCR1_MSIPLL1SEL_Pos)
+#define RCC_ICSCR1_MSIPLL0SEL_LSE           ((0U) << RCC_ICSCR1_MSIPLL0SEL_Pos)
+#define RCC_ICSCR1_MSIPLL0SEL_HSE           ((1U) << RCC_ICSCR1_MSIPLL0SEL_Pos)
+#define RCC_ICSCR1_MSIBIAS_CONTINUOUS       ((0U) << RCC_ICSCR1_MSIBIAS_Pos)
+#define RCC_ICSCR1_MSIBIAS_SAMPLING         ((1U) << RCC_ICSCR1_MSIBIAS_Pos)
+#define RCC_ICSCR1_MSIRGSEL_CSR             ((0U) << RCC_ICSCR1_MSIRGSEL_Pos)
+#define RCC_ICSCR1_MSIRGSEL_ICSCR1          ((1U) << RCC_ICSCR1_MSIRGSEL_Pos)
+#define RCC_ICSCR1_MSIKSEL_MSIRC0           ((0U) << RCC_ICSCR1_MSIKSEL_Pos)
+#define RCC_ICSCR1_MSIKSEL_MSIRC1           ((1U) << RCC_ICSCR1_MSIKSEL_Pos)
+#define RCC_ICSCR1_MSISSEL_MSIRC0           ((0U) << RCC_ICSCR1_MSISSEL_Pos)
+#define RCC_ICSCR1_MSISSEL_MSIRC1           ((1U) << RCC_ICSCR1_MSISSEL_Pos)
+#define RCC_CFGR1_STOPWUCK_MSIS             ((0U) << RCC_CFGR1_STOPWUCK_Pos)
+#define RCC_CFGR1_STOPWUCK_HSI16            ((1U) << RCC_CFGR1_STOPWUCK_Pos)
+#define RCC_CFGR1_STOPKERWUCK_MSIK          ((0U) << RCC_CFGR1_STOPKERWUCK_Pos)
+#define RCC_CFGR1_STOPKERWUCK_HSI16         ((1U) << RCC_CFGR1_STOPKERWUCK_Pos)
+#define RCC_CCIPR1_TIMICSEL_NOCLOCK         ((0U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4 ((4U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4 ((5U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4 ((6U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4 ((7U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_ICSCR1_MSIPLL1N_FIELD(n)        ((n) << RCC_ICSCR1_MSIPLL1N_Pos)
+#define RCC_ICSCR1_MSIKDIV_FIELD(n)         ((n) << RCC_ICSCR1_MSIKDIV_Pos)
+#define RCC_ICSCR1_MSISDIV_FIELD(n)         ((n) << RCC_ICSCR1_MSISDIV_Pos)
+/** @} */
+
+/**
  * @name    Generated mux selector constants
  * @{
  */
@@ -304,6 +362,13 @@
  */
 #if !defined(STM32_CFG_MSIPLL1N_VALUE) || defined(__DOXYGEN__)
   #define STM32_CFG_MSIPLL1N_VALUE          0
+#endif
+
+/**
+ * @brief   Sets the external audio clock input frequency.
+ */
+#if !defined(STM32_CFG_AUDIOCLK) || defined(__DOXYGEN__)
+  #define STM32_CFG_AUDIOCLK                0U
 #endif
 
 /**
@@ -875,21 +940,6 @@
   #error "invalid STM32_CFG_PWR_VOSR value specified"
 #endif
 
-#if !defined(RCC_MSIRC0_FREE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC0_FREE not defined"
-#endif
-#if !defined(RCC_MSIRC0_PLL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC0_PLL_LSE not defined"
-#endif
-#if !defined(RCC_MSIRC0_PLL_HSE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC0_PLL_HSE not defined"
-#endif
-#if !defined(RCC_MSIRC0_PLL_LSE_FAST) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC0_PLL_LSE_FAST not defined"
-#endif
-#if !defined(RCC_MSIRC0_PLL_HSE_FAST) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC0_PLL_HSE_FAST not defined"
-#endif
 #if !((STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_FREE) ||                         \
      (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_LSE) ||                       \
      (STM32_CFG_MSIRC0_MODE == RCC_MSIRC0_PLL_HSE) ||                       \
@@ -898,21 +948,6 @@
   #error "invalid STM32_CFG_MSIRC0_MODE value specified"
 #endif
 
-#if !defined(RCC_MSIRC1_FREE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC1_FREE not defined"
-#endif
-#if !defined(RCC_MSIRC1_PLL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC1_PLL_LSE not defined"
-#endif
-#if !defined(RCC_MSIRC1_PLL_HSE) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC1_PLL_HSE not defined"
-#endif
-#if !defined(RCC_MSIRC1_PLL_LSE_FAST) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC1_PLL_LSE_FAST not defined"
-#endif
-#if !defined(RCC_MSIRC1_PLL_HSE_FAST) && !defined(__DOXYGEN__)
-  #error "RCC_MSIRC1_PLL_HSE_FAST not defined"
-#endif
 #if !((STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_FREE) ||                         \
      (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_LSE) ||                       \
      (STM32_CFG_MSIRC1_MODE == RCC_MSIRC1_PLL_HSE) ||                       \
@@ -927,30 +962,6 @@
   #error "invalid STM32_CFG_MSIPLL1N_VALUE value specified"
 #endif
 
-#if !defined(RCC_ICSCR1_MSIS_IRC0_DIV1) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC0_DIV1 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC0_DIV2) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC0_DIV2 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC0_DIV4) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC0_DIV4 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC0_DIV8) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC0_DIV8 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC1_DIV1) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC1_DIV1 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC1_DIV2) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC1_DIV2 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC1_DIV4) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC1_DIV4 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIS_IRC1_DIV8) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIS_IRC1_DIV8 not defined"
-#endif
 #if !((STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV1) ||               \
      (STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV2) ||                \
      (STM32_CFG_MSIS_SRCDIV == RCC_ICSCR1_MSIS_IRC0_DIV4) ||                \
@@ -963,30 +974,6 @@
   #error "invalid STM32_CFG_MSIS_SRCDIV value specified"
 #endif
 
-#if !defined(RCC_ICSCR1_MSIK_IRC0_DIV1) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC0_DIV1 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC0_DIV2) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC0_DIV2 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC0_DIV4) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC0_DIV4 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC0_DIV8) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC0_DIV8 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC1_DIV1) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC1_DIV1 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC1_DIV2) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC1_DIV2 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC1_DIV4) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC1_DIV4 not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIK_IRC1_DIV8) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIK_IRC1_DIV8 not defined"
-#endif
 #if !((STM32_CFG_MSIK_SRCDIV == RCC_ICSCR1_MSIK_IRC0_DIV1) ||               \
      (STM32_CFG_MSIK_SRCDIV == RCC_ICSCR1_MSIK_IRC0_DIV2) ||                \
      (STM32_CFG_MSIK_SRCDIV == RCC_ICSCR1_MSIK_IRC0_DIV4) ||                \
@@ -999,55 +986,22 @@
   #error "invalid STM32_CFG_MSIK_SRCDIV value specified"
 #endif
 
-#if !defined(RCC_CFGR1_STOPWUCK_MSIS) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR1_STOPWUCK_MSIS not defined"
-#endif
-#if !defined(RCC_CFGR1_STOPWUCK_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR1_STOPWUCK_HSI16 not defined"
-#endif
 #if !((STM32_CFG_STOPWUCK == RCC_CFGR1_STOPWUCK_MSIS) ||                    \
      (STM32_CFG_STOPWUCK == RCC_CFGR1_STOPWUCK_HSI16)) && !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_STOPWUCK value specified"
 #endif
 
-#if !defined(RCC_CFGR1_STOPKERWUCK_MSIK) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR1_STOPKERWUCK_MSIK not defined"
-#endif
-#if !defined(RCC_CFGR1_STOPKERWUCK_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR1_STOPKERWUCK_HSI16 not defined"
-#endif
 #if !((STM32_CFG_STOPKERWUCK == RCC_CFGR1_STOPKERWUCK_MSIK) ||              \
      (STM32_CFG_STOPKERWUCK == RCC_CFGR1_STOPKERWUCK_HSI16)) &&             \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_STOPKERWUCK value specified"
 #endif
 
-#if !defined(RCC_ICSCR1_MSIBIAS_CONTINUOUS) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIBIAS_CONTINUOUS not defined"
-#endif
-#if !defined(RCC_ICSCR1_MSIBIAS_SAMPLING) && !defined(__DOXYGEN__)
-  #error "RCC_ICSCR1_MSIBIAS_SAMPLING not defined"
-#endif
 #if !((STM32_CFG_MSIBIAS == RCC_ICSCR1_MSIBIAS_CONTINUOUS) ||               \
      (STM32_CFG_MSIBIAS == RCC_ICSCR1_MSIBIAS_SAMPLING)) && !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_MSIBIAS value specified"
 #endif
 
-#if !defined(RCC_CCIPR1_TIMICSEL_NOCLOCK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR1_TIMICSEL_NOCLOCK not defined"
-#endif
-#if !defined(RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4 not defined"
-#endif
-#if !defined(RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4 not defined"
-#endif
-#if !defined(RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4 not defined"
-#endif
-#if !defined(RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4 not defined"
-#endif
 #if !((STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK) ||                \
      (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) ||   \
      (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4) ||   \
@@ -1657,7 +1611,7 @@
 /**
  * @brief   AUDIOCLK nominal source frequency.
  */
-#define STM32_AUDIOCLK_SOURCE_FREQ          STM32_AUDIOCLK
+#define STM32_AUDIOCLK_SOURCE_FREQ          STM32_CFG_AUDIOCLK
 
 /**
  * @brief   AUDIOCLK clock register bits.

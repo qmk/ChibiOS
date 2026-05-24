@@ -1,0 +1,6 @@
+Generated support definitions
+#define RCC_TESTSEL_OSC                     ((1U) << RCC_TESTSEL_Pos)
+#define RCC_TEST_MODE_A                     0
+#define RCC_TEST_MODE_B                     1
+#define RCC_TESTSEL_FIELD(n)                ((n) << RCC_TESTSEL_Pos)
+#define TST_CFG_TEST_MODE                   RCC_TEST_MODE_A

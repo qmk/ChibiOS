@@ -1,0 +1,44 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <enums>
+      <enum name="RCC_TESTSEL" field="RCC_TESTSEL_Pos">
+        <item name="OSC" value="1U" />
+      </enum>
+      <enum name="RCC_TEST_MODE">
+        <item name="A" value="0" />
+        <item name="B" value="1" />
+      </enum>
+    </enums>
+    <definitions>
+      <define name="RCC_TESTSEL_FIELD(n)" value="((n) &lt;&lt; RCC_TESTSEL_Pos)" />
+    </definitions>
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="TEST_MODE" type="set" default="RCC_TEST_MODE_A"
+              values="RCC_TEST_MODE_A RCC_TEST_MODE_B">
+        <description>Selects a generated test mode.</description>
+      </config>
+    </configs>
+  </settings>
+  <sources>
+    <source point="OSC" enable="always" dynamic="no" frequency="16000000U">
+      <description>root oscillator</description>
+    </source>
+  </sources>
+  <clocks>
+    <clock point="SYSCLK" enable="always" dynamic="no">
+      <description>system clock mux</description>
+      <mux name="SYSSEL">
+        <input point="OSC" default="yes">
+          <bits value="RCC_TESTSEL_OSC" />
+        </input>
+      </mux>
+    </clock>
+  </clocks>
+</clocktree>
