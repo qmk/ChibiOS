@@ -187,11 +187,6 @@
  * @name    RCC_CFGR1 register helpers
  * @{
  */
-#define RCC_CFGR1_SWS_FIELD(n)              ((n) << RCC_CFGR1_SWS_Pos)
-#define RCC_CFGR1_SWS_MSIS                  RCC_CFGR1_SWS_FIELD(0U)
-#define RCC_CFGR1_SWS_HSI16                 RCC_CFGR1_SWS_FIELD(1U)
-#define RCC_CFGR1_SWS_HSE                   RCC_CFGR1_SWS_FIELD(2U)
-
 #define RCC_CFGR1_STOPWUCK_FIELD(n)         ((n) << RCC_CFGR1_STOPWUCK_Pos)
 #define RCC_CFGR1_STOPWUCK_MSIS             RCC_CFGR1_STOPWUCK_FIELD(0U)
 #define RCC_CFGR1_STOPWUCK_HSI16            RCC_CFGR1_STOPWUCK_FIELD(1U)
@@ -199,29 +194,6 @@
 #define RCC_CFGR1_STOPKERWUCK_FIELD(n)      ((n) << RCC_CFGR1_STOPKERWUCK_Pos)
 #define RCC_CFGR1_STOPKERWUCK_MSIK          RCC_CFGR1_STOPKERWUCK_FIELD(0U)
 #define RCC_CFGR1_STOPKERWUCK_HSI16         RCC_CFGR1_STOPKERWUCK_FIELD(1U)
-
-/** @} */
-
-/**
- * @name    RCC_CFGR2 register helpers
- * @{
- */
-#define STM32_HPRE_MASK                     RCC_CFGR2_HPRE_Msk
-#define STM32_HPRE_POS                      RCC_CFGR2_HPRE_Pos
-
-#define STM32_PPRE1_MASK                    RCC_CFGR2_PPRE1_Msk
-#define STM32_PPRE1_POS                     RCC_CFGR2_PPRE1_Pos
-
-#define STM32_PPRE2_MASK                    RCC_CFGR2_PPRE2_Msk
-#define STM32_PPRE2_POS                     RCC_CFGR2_PPRE2_Pos
-/** @} */
-
-/**
- * @name    RCC_CFGR3 register helpers
- * @{
- */
-#define STM32_PPRE3_MASK                    RCC_CFGR3_PPRE3_Msk
-#define STM32_PPRE3_POS                     RCC_CFGR3_PPRE3_Pos
 /** @} */
 
 /**
@@ -256,12 +228,6 @@
 #define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4   RCC_CCIPR1_TIMICSEL_FIELD(5U)
 #define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4   RCC_CCIPR1_TIMICSEL_FIELD(6U)
 #define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4   RCC_CCIPR1_TIMICSEL_FIELD(7U)
-/** @} */
-
-/**
- * @name    RCC_BDCR register helpers
- * @{
- */
 /** @} */
 
 /*===========================================================================*/

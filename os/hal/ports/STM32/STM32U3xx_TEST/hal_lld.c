@@ -283,7 +283,7 @@ static bool hal_lld_clock_configure(const halclkcfg_t *ccp) {
   /* Resetting clock-related settings.*/
   halRegWrite32X(&RCC->CFGR1, STM32_RCC_CFGR1_RESET, true);
   if (halRegWaitMatch32X(&RCC->CFGR1,
-                         RCC_CFGR1_SWS_Msk, RCC_CFGR1_SWS_MSIS,
+                         RCC_CFGR1_SWS_Msk, 0U,
                          STM32_SYSCLK_SWITCH_TIME,
                          NULL)) {
     return true;
@@ -543,10 +543,10 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
   }
 
   /* HCLK frequency.*/
-  hclk = sysclk / hprediv[(ccp->rcc_cfgr2 & STM32_HPRE_MASK) >> STM32_HPRE_POS];
+  hclk = sysclk / hprediv[(ccp->rcc_cfgr2 & RCC_CFGR2_HPRE_Msk) >> RCC_CFGR2_HPRE_Pos];
 
   /* PPRE1 frequency.*/
-  n = pprediv[(ccp->rcc_cfgr2 & STM32_PPRE1_MASK) >> STM32_PPRE1_POS];
+  n = pprediv[(ccp->rcc_cfgr2 & RCC_CFGR2_PPRE1_Msk) >> RCC_CFGR2_PPRE1_Pos];
   pclk1 = hclk / n;
   if (n < 2) {
     pclk1tim = pclk1;
@@ -556,7 +556,7 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
   }
 
   /* PPRE2 frequency.*/
-  n = pprediv[(ccp->rcc_cfgr2 & STM32_PPRE2_MASK) >> STM32_PPRE2_POS];
+  n = pprediv[(ccp->rcc_cfgr2 & RCC_CFGR2_PPRE2_Msk) >> RCC_CFGR2_PPRE2_Pos];
   pclk2 = hclk / n;
   if (n < 2) {
     pclk2tim = pclk2;
@@ -566,7 +566,7 @@ static bool hal_lld_clock_check_tree(const halclkcfg_t *ccp) {
   }
 
   /* PPRE3 frequency.*/
-  n = pprediv[(ccp->rcc_cfgr3 & STM32_PPRE3_MASK) >> STM32_PPRE3_POS];
+  n = pprediv[(ccp->rcc_cfgr3 & RCC_CFGR3_PPRE3_Msk) >> RCC_CFGR3_PPRE3_Pos];
   pclk3 = hclk / n;
 
   /* MCO1 clock.*/
