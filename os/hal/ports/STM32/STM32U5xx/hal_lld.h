@@ -17,6 +17,15 @@
 /**
  * @file    STM32U5xx/hal_lld.h
  * @brief   STM32U5xx HAL subsystem low level driver header.
+ * @pre     This module requires the following macros to be defined in the
+ *          @p board.h file:
+ *          - STM32_LSECLK.
+ *          - STM32_LSEDRV.
+ *          - STM32_LSE_BYPASS (optionally).
+ *          - STM32_HSECLK.
+ *          - STM32_HSE_BYPASS (optionally).
+ *          - STM32_HSE_DIGITAL (optionally).
+ *          .
  *
  * @addtogroup HAL
  * @{
@@ -311,6 +320,35 @@
                                              RCC_BDCR_LSCOSEL_FIELD(0U))
 #define RCC_BDCR_LSCOSEL_LSE                (RCC_BDCR_LSCOEN |      \
                                              RCC_BDCR_LSCOSEL_FIELD(1U))
+/** @} */
+
+/**
+ * @name    Board-defined oscillator mode helpers
+ * @{
+ */
+#if defined(STM32_HSE_BYPASS) || defined(__DOXYGEN__)
+  #if defined(STM32_HSE_DIGITAL) || defined(__DOXYGEN__)
+    #define STM32_HSE_MODE_BITS             (RCC_CR_HSEBYP | RCC_CR_HSEEXT)
+  #else
+    #define STM32_HSE_MODE_BITS             RCC_CR_HSEBYP
+  #endif
+#else
+  #define STM32_HSE_MODE_BITS               0U
+#endif
+
+#if !defined(STM32_LSEDRV)
+  #error "STM32_LSEDRV not defined in board.h"
+#endif
+
+#if (STM32_LSEDRV & ~RCC_BDCR_LSEDRV_Msk) != 0U
+  #error "STM32_LSEDRV outside acceptable range ((0<<3)...(3<<3))"
+#endif
+
+#if defined(STM32_LSE_BYPASS) || defined(__DOXYGEN__)
+  #define STM32_LSE_MODE_BITS               (STM32_LSEDRV | RCC_BDCR_LSEBYP)
+#else
+  #define STM32_LSE_MODE_BITS               STM32_LSEDRV
+#endif
 /** @} */
 
 /*===========================================================================*/

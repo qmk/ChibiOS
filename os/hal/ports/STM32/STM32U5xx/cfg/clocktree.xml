@@ -51,10 +51,23 @@
         <item name="ICSCR1" value="1U" />
       </enum>
     </enums>
+    <definitions>
+      <define name="RCC_BDCR_LSIPREDIV_DIV1" value="0U" />
+      <define name="RCC_BDCR_LSIPREDIV_DIV128" value="RCC_BDCR_LSIPREDIV" />
+    </definitions>
     <configs>
       <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
               role="dynamic_mode">
         <description>Enables dynamic clock handling.</description>
+      </config>
+      <config name="PWR_VOSR" type="set" default="PWR_VOSR_VOS_RANGE1"
+              values="PWR_VOSR_VOS_RANGE1 PWR_VOSR_VOS_RANGE2 PWR_VOSR_VOS_RANGE3 PWR_VOSR_VOS_RANGE4">
+        <description>Selects the core voltage scaling range.</description>
+      </config>
+      <config name="LSI_PREDIV" type="set"
+              default="RCC_BDCR_LSIPREDIV_DIV1"
+              values="RCC_BDCR_LSIPREDIV_DIV1 RCC_BDCR_LSIPREDIV_DIV128">
+        <description>Selects the LSI oscillator output divider.</description>
       </config>
       <config name="MSIS_RANGE" type="set"
               default="RCC_ICSCR1_MSISRANGE_RANGE4_4M"
@@ -82,8 +95,155 @@
       <derived-config name="MSIKDIV_VALUE" type="expression"
                       value="((((STM32_CFG_MSIK_RANGE &gt;&gt; RCC_ICSCR1_MSIKRANGE_Pos) &amp; 3U) + 1U))" />
     </derived-configs>
+    <states>
+      <state name="vos1"
+             when="STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE1" />
+      <state name="vos2"
+             when="STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE2" />
+      <state name="vos3"
+             when="STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE3" />
+      <state name="vos4"
+             when="STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE4" />
+    </states>
+    <limit-set>
+      <limit name="HSECLK" min="yes" max="yes" />
+      <limit name="LSECLK" min="yes" max="yes" />
+      <limit name="PLLIN" min="yes" max="yes" />
+      <limit name="PLLVCO" min="yes" max="yes" />
+      <limit name="PLLP" min="yes" max="yes" />
+      <limit name="PLLQ" min="yes" max="yes" />
+      <limit name="PLLR" min="yes" max="yes" />
+      <limit name="SYSCLK" min="no" max="yes" />
+      <limit name="HCLK" min="no" max="yes" />
+      <limit name="PCLK1" min="no" max="yes" />
+      <limit name="PCLK2" min="no" max="yes" />
+      <limit name="PCLK3" min="no" max="yes" />
+      <limit name="ADCCLK" min="no" max="yes" />
+    </limit-set>
+    <limit-values>
+      <state-values state="vos1">
+        <limit name="HSECLK">
+          <case when="defined(STM32_HSE_BYPASS)" min="4000000" max="50000000" />
+          <default min="4000000" max="50000000" />
+        </limit>
+        <limit name="LSECLK">
+          <case when="defined(STM32_LSE_BYPASS)" min="5000" max="40000" />
+          <default min="32768" max="32768" />
+        </limit>
+        <limit name="PLLIN" min="4000000" max="16000000" />
+        <limit name="PLLVCO" min="128000000" max="544000000" />
+        <limit name="PLLP" min="1000000" max="208000000" />
+        <limit name="PLLQ" min="1000000" max="208000000" />
+        <limit name="PLLR" min="1000000" max="208000000" />
+        <limit name="SYSCLK" max="160000000" />
+        <limit name="HCLK" max="160000000" />
+        <limit name="PCLK1" max="160000000" />
+        <limit name="PCLK2" max="160000000" />
+        <limit name="PCLK3" max="160000000" />
+        <limit name="ADCCLK" max="55000000" />
+      </state-values>
+      <state-values state="vos2">
+        <limit name="HSECLK">
+          <case when="defined(STM32_HSE_BYPASS)" min="4000000" max="50000000" />
+          <default min="4000000" max="50000000" />
+        </limit>
+        <limit name="LSECLK">
+          <case when="defined(STM32_LSE_BYPASS)" min="5000" max="40000" />
+          <default min="32768" max="32768" />
+        </limit>
+        <limit name="PLLIN" min="4000000" max="16000000" />
+        <limit name="PLLVCO" min="128000000" max="544000000" />
+        <limit name="PLLP" min="1000000" max="110000000" />
+        <limit name="PLLQ" min="1000000" max="110000000" />
+        <limit name="PLLR" min="1000000" max="110000000" />
+        <limit name="SYSCLK" max="110000000" />
+        <limit name="HCLK" max="110000000" />
+        <limit name="PCLK1" max="110000000" />
+        <limit name="PCLK2" max="110000000" />
+        <limit name="PCLK3" max="110000000" />
+        <limit name="ADCCLK" max="55000000" />
+      </state-values>
+      <state-values state="vos3">
+        <limit name="HSECLK">
+          <case when="defined(STM32_HSE_BYPASS)" min="4000000" max="50000000" />
+          <default min="4000000" max="50000000" />
+        </limit>
+        <limit name="LSECLK">
+          <case when="defined(STM32_LSE_BYPASS)" min="5000" max="40000" />
+          <default min="32768" max="32768" />
+        </limit>
+        <limit name="PLLIN" min="4000000" max="16000000" />
+        <limit name="PLLVCO" min="128000000" max="330000000" />
+        <limit name="PLLP" min="1000000" max="55000000" />
+        <limit name="PLLQ" min="1000000" max="55000000" />
+        <limit name="PLLR" min="1000000" max="55000000" />
+        <limit name="SYSCLK" max="55000000" />
+        <limit name="HCLK" max="55000000" />
+        <limit name="PCLK1" max="55000000" />
+        <limit name="PCLK2" max="55000000" />
+        <limit name="PCLK3" max="55000000" />
+        <limit name="ADCCLK" max="55000000" />
+      </state-values>
+      <state-values state="vos4">
+        <limit name="HSECLK">
+          <case when="defined(STM32_HSE_BYPASS)" min="4000000" max="25000000" />
+          <default min="4000000" max="25000000" />
+        </limit>
+        <limit name="LSECLK">
+          <case when="defined(STM32_LSE_BYPASS)" min="5000" max="40000" />
+          <default min="32768" max="32768" />
+        </limit>
+        <limit name="PLLIN" min="0" max="0" />
+        <limit name="PLLVCO" min="0" max="0" />
+        <limit name="PLLP" min="0" max="0" />
+        <limit name="PLLQ" min="0" max="0" />
+        <limit name="PLLR" min="0" max="0" />
+        <limit name="SYSCLK" max="25000000" />
+        <limit name="HCLK" max="25000000" />
+        <limit name="PCLK1" max="25000000" />
+        <limit name="PCLK2" max="25000000" />
+        <limit name="PCLK3" max="25000000" />
+        <limit name="ADCCLK" max="25000000" />
+      </state-values>
+    </limit-values>
   </settings>
   <sources>
+    <source point="NONE" enable="never" dynamic="no" frequency="0U">
+      <description>pseudo-clock for disabled sources</description>
+    </source>
+    <source point="HSI16" enable="manual" dynamic="yes" frequency="16000000U">
+      <description>16 MHz high speed internal oscillator</description>
+      <bits target="CR" enabled="(RCC_CR_HSION | RCC_CR_HSIKERON)" disabled="0U" />
+    </source>
+    <source point="HSI48" enable="manual" dynamic="yes" frequency="48000000U">
+      <description>48 MHz high speed internal oscillator</description>
+      <bits target="CR" enabled="RCC_CR_HSI48ON" disabled="0U" />
+    </source>
+    <source point="SHSI" enable="manual" dynamic="yes" frequency="48000000U">
+      <description>48 MHz secure high speed internal oscillator</description>
+      <bits target="CR" enabled="RCC_CR_SHSION" disabled="0U" />
+    </source>
+    <source point="HSE" enable="manual" dynamic="yes" frequency="STM32_HSECLK">
+      <description>high speed external oscillator</description>
+      <bits target="CR" enabled="(RCC_CR_HSEON | STM32_HSE_MODE_BITS)" disabled="0U" />
+      <limits ref="HSECLK" />
+    </source>
+    <source point="LSE" enable="manual" dynamic="no" frequency="STM32_LSECLK">
+      <description>low speed external oscillator</description>
+      <bits target="BDCR" enabled="(RCC_BDCR_LSEON | STM32_LSE_MODE_BITS)" disabled="0U" />
+      <limits ref="LSECLK" />
+    </source>
+    <source point="LSI" enable="manual" dynamic="no">
+      <description>low speed internal oscillator</description>
+      <bits target="BDCR" enabled="(RCC_BDCR_LSION | STM32_CFG_LSI_PREDIV)" disabled="0U" />
+      <frequencies>
+        <select>
+          <when condition="STM32_CFG_LSI_PREDIV == RCC_BDCR_LSIPREDIV_DIV128"
+                value="250U" />
+          <otherwise value="32000U" />
+        </select>
+      </frequencies>
+    </source>
     <source point="MSIRC0" enable="auto" dynamic="no" frequency="48000000U">
       <description>48 MHz internal MSI RC oscillator</description>
     </source>
@@ -156,9 +316,16 @@
     </clock>
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>system clock</description>
+      <limits ref="SYSCLK" />
       <mux name="SW">
         <input point="MSIS" default="yes">
           <bits value="RCC_CFGR1_SW_MSIS" />
+        </input>
+        <input point="HSI16">
+          <bits value="RCC_CFGR1_SW_HSI16" />
+        </input>
+        <input point="HSE">
+          <bits value="RCC_CFGR1_SW_HSE" />
         </input>
       </mux>
     </clock>

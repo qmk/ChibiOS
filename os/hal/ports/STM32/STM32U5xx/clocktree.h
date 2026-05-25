@@ -32,13 +32,21 @@
  * @name    Dynamic clock point indexes and names
  * @{
  */
-#define CLK_MSIS                0U
-#define CLK_MSIK                1U
-#define CLK_SYSCLK              2U
-#define CLK_ARRAY_SIZE          3U
+#define CLK_HSI16               0U
+#define CLK_HSI48               1U
+#define CLK_SHSI                2U
+#define CLK_HSE                 3U
+#define CLK_MSIS                4U
+#define CLK_MSIK                5U
+#define CLK_SYSCLK              6U
+#define CLK_ARRAY_SIZE          7U
 
 #define CLK_POINT_NAMES                                                     \
   {                                                                         \
+    "HSI16",                                                                \
+    "HSI48",                                                                \
+    "SHSI",                                                                 \
+    "HSE",                                                                  \
     "MSIS",                                                                 \
     "MSIK",                                                                 \
     "SYSCLK"                                                                \
@@ -85,6 +93,8 @@
 #define RCC_ICSCR1_MSIBIAS_SAMPLING         ((1U) << RCC_ICSCR1_MSIBIAS_Pos)
 #define RCC_ICSCR1_MSIRGSEL_CSR             ((0U) << RCC_ICSCR1_MSIRGSEL_Pos)
 #define RCC_ICSCR1_MSIRGSEL_ICSCR1          ((1U) << RCC_ICSCR1_MSIRGSEL_Pos)
+#define RCC_BDCR_LSIPREDIV_DIV1             0U
+#define RCC_BDCR_LSIPREDIV_DIV128           RCC_BDCR_LSIPREDIV
 /** @} */
 
 /**
@@ -134,6 +144,20 @@
 #endif
 
 /**
+ * @brief   Selects the core voltage scaling range.
+ */
+#if !defined(STM32_CFG_PWR_VOSR) || defined(__DOXYGEN__)
+  #define STM32_CFG_PWR_VOSR                PWR_VOSR_VOS_RANGE1
+#endif
+
+/**
+ * @brief   Selects the LSI oscillator output divider.
+ */
+#if !defined(STM32_CFG_LSI_PREDIV) || defined(__DOXYGEN__)
+  #define STM32_CFG_LSI_PREDIV              RCC_BDCR_LSIPREDIV_DIV1
+#endif
+
+/**
  * @brief   Selects the MSIS frequency range.
  */
 #if !defined(STM32_CFG_MSIS_RANGE) || defined(__DOXYGEN__)
@@ -155,9 +179,53 @@
 #endif
 
 /**
+ * @brief   Enables the HSI16 clock source.
+ */
+#if !defined(STM32_CFG_HSI16_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_HSI16_ENABLE            FALSE
+#endif
+
+/**
+ * @brief   Enables the HSI48 clock source.
+ */
+#if !defined(STM32_CFG_HSI48_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_HSI48_ENABLE            FALSE
+#endif
+
+/**
+ * @brief   Enables the SHSI clock source.
+ */
+#if !defined(STM32_CFG_SHSI_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_SHSI_ENABLE             FALSE
+#endif
+
+/**
+ * @brief   Enables the HSE clock source.
+ */
+#if !defined(STM32_CFG_HSE_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_HSE_ENABLE              FALSE
+#endif
+
+/**
+ * @brief   Enables the LSE clock source.
+ */
+#if !defined(STM32_CFG_LSE_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_LSE_ENABLE              FALSE
+#endif
+
+/**
+ * @brief   Enables the LSI clock source.
+ */
+#if !defined(STM32_CFG_LSI_ENABLE) || defined(__DOXYGEN__)
+  #define STM32_CFG_LSI_ENABLE              FALSE
+#endif
+
+/**
  * @brief   Selects the SYSCLK clock source.
  * @note    Allowed sources:
  *          - MSIS.
+ *          - HSI16.
+ *          - HSE.
  */
 #if !defined(STM32_CFG_SYSCLK_SEL) || defined(__DOXYGEN__)
   #define STM32_CFG_SYSCLK_SEL              RCC_CFGR1_SW_MSIS
@@ -184,6 +252,31 @@
 #if !((STM32_CFG_CLOCK_DYNAMIC == TRUE) || (STM32_CFG_CLOCK_DYNAMIC == FALSE)) && \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_CLOCK_DYNAMIC value specified"
+#endif
+
+#if !defined(PWR_VOSR_VOS_RANGE1) && !defined(__DOXYGEN__)
+  #error "PWR_VOSR_VOS_RANGE1 not defined"
+#endif
+#if !defined(PWR_VOSR_VOS_RANGE2) && !defined(__DOXYGEN__)
+  #error "PWR_VOSR_VOS_RANGE2 not defined"
+#endif
+#if !defined(PWR_VOSR_VOS_RANGE3) && !defined(__DOXYGEN__)
+  #error "PWR_VOSR_VOS_RANGE3 not defined"
+#endif
+#if !defined(PWR_VOSR_VOS_RANGE4) && !defined(__DOXYGEN__)
+  #error "PWR_VOSR_VOS_RANGE4 not defined"
+#endif
+#if !((STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE1) ||                        \
+     (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE2) ||                         \
+     (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE3) ||                         \
+     (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE4)) && !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_PWR_VOSR value specified"
+#endif
+
+#if !((STM32_CFG_LSI_PREDIV == RCC_BDCR_LSIPREDIV_DIV1) ||                  \
+     (STM32_CFG_LSI_PREDIV == RCC_BDCR_LSIPREDIV_DIV128)) &&                \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_LSI_PREDIV value specified"
 #endif
 
 #if !((STM32_CFG_MSIS_RANGE == RCC_ICSCR1_MSISRANGE_RANGE0_48M) ||          \
@@ -245,6 +338,285 @@
 
 #define STM32_DCFG_MSIKDIV_VALUE            ((((STM32_CFG_MSIK_RANGE >> RCC_ICSCR1_MSIKRANGE_Pos) & \
                                                3U) + 1U))
+
+/**
+ * @name    Frequency limits for vos1 state
+ * @{
+ */
+#if defined(STM32_HSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_HSECLK_MIN               4000000
+#define STM32_VOS1_HSECLK_MAX               50000000
+#else
+#define STM32_VOS1_HSECLK_MIN               4000000
+#define STM32_VOS1_HSECLK_MAX               50000000
+#endif
+#if defined(STM32_LSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_LSECLK_MIN               5000
+#define STM32_VOS1_LSECLK_MAX               40000
+#else
+#define STM32_VOS1_LSECLK_MIN               32768
+#define STM32_VOS1_LSECLK_MAX               32768
+#endif
+#define STM32_VOS1_PLLIN_MIN                4000000
+#define STM32_VOS1_PLLIN_MAX                16000000
+#define STM32_VOS1_PLLVCO_MIN               128000000
+#define STM32_VOS1_PLLVCO_MAX               544000000
+#define STM32_VOS1_PLLP_MIN                 1000000
+#define STM32_VOS1_PLLP_MAX                 208000000
+#define STM32_VOS1_PLLQ_MIN                 1000000
+#define STM32_VOS1_PLLQ_MAX                 208000000
+#define STM32_VOS1_PLLR_MIN                 1000000
+#define STM32_VOS1_PLLR_MAX                 208000000
+#define STM32_VOS1_SYSCLK_MAX               160000000
+#define STM32_VOS1_HCLK_MAX                 160000000
+#define STM32_VOS1_PCLK1_MAX                160000000
+#define STM32_VOS1_PCLK2_MAX                160000000
+#define STM32_VOS1_PCLK3_MAX                160000000
+#define STM32_VOS1_ADCCLK_MAX               55000000
+/** @} */
+
+/**
+ * @name    Frequency limits for vos2 state
+ * @{
+ */
+#if defined(STM32_HSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_HSECLK_MIN               4000000
+#define STM32_VOS2_HSECLK_MAX               50000000
+#else
+#define STM32_VOS2_HSECLK_MIN               4000000
+#define STM32_VOS2_HSECLK_MAX               50000000
+#endif
+#if defined(STM32_LSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_LSECLK_MIN               5000
+#define STM32_VOS2_LSECLK_MAX               40000
+#else
+#define STM32_VOS2_LSECLK_MIN               32768
+#define STM32_VOS2_LSECLK_MAX               32768
+#endif
+#define STM32_VOS2_PLLIN_MIN                4000000
+#define STM32_VOS2_PLLIN_MAX                16000000
+#define STM32_VOS2_PLLVCO_MIN               128000000
+#define STM32_VOS2_PLLVCO_MAX               544000000
+#define STM32_VOS2_PLLP_MIN                 1000000
+#define STM32_VOS2_PLLP_MAX                 110000000
+#define STM32_VOS2_PLLQ_MIN                 1000000
+#define STM32_VOS2_PLLQ_MAX                 110000000
+#define STM32_VOS2_PLLR_MIN                 1000000
+#define STM32_VOS2_PLLR_MAX                 110000000
+#define STM32_VOS2_SYSCLK_MAX               110000000
+#define STM32_VOS2_HCLK_MAX                 110000000
+#define STM32_VOS2_PCLK1_MAX                110000000
+#define STM32_VOS2_PCLK2_MAX                110000000
+#define STM32_VOS2_PCLK3_MAX                110000000
+#define STM32_VOS2_ADCCLK_MAX               55000000
+/** @} */
+
+/**
+ * @name    Frequency limits for vos3 state
+ * @{
+ */
+#if defined(STM32_HSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_HSECLK_MIN               4000000
+#define STM32_VOS3_HSECLK_MAX               50000000
+#else
+#define STM32_VOS3_HSECLK_MIN               4000000
+#define STM32_VOS3_HSECLK_MAX               50000000
+#endif
+#if defined(STM32_LSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_LSECLK_MIN               5000
+#define STM32_VOS3_LSECLK_MAX               40000
+#else
+#define STM32_VOS3_LSECLK_MIN               32768
+#define STM32_VOS3_LSECLK_MAX               32768
+#endif
+#define STM32_VOS3_PLLIN_MIN                4000000
+#define STM32_VOS3_PLLIN_MAX                16000000
+#define STM32_VOS3_PLLVCO_MIN               128000000
+#define STM32_VOS3_PLLVCO_MAX               330000000
+#define STM32_VOS3_PLLP_MIN                 1000000
+#define STM32_VOS3_PLLP_MAX                 55000000
+#define STM32_VOS3_PLLQ_MIN                 1000000
+#define STM32_VOS3_PLLQ_MAX                 55000000
+#define STM32_VOS3_PLLR_MIN                 1000000
+#define STM32_VOS3_PLLR_MAX                 55000000
+#define STM32_VOS3_SYSCLK_MAX               55000000
+#define STM32_VOS3_HCLK_MAX                 55000000
+#define STM32_VOS3_PCLK1_MAX                55000000
+#define STM32_VOS3_PCLK2_MAX                55000000
+#define STM32_VOS3_PCLK3_MAX                55000000
+#define STM32_VOS3_ADCCLK_MAX               55000000
+/** @} */
+
+/**
+ * @name    Frequency limits for vos4 state
+ * @{
+ */
+#if defined(STM32_HSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_HSECLK_MIN               4000000
+#define STM32_VOS4_HSECLK_MAX               25000000
+#else
+#define STM32_VOS4_HSECLK_MIN               4000000
+#define STM32_VOS4_HSECLK_MAX               25000000
+#endif
+#if defined(STM32_LSE_BYPASS) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_LSECLK_MIN               5000
+#define STM32_VOS4_LSECLK_MAX               40000
+#else
+#define STM32_VOS4_LSECLK_MIN               32768
+#define STM32_VOS4_LSECLK_MAX               32768
+#endif
+#define STM32_VOS4_PLLIN_MIN                0
+#define STM32_VOS4_PLLIN_MAX                0
+#define STM32_VOS4_PLLVCO_MIN               0
+#define STM32_VOS4_PLLVCO_MAX               0
+#define STM32_VOS4_PLLP_MIN                 0
+#define STM32_VOS4_PLLP_MAX                 0
+#define STM32_VOS4_PLLQ_MIN                 0
+#define STM32_VOS4_PLLQ_MAX                 0
+#define STM32_VOS4_PLLR_MIN                 0
+#define STM32_VOS4_PLLR_MAX                 0
+#define STM32_VOS4_SYSCLK_MAX               25000000
+#define STM32_VOS4_HCLK_MAX                 25000000
+#define STM32_VOS4_PCLK1_MAX                25000000
+#define STM32_VOS4_PCLK2_MAX                25000000
+#define STM32_VOS4_PCLK3_MAX                25000000
+#define STM32_VOS4_ADCCLK_MAX               25000000
+/** @} */
+
+/*
+ * Selected frequency limits.
+ */
+#if (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE1) || \
+    defined(__DOXYGEN__)
+#define STM32_HSECLK_MIN                    STM32_VOS1_HSECLK_MIN
+#define STM32_HSECLK_MAX                    STM32_VOS1_HSECLK_MAX
+#define STM32_LSECLK_MIN                    STM32_VOS1_LSECLK_MIN
+#define STM32_LSECLK_MAX                    STM32_VOS1_LSECLK_MAX
+#define STM32_PLLIN_MIN                     STM32_VOS1_PLLIN_MIN
+#define STM32_PLLIN_MAX                     STM32_VOS1_PLLIN_MAX
+#define STM32_PLLVCO_MIN                    STM32_VOS1_PLLVCO_MIN
+#define STM32_PLLVCO_MAX                    STM32_VOS1_PLLVCO_MAX
+#define STM32_PLLP_MIN                      STM32_VOS1_PLLP_MIN
+#define STM32_PLLP_MAX                      STM32_VOS1_PLLP_MAX
+#define STM32_PLLQ_MIN                      STM32_VOS1_PLLQ_MIN
+#define STM32_PLLQ_MAX                      STM32_VOS1_PLLQ_MAX
+#define STM32_PLLR_MIN                      STM32_VOS1_PLLR_MIN
+#define STM32_PLLR_MAX                      STM32_VOS1_PLLR_MAX
+#define STM32_SYSCLK_MAX                    STM32_VOS1_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS1_HCLK_MAX
+#define STM32_PCLK1_MAX                     STM32_VOS1_PCLK1_MAX
+#define STM32_PCLK2_MAX                     STM32_VOS1_PCLK2_MAX
+#define STM32_PCLK3_MAX                     STM32_VOS1_PCLK3_MAX
+#define STM32_ADCCLK_MAX                    STM32_VOS1_ADCCLK_MAX
+#elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE2)
+#define STM32_HSECLK_MIN                    STM32_VOS2_HSECLK_MIN
+#define STM32_HSECLK_MAX                    STM32_VOS2_HSECLK_MAX
+#define STM32_LSECLK_MIN                    STM32_VOS2_LSECLK_MIN
+#define STM32_LSECLK_MAX                    STM32_VOS2_LSECLK_MAX
+#define STM32_PLLIN_MIN                     STM32_VOS2_PLLIN_MIN
+#define STM32_PLLIN_MAX                     STM32_VOS2_PLLIN_MAX
+#define STM32_PLLVCO_MIN                    STM32_VOS2_PLLVCO_MIN
+#define STM32_PLLVCO_MAX                    STM32_VOS2_PLLVCO_MAX
+#define STM32_PLLP_MIN                      STM32_VOS2_PLLP_MIN
+#define STM32_PLLP_MAX                      STM32_VOS2_PLLP_MAX
+#define STM32_PLLQ_MIN                      STM32_VOS2_PLLQ_MIN
+#define STM32_PLLQ_MAX                      STM32_VOS2_PLLQ_MAX
+#define STM32_PLLR_MIN                      STM32_VOS2_PLLR_MIN
+#define STM32_PLLR_MAX                      STM32_VOS2_PLLR_MAX
+#define STM32_SYSCLK_MAX                    STM32_VOS2_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS2_HCLK_MAX
+#define STM32_PCLK1_MAX                     STM32_VOS2_PCLK1_MAX
+#define STM32_PCLK2_MAX                     STM32_VOS2_PCLK2_MAX
+#define STM32_PCLK3_MAX                     STM32_VOS2_PCLK3_MAX
+#define STM32_ADCCLK_MAX                    STM32_VOS2_ADCCLK_MAX
+#elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE3)
+#define STM32_HSECLK_MIN                    STM32_VOS3_HSECLK_MIN
+#define STM32_HSECLK_MAX                    STM32_VOS3_HSECLK_MAX
+#define STM32_LSECLK_MIN                    STM32_VOS3_LSECLK_MIN
+#define STM32_LSECLK_MAX                    STM32_VOS3_LSECLK_MAX
+#define STM32_PLLIN_MIN                     STM32_VOS3_PLLIN_MIN
+#define STM32_PLLIN_MAX                     STM32_VOS3_PLLIN_MAX
+#define STM32_PLLVCO_MIN                    STM32_VOS3_PLLVCO_MIN
+#define STM32_PLLVCO_MAX                    STM32_VOS3_PLLVCO_MAX
+#define STM32_PLLP_MIN                      STM32_VOS3_PLLP_MIN
+#define STM32_PLLP_MAX                      STM32_VOS3_PLLP_MAX
+#define STM32_PLLQ_MIN                      STM32_VOS3_PLLQ_MIN
+#define STM32_PLLQ_MAX                      STM32_VOS3_PLLQ_MAX
+#define STM32_PLLR_MIN                      STM32_VOS3_PLLR_MIN
+#define STM32_PLLR_MAX                      STM32_VOS3_PLLR_MAX
+#define STM32_SYSCLK_MAX                    STM32_VOS3_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS3_HCLK_MAX
+#define STM32_PCLK1_MAX                     STM32_VOS3_PCLK1_MAX
+#define STM32_PCLK2_MAX                     STM32_VOS3_PCLK2_MAX
+#define STM32_PCLK3_MAX                     STM32_VOS3_PCLK3_MAX
+#define STM32_ADCCLK_MAX                    STM32_VOS3_ADCCLK_MAX
+#elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE4)
+#define STM32_HSECLK_MIN                    STM32_VOS4_HSECLK_MIN
+#define STM32_HSECLK_MAX                    STM32_VOS4_HSECLK_MAX
+#define STM32_LSECLK_MIN                    STM32_VOS4_LSECLK_MIN
+#define STM32_LSECLK_MAX                    STM32_VOS4_LSECLK_MAX
+#define STM32_PLLIN_MIN                     STM32_VOS4_PLLIN_MIN
+#define STM32_PLLIN_MAX                     STM32_VOS4_PLLIN_MAX
+#define STM32_PLLVCO_MIN                    STM32_VOS4_PLLVCO_MIN
+#define STM32_PLLVCO_MAX                    STM32_VOS4_PLLVCO_MAX
+#define STM32_PLLP_MIN                      STM32_VOS4_PLLP_MIN
+#define STM32_PLLP_MAX                      STM32_VOS4_PLLP_MAX
+#define STM32_PLLQ_MIN                      STM32_VOS4_PLLQ_MIN
+#define STM32_PLLQ_MAX                      STM32_VOS4_PLLQ_MAX
+#define STM32_PLLR_MIN                      STM32_VOS4_PLLR_MIN
+#define STM32_PLLR_MAX                      STM32_VOS4_PLLR_MAX
+#define STM32_SYSCLK_MAX                    STM32_VOS4_SYSCLK_MAX
+#define STM32_HCLK_MAX                      STM32_VOS4_HCLK_MAX
+#define STM32_PCLK1_MAX                     STM32_VOS4_PCLK1_MAX
+#define STM32_PCLK2_MAX                     STM32_VOS4_PCLK2_MAX
+#define STM32_PCLK3_MAX                     STM32_VOS4_PCLK3_MAX
+#define STM32_ADCCLK_MAX                    STM32_VOS4_ADCCLK_MAX
+#else
+  #error "unable to select clock frequency limits"
+#endif
+
+/**
+ * @brief   NONE clock derived enable state.
+ */
+#define STM32_NONE_ENABLED                  FALSE
+
+/**
+ * @brief   HSI16 clock derived enable state.
+ */
+#define STM32_HSI16_ENABLED                 STM32_CFG_HSI16_ENABLE
+
+/**
+ * @brief   HSI48 clock derived enable state.
+ */
+#define STM32_HSI48_ENABLED                 STM32_CFG_HSI48_ENABLE
+
+/**
+ * @brief   SHSI clock derived enable state.
+ */
+#define STM32_SHSI_ENABLED                  STM32_CFG_SHSI_ENABLE
+
+/**
+ * @brief   HSE clock derived enable state.
+ */
+#define STM32_HSE_ENABLED                   STM32_CFG_HSE_ENABLE
+
+/**
+ * @brief   LSE clock derived enable state.
+ */
+#define STM32_LSE_ENABLED                   STM32_CFG_LSE_ENABLE
+
+/**
+ * @brief   LSI clock derived enable state.
+ */
+#define STM32_LSI_ENABLED                   STM32_CFG_LSI_ENABLE
 
 /**
  * @brief   MSIRC0 clock derived enable state.
@@ -313,6 +685,244 @@
  * @brief   SYSCLK clock derived enable state.
  */
 #define STM32_SYSCLK_ENABLED                TRUE
+
+/*--- Macros and checks for the NONE clock point. --------------------------*/
+
+/**
+ * @brief   NONE nominal source frequency.
+ */
+#define STM32_NONE_SOURCE_FREQ              0U
+
+/**
+ * @brief   NONE clock register bits.
+ */
+#define STM32_NONE_BITS                     0U
+
+/**
+ * @brief   Pseudo-clock for disabled sources clock point.
+ */
+#define STM32_NONE_FREQ                     0U
+
+/*--- Macros and checks for the HSI16 clock point. -------------------------*/
+
+#if !((STM32_CFG_HSI16_ENABLE == TRUE) || (STM32_CFG_HSI16_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_HSI16_ENABLE value specified"
+#endif
+
+#if !defined(RCC_CFGR1_SW_HSI16) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_SW_HSI16 not defined"
+#endif
+#if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_SYSCLK_ENABLED == TRUE) &&  \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSI16))) && !defined(__DOXYGEN__)
+  #error "HSI16 not enabled, required by SYSCLK"
+#endif
+
+/**
+ * @brief   HSI16 nominal source frequency.
+ */
+#define STM32_HSI16_SOURCE_FREQ             16000000U
+
+/**
+ * @brief   HSI16 clock register bits.
+ */
+#if (STM32_HSI16_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_CR_HSI16_BITS               (RCC_CR_HSION | RCC_CR_HSIKERON)
+#else
+  #define STM32_CR_HSI16_BITS               0U
+#endif
+
+/**
+ * @brief   16 MHz high speed internal oscillator clock point.
+ */
+#if (STM32_HSI16_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_HSI16_FREQ                  STM32_HSI16_SOURCE_FREQ
+#else
+  #define STM32_HSI16_FREQ                  0U
+#endif
+
+/*--- Macros and checks for the HSI48 clock point. -------------------------*/
+
+#if !((STM32_CFG_HSI48_ENABLE == TRUE) || (STM32_CFG_HSI48_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_HSI48_ENABLE value specified"
+#endif
+
+/**
+ * @brief   HSI48 nominal source frequency.
+ */
+#define STM32_HSI48_SOURCE_FREQ             48000000U
+
+/**
+ * @brief   HSI48 clock register bits.
+ */
+#if (STM32_HSI48_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_CR_HSI48_BITS               RCC_CR_HSI48ON
+#else
+  #define STM32_CR_HSI48_BITS               0U
+#endif
+
+/**
+ * @brief   48 MHz high speed internal oscillator clock point.
+ */
+#if (STM32_HSI48_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_HSI48_FREQ                  STM32_HSI48_SOURCE_FREQ
+#else
+  #define STM32_HSI48_FREQ                  0U
+#endif
+
+/*--- Macros and checks for the SHSI clock point. --------------------------*/
+
+#if !((STM32_CFG_SHSI_ENABLE == TRUE) || (STM32_CFG_SHSI_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_SHSI_ENABLE value specified"
+#endif
+
+/**
+ * @brief   SHSI nominal source frequency.
+ */
+#define STM32_SHSI_SOURCE_FREQ              48000000U
+
+/**
+ * @brief   SHSI clock register bits.
+ */
+#if (STM32_SHSI_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_CR_SHSI_BITS                RCC_CR_SHSION
+#else
+  #define STM32_CR_SHSI_BITS                0U
+#endif
+
+/**
+ * @brief   48 MHz secure high speed internal oscillator clock point.
+ */
+#if (STM32_SHSI_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_SHSI_FREQ                   STM32_SHSI_SOURCE_FREQ
+#else
+  #define STM32_SHSI_FREQ                   0U
+#endif
+
+/*--- Macros and checks for the HSE clock point. ---------------------------*/
+
+#if !((STM32_CFG_HSE_ENABLE == TRUE) || (STM32_CFG_HSE_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_HSE_ENABLE value specified"
+#endif
+
+#if !defined(RCC_CFGR1_SW_HSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_SW_HSE not defined"
+#endif
+#if !((STM32_HSE_ENABLED == TRUE) || !((STM32_SYSCLK_ENABLED == TRUE) &&    \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSE))) && !defined(__DOXYGEN__)
+  #error "HSE not enabled, required by SYSCLK"
+#endif
+
+/**
+ * @brief   HSE nominal source frequency.
+ */
+#define STM32_HSE_SOURCE_FREQ               STM32_HSECLK
+
+/**
+ * @brief   HSE clock register bits.
+ */
+#if (STM32_HSE_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_CR_HSE_BITS                 (RCC_CR_HSEON | STM32_HSE_MODE_BITS)
+#else
+  #define STM32_CR_HSE_BITS                 0U
+#endif
+
+/**
+ * @brief   High speed external oscillator clock point.
+ */
+#if (STM32_HSE_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_HSE_FREQ                    STM32_HSE_SOURCE_FREQ
+#else
+  #define STM32_HSE_FREQ                    0U
+#endif
+
+#if !((STM32_HSE_ENABLED != TRUE) || (STM32_HSE_FREQ >= STM32_HSECLK_MIN)) && \
+    !defined(__DOXYGEN__)
+  #error "STM32_HSE_FREQ below minimum frequency"
+#endif
+
+#if !((STM32_HSE_ENABLED != TRUE) || (STM32_HSE_FREQ <= STM32_HSECLK_MAX)) && \
+    !defined(__DOXYGEN__)
+  #error "STM32_HSE_FREQ above maximum frequency"
+#endif
+
+/*--- Macros and checks for the LSE clock point. ---------------------------*/
+
+#if !((STM32_CFG_LSE_ENABLE == TRUE) || (STM32_CFG_LSE_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_LSE_ENABLE value specified"
+#endif
+
+/**
+ * @brief   LSE nominal source frequency.
+ */
+#define STM32_LSE_SOURCE_FREQ               STM32_LSECLK
+
+/**
+ * @brief   LSE clock register bits.
+ */
+#if (STM32_LSE_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_BDCR_LSE_BITS               (RCC_BDCR_LSEON |               \
+                                             STM32_LSE_MODE_BITS)
+#else
+  #define STM32_BDCR_LSE_BITS               0U
+#endif
+
+/**
+ * @brief   Low speed external oscillator clock point.
+ */
+#if (STM32_LSE_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_LSE_FREQ                    STM32_LSE_SOURCE_FREQ
+#else
+  #define STM32_LSE_FREQ                    0U
+#endif
+
+#if !((STM32_LSE_ENABLED != TRUE) || (STM32_LSE_FREQ >= STM32_LSECLK_MIN)) && \
+    !defined(__DOXYGEN__)
+  #error "STM32_LSE_FREQ below minimum frequency"
+#endif
+
+#if !((STM32_LSE_ENABLED != TRUE) || (STM32_LSE_FREQ <= STM32_LSECLK_MAX)) && \
+    !defined(__DOXYGEN__)
+  #error "STM32_LSE_FREQ above maximum frequency"
+#endif
+
+/*--- Macros and checks for the LSI clock point. ---------------------------*/
+
+#if !((STM32_CFG_LSI_ENABLE == TRUE) || (STM32_CFG_LSI_ENABLE == FALSE)) && \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_LSI_ENABLE value specified"
+#endif
+
+/**
+ * @brief   LSI nominal source frequency.
+ */
+#define STM32_LSI_SOURCE_FREQ               32000U
+
+/**
+ * @brief   LSI clock register bits.
+ */
+#if (STM32_LSI_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_BDCR_LSI_BITS               (RCC_BDCR_LSION |               \
+                                             STM32_CFG_LSI_PREDIV)
+#else
+  #define STM32_BDCR_LSI_BITS               0U
+#endif
+
+/**
+ * @brief   Low speed internal oscillator clock point.
+ */
+#if (STM32_LSI_ENABLED == FALSE) && !defined(__DOXYGEN__)
+  #define STM32_LSI_FREQ                    0U
+#elif (STM32_CFG_LSI_PREDIV == RCC_BDCR_LSIPREDIV_DIV128) || \
+    defined(__DOXYGEN__)
+  #define STM32_LSI_FREQ                    250U
+#else
+  #define STM32_LSI_FREQ                    32000U
+#endif
 
 /*--- Macros and checks for the MSIRC0 clock point. ------------------------*/
 
@@ -653,6 +1263,10 @@
  */
 #if (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_MSIS) || defined(__DOXYGEN__)
   #define STM32_SYSCLK_BITS                 RCC_CFGR1_SW_MSIS
+#elif (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSI16)
+  #define STM32_SYSCLK_BITS                 RCC_CFGR1_SW_HSI16
+#elif (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSE)
+  #define STM32_SYSCLK_BITS                 RCC_CFGR1_SW_HSE
 #else
   #error "invalid STM32_CFG_SYSCLK_SEL value specified"
 #endif
@@ -664,8 +1278,35 @@
      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_MSIS)) || \
     defined(__DOXYGEN__)
   #define STM32_SYSCLK_FREQ                 STM32_MSIS_FREQ
+#elif (STM32_SYSCLK_ENABLED == TRUE) && \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSI16)
+  #define STM32_SYSCLK_FREQ                 STM32_HSI16_FREQ
+#elif (STM32_SYSCLK_ENABLED == TRUE) && \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSE)
+  #define STM32_SYSCLK_FREQ                 STM32_HSE_FREQ
 #else
   #define STM32_SYSCLK_FREQ                 0U
+#endif
+
+#if !defined(RCC_CFGR1_SW_MSIS) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_SW_MSIS not defined"
+#endif
+#if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_MSIS)) ||                       \
+     (STM32_MSIS_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
+  #error "STM32_SYSCLK_FREQ above maximum frequency"
+#endif
+
+#if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSI16)) ||                      \
+     (STM32_HSI16_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
+  #error "STM32_SYSCLK_FREQ above maximum frequency"
+#endif
+
+#if !(!((STM32_SYSCLK_ENABLED == TRUE) &&                                   \
+      (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSE)) ||                        \
+     (STM32_HSE_FREQ <= STM32_SYSCLK_MAX)) && !defined(__DOXYGEN__)
+  #error "STM32_SYSCLK_FREQ above maximum frequency"
 #endif
 /** @} */
 
@@ -681,6 +1322,13 @@
  * @name    Current clock point values
  * @{
  */
+#define STM32_NONE_CLOCK                    STM32_NONE_FREQ
+#define STM32_HSI16_CLOCK                   hal_lld_get_clock_point(CLK_HSI16)
+#define STM32_HSI48_CLOCK                   hal_lld_get_clock_point(CLK_HSI48)
+#define STM32_SHSI_CLOCK                    hal_lld_get_clock_point(CLK_SHSI)
+#define STM32_HSE_CLOCK                     hal_lld_get_clock_point(CLK_HSE)
+#define STM32_LSE_CLOCK                     STM32_LSE_FREQ
+#define STM32_LSI_CLOCK                     STM32_LSI_FREQ
 #define STM32_MSIRC0_CLOCK                  STM32_MSIRC0_FREQ
 #define STM32_MSIRC1_CLOCK                  STM32_MSIRC1_FREQ
 #define STM32_MSIRC2_CLOCK                  STM32_MSIRC2_FREQ
@@ -706,7 +1354,11 @@
  */
 #if (STM32_CFG_CLOCK_DYNAMIC == FALSE) || defined(__DOXYGEN__)
 #define hal_lld_get_clock_point(clkpt)                                      \
-  ((clkpt) == CLK_MSIS         ? STM32_MSIS_FREQ          :                 \
+  ((clkpt) == CLK_HSI16        ? STM32_HSI16_FREQ         :                 \
+   (clkpt) == CLK_HSI48        ? STM32_HSI48_FREQ         :                 \
+   (clkpt) == CLK_SHSI         ? STM32_SHSI_FREQ          :                 \
+   (clkpt) == CLK_HSE          ? STM32_HSE_FREQ           :                 \
+   (clkpt) == CLK_MSIS         ? STM32_MSIS_FREQ          :                 \
    (clkpt) == CLK_MSIK         ? STM32_MSIK_FREQ          :                 \
    (clkpt) == CLK_SYSCLK       ? STM32_SYSCLK_FREQ        :                 \
    0U)
