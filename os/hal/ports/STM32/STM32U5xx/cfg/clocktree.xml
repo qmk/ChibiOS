@@ -50,6 +50,21 @@
         <item name="CSR" value="0U" />
         <item name="ICSCR1" value="1U" />
       </enum>
+      <enum name="RCC_CFGR1_STOPWUCK" field="RCC_CFGR1_STOPWUCK_Pos">
+        <item name="MSIS" value="0U" />
+        <item name="HSI16" value="1U" />
+      </enum>
+      <enum name="RCC_CFGR1_STOPKERWUCK" field="RCC_CFGR1_STOPKERWUCK_Pos">
+        <item name="MSIK" value="0U" />
+        <item name="HSI16" value="1U" />
+      </enum>
+      <enum name="RCC_CCIPR1_TIMICSEL" field="RCC_CCIPR1_TIMICSEL_Pos">
+        <item name="NOCLOCK" value="0U" />
+        <item name="HSI256_MSIS1024_MSIS4" value="4U" />
+        <item name="HSI256_MSIS1024_MSIK4" value="5U" />
+        <item name="HSI256_MSIK1024_MSIS4" value="6U" />
+        <item name="HSI256_MSIK1024_MSIK4" value="7U" />
+      </enum>
     </enums>
     <definitions>
       <define name="RCC_BDCR_LSIPREDIV_DIV1" value="0U" />
@@ -90,6 +105,21 @@
               default="RCC_ICSCR1_MSIBIAS_CONTINUOUS"
               values="RCC_ICSCR1_MSIBIAS_CONTINUOUS RCC_ICSCR1_MSIBIAS_SAMPLING">
         <description>Selects the MSI bias mode.</description>
+      </config>
+      <config name="TIMICSEL" type="set"
+              default="RCC_CCIPR1_TIMICSEL_NOCLOCK"
+              values="RCC_CCIPR1_TIMICSEL_NOCLOCK RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4 RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4 RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4 RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4">
+        <description>Selects the timer internal capture clock sources.</description>
+      </config>
+      <config name="STOPWUCK" type="set"
+              default="RCC_CFGR1_STOPWUCK_MSIS"
+              values="RCC_CFGR1_STOPWUCK_MSIS RCC_CFGR1_STOPWUCK_HSI16">
+        <description>Selects the system clock source after Stop mode.</description>
+      </config>
+      <config name="STOPKERWUCK" type="set"
+              default="RCC_CFGR1_STOPKERWUCK_MSIK"
+              values="RCC_CFGR1_STOPKERWUCK_MSIK RCC_CFGR1_STOPKERWUCK_HSI16">
+        <description>Selects the kernel clock source after Stop mode.</description>
       </config>
       <config name="PLL1P_REQUIRED" type="bool" default="FALSE">
         <description>Enables demand for the PLL1 P output clock.</description>
@@ -406,7 +436,7 @@
       <description>PLL1 P output clock</description>
       <limits ref="PLLP" />
       <divider name="PLL1P" input="PLL1VCO">
-        <value min="2" max="128" default="4">
+        <value min="1" max="128" default="4">
           <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1DIVR_PLL1P_Pos)" />
         </value>
       </divider>
@@ -460,7 +490,7 @@
       <description>PLL2 P output clock</description>
       <limits ref="PLLP" />
       <divider name="PLL2P" input="PLL2VCO">
-        <value min="2" max="128" default="4">
+        <value min="1" max="128" default="4">
           <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2DIVR_PLL2P_Pos)" />
         </value>
       </divider>
@@ -514,7 +544,7 @@
       <description>PLL3 P output clock</description>
       <limits ref="PLLP" />
       <divider name="PLL3P" input="PLL3VCO">
-        <value min="2" max="128" default="4">
+        <value min="1" max="128" default="4">
           <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3DIVR_PLL3P_Pos)" />
         </value>
       </divider>
@@ -620,6 +650,34 @@
     <clock point="HSEDIV" enable="auto" dynamic="no">
       <description>HSE divided-by-32 RTC clock</description>
       <derived input="HSE" frequency="(%I% / 32U)" />
+    </clock>
+    <clock point="MCODIV" enable="always" dynamic="no">
+      <description>MCO selected source before prescaler</description>
+      <mux name="MCO" field="RCC_CFGR1_MCOSEL" offset="24U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" default="yes" />
+        <input point="SYSCLK" encoding="1U" />
+        <input point="MSIS" encoding="2U" />
+        <input point="HSI16" encoding="3U" />
+        <input point="HSE" encoding="4U" />
+        <input point="PLL1R" encoding="5U" />
+        <input point="LSI" encoding="6U" />
+        <input point="LSE" encoding="7U" />
+        <input point="HSI48" encoding="8U" />
+        <input point="MSIK" encoding="9U" />
+      </mux>
+    </clock>
+    <clock point="MCO" enable="always" dynamic="yes">
+      <description>MCO output pin</description>
+      <divider name="MCOPRE" input="MCODIV" field="RCC_CFGR1_MCOPRE"
+               offset="28U">
+        <choices>
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="1U" />
+          <choice item="DIV4" value="4" encoding="2U" />
+          <choice item="DIV8" value="8" encoding="3U" />
+          <choice item="DIV16" value="16" encoding="4U" />
+        </choices>
+      </divider>
     </clock>
     <clock point="LSESYS" enable="auto" dynamic="no">
       <description>LSE system clock</description>
@@ -776,6 +834,60 @@
         <inactive label="IGNORE" value="0xFFFFFFFFU" bits="0U"
                   when="STM32_FDCAN1_ENABLED == FALSE" />
       </mux>
+    </clock>
+    <clock point="HCLKDIV8" enable="auto" dynamic="no">
+      <description>HCLK divided by 8 clock</description>
+      <derived input="HCLK" frequency="(%I% / 8U)" />
+    </clock>
+    <clock point="SYSTICK" enable="auto" dynamic="no">
+      <description>SysTick clock</description>
+      <mux name="SYSTICK" field="RCC_CCIPR1_SYSTICKSEL" offset="22U">
+        <input point="HCLKDIV8" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="LSESYS" label="LSE" encoding="2U" />
+        <inactive label="IGNORE" value="0xFFFFFFFFU" bits="0U"
+                  when="STM32_SYSTICK_ENABLED == FALSE" />
+      </mux>
+    </clock>
+    <clock point="TIM16IC" enable="always" dynamic="no">
+      <description>TIM16 internal capture clock</description>
+      <derived>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_HSI16) / 256U)" />
+          </select>
+        </frequencies>
+      </derived>
+    </clock>
+    <clock point="TIM17IC" enable="always" dynamic="no">
+      <description>TIM17 internal capture clock</description>
+      <derived>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <when condition="(STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4)"
+                  value="(hal_lld_get_clock_point(CLK_MSIS) / 1024U)" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_MSIK) / 1024U)" />
+          </select>
+        </frequencies>
+      </derived>
+    </clock>
+    <clock point="LPTIM2IC" enable="always" dynamic="no">
+      <description>LPTIM2 internal capture clock</description>
+      <derived>
+        <frequencies>
+          <select>
+            <when condition="STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK"
+                  value="0U" />
+            <when condition="(STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4)"
+                  value="(hal_lld_get_clock_point(CLK_MSIS) / 4U)" />
+            <otherwise value="(hal_lld_get_clock_point(CLK_MSIK) / 4U)" />
+          </select>
+        </frequencies>
+      </derived>
     </clock>
     <clock point="ICLK" enable="auto" dynamic="no">
       <description>ICLK 48 MHz clock</description>
@@ -1049,6 +1161,22 @@
     <sink name="FDCAN1_DRIVER" input="FDCAN1"
               condition="(HAL_USE_CAN == TRUE) &amp;&amp; (STM32_CAN_USE_FDCAN1 == TRUE)">
       <description>CAN driver demands the FDCAN1 clock when enabled.</description>
+    </sink>
+    <sink name="SYSTICK_DRIVER" input="SYSTICK"
+              condition="OSAL_ST_MODE == OSAL_ST_MODE_PERIODIC">
+      <description>System timer driver demands the SysTick clock when periodic mode is selected.</description>
+    </sink>
+    <sink name="TIMICSEL_HSI16_SOURCE" input="HSI16"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands HSI16 when internal capture clocks are enabled.</description>
+    </sink>
+    <sink name="TIMICSEL_MSIS_SOURCE" input="MSIS"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands MSIS when internal capture clocks are enabled.</description>
+    </sink>
+    <sink name="TIMICSEL_MSIK_SOURCE" input="MSIK"
+              condition="STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK">
+      <description>TIMICSEL conservatively demands MSIK when internal capture clocks are enabled.</description>
     </sink>
     <sink name="USB1_DRIVER" input="USB"
               condition="(HAL_USE_USB == TRUE) &amp;&amp; (STM32_USB_USE_USB1 == TRUE)">

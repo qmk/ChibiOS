@@ -63,7 +63,8 @@
 #define CLK_PCLK2               28U
 #define CLK_PCLK2TIM            29U
 #define CLK_PCLK3               30U
-#define CLK_ARRAY_SIZE          31U
+#define CLK_MCO                 31U
+#define CLK_ARRAY_SIZE          32U
 
 #define CLK_POINT_NAMES                                                     \
   {                                                                         \
@@ -97,7 +98,8 @@
     "PCLK1TIM",                                                             \
     "PCLK2",                                                                \
     "PCLK2TIM",                                                             \
-    "PCLK3"                                                                 \
+    "PCLK3",                                                                \
+    "MCO"                                                                   \
   }
 /** @} */
 
@@ -141,6 +143,15 @@
 #define RCC_ICSCR1_MSIBIAS_SAMPLING         ((1U) << RCC_ICSCR1_MSIBIAS_Pos)
 #define RCC_ICSCR1_MSIRGSEL_CSR             ((0U) << RCC_ICSCR1_MSIRGSEL_Pos)
 #define RCC_ICSCR1_MSIRGSEL_ICSCR1          ((1U) << RCC_ICSCR1_MSIRGSEL_Pos)
+#define RCC_CFGR1_STOPWUCK_MSIS             ((0U) << RCC_CFGR1_STOPWUCK_Pos)
+#define RCC_CFGR1_STOPWUCK_HSI16            ((1U) << RCC_CFGR1_STOPWUCK_Pos)
+#define RCC_CFGR1_STOPKERWUCK_MSIK          ((0U) << RCC_CFGR1_STOPKERWUCK_Pos)
+#define RCC_CFGR1_STOPKERWUCK_HSI16         ((1U) << RCC_CFGR1_STOPKERWUCK_Pos)
+#define RCC_CCIPR1_TIMICSEL_NOCLOCK         ((0U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4 ((4U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4 ((5U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4 ((6U) << RCC_CCIPR1_TIMICSEL_Pos)
+#define RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4 ((7U) << RCC_CCIPR1_TIMICSEL_Pos)
 #define RCC_BDCR_LSIPREDIV_DIV1             0U
 #define RCC_BDCR_LSIPREDIV_DIV128           RCC_BDCR_LSIPREDIV
 #define RCC_BDCR_LSCOSEL_NOCLOCK            0U
@@ -181,6 +192,17 @@
 #define RCC_CFGR1_SW_HSI16                  ((1U) << 0U)
 #define RCC_CFGR1_SW_HSE                    ((2U) << 0U)
 #define RCC_CFGR1_SW_PLL1P                  ((3U) << 0U)
+
+#define RCC_CFGR1_MCOSEL_NOCLOCK            ((0U) << 24U)
+#define RCC_CFGR1_MCOSEL_SYSCLK             ((1U) << 24U)
+#define RCC_CFGR1_MCOSEL_MSIS               ((2U) << 24U)
+#define RCC_CFGR1_MCOSEL_HSI16              ((3U) << 24U)
+#define RCC_CFGR1_MCOSEL_HSE                ((4U) << 24U)
+#define RCC_CFGR1_MCOSEL_PLL1R              ((5U) << 24U)
+#define RCC_CFGR1_MCOSEL_LSI                ((6U) << 24U)
+#define RCC_CFGR1_MCOSEL_LSE                ((7U) << 24U)
+#define RCC_CFGR1_MCOSEL_HSI48              ((8U) << 24U)
+#define RCC_CFGR1_MCOSEL_MSIK               ((9U) << 24U)
 
 #define RCC_BDCR_RTCSEL_NOCLOCK             ((0U) << 8U)
 #define RCC_BDCR_RTCSEL_LSE                 ((1U) << 8U)
@@ -257,6 +279,11 @@
 #define RCC_CCIPR1_FDCANSEL_PLL1Q           ((1U) << 24U)
 #define RCC_CCIPR1_FDCANSEL_PLL2P           ((2U) << 24U)
 #define RCC_CCIPR1_FDCANSEL_IGNORE          0xFFFFFFFFU
+
+#define RCC_CCIPR1_SYSTICKSEL_HCLKDIV8      ((0U) << 22U)
+#define RCC_CCIPR1_SYSTICKSEL_LSI           ((1U) << 22U)
+#define RCC_CCIPR1_SYSTICKSEL_LSE           ((2U) << 22U)
+#define RCC_CCIPR1_SYSTICKSEL_IGNORE        0xFFFFFFFFU
 
 #define RCC_CCIPR1_ICLKSEL_HSI48            ((0U) << 26U)
 #define RCC_CCIPR1_ICLKSEL_PLL2Q            ((1U) << 26U)
@@ -374,6 +401,12 @@
 #define RCC_CFGR3_PPRE3_DIV4                ((5U) << 4U)
 #define RCC_CFGR3_PPRE3_DIV8                ((6U) << 4U)
 #define RCC_CFGR3_PPRE3_DIV16               ((7U) << 4U)
+
+#define RCC_CFGR1_MCOPRE_DIV1               ((0U) << 28U)
+#define RCC_CFGR1_MCOPRE_DIV2               ((1U) << 28U)
+#define RCC_CFGR1_MCOPRE_DIV4               ((2U) << 28U)
+#define RCC_CFGR1_MCOPRE_DIV8               ((3U) << 28U)
+#define RCC_CFGR1_MCOPRE_DIV16              ((4U) << 28U)
 /** @} */
 
 /*===========================================================================*/
@@ -431,6 +464,27 @@
  */
 #if !defined(STM32_CFG_MSIBIAS) || defined(__DOXYGEN__)
   #define STM32_CFG_MSIBIAS                 RCC_ICSCR1_MSIBIAS_CONTINUOUS
+#endif
+
+/**
+ * @brief   Selects the timer internal capture clock sources.
+ */
+#if !defined(STM32_CFG_TIMICSEL) || defined(__DOXYGEN__)
+  #define STM32_CFG_TIMICSEL                RCC_CCIPR1_TIMICSEL_NOCLOCK
+#endif
+
+/**
+ * @brief   Selects the system clock source after Stop mode.
+ */
+#if !defined(STM32_CFG_STOPWUCK) || defined(__DOXYGEN__)
+  #define STM32_CFG_STOPWUCK                RCC_CFGR1_STOPWUCK_MSIS
+#endif
+
+/**
+ * @brief   Selects the kernel clock source after Stop mode.
+ */
+#if !defined(STM32_CFG_STOPKERWUCK) || defined(__DOXYGEN__)
+  #define STM32_CFG_STOPKERWUCK             RCC_CFGR1_STOPKERWUCK_MSIK
 #endif
 
 /**
@@ -762,6 +816,31 @@
 #endif
 
 /**
+ * @brief   Selects the MCODIV clock source.
+ * @note    Allowed sources:
+ *          - NONE.
+ *          - SYSCLK.
+ *          - MSIS.
+ *          - HSI16.
+ *          - HSE.
+ *          - PLL1R.
+ *          - LSI.
+ *          - LSE.
+ *          - HSI48.
+ *          - MSIK.
+ */
+#if !defined(STM32_CFG_MCODIV_SEL) || defined(__DOXYGEN__)
+  #define STM32_CFG_MCODIV_SEL              RCC_CFGR1_MCOSEL_NOCLOCK
+#endif
+
+/**
+ * @brief   Configures the MCO clock divider value.
+ */
+#if !defined(STM32_CFG_MCO_VALUE) || defined(__DOXYGEN__)
+  #define STM32_CFG_MCO_VALUE               1
+#endif
+
+/**
  * @brief   Selects the RTC clock source.
  * @note    Allowed sources:
  *          - NONE.
@@ -951,6 +1030,18 @@
  */
 #if !defined(STM32_CFG_FDCAN1_SEL) || defined(__DOXYGEN__)
   #define STM32_CFG_FDCAN1_SEL              RCC_CCIPR1_FDCANSEL_HSE
+#endif
+
+/**
+ * @brief   Selects the SYSTICK clock source.
+ * @note    Allowed sources:
+ *          - HCLKDIV8.
+ *          - LSI.
+ *          - LSESYS.
+ *          - inactive selection RCC_CCIPR1_SYSTICKSEL_IGNORE.
+ */
+#if !defined(STM32_CFG_SYSTICK_SEL) || defined(__DOXYGEN__)
+  #define STM32_CFG_SYSTICK_SEL             RCC_CCIPR1_SYSTICKSEL_HCLKDIV8
 #endif
 
 /**
@@ -1209,6 +1300,26 @@
 #if !((STM32_CFG_MSIBIAS == RCC_ICSCR1_MSIBIAS_CONTINUOUS) ||               \
      (STM32_CFG_MSIBIAS == RCC_ICSCR1_MSIBIAS_SAMPLING)) && !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_MSIBIAS value specified"
+#endif
+
+#if !((STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK) ||                \
+     (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) ||   \
+     (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4) ||   \
+     (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4) ||   \
+     (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIK4)) &&  \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_TIMICSEL value specified"
+#endif
+
+#if !((STM32_CFG_STOPWUCK == RCC_CFGR1_STOPWUCK_MSIS) ||                    \
+     (STM32_CFG_STOPWUCK == RCC_CFGR1_STOPWUCK_HSI16)) && !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_STOPWUCK value specified"
+#endif
+
+#if !((STM32_CFG_STOPKERWUCK == RCC_CFGR1_STOPKERWUCK_MSIK) ||              \
+     (STM32_CFG_STOPKERWUCK == RCC_CFGR1_STOPKERWUCK_HSI16)) &&             \
+    !defined(__DOXYGEN__)
+  #error "invalid STM32_CFG_STOPKERWUCK value specified"
 #endif
 
 #if !((STM32_CFG_PLL1P_REQUIRED == TRUE) ||                                 \
@@ -1646,14 +1757,17 @@
 /**
  * @brief   MSIS clock derived enable state.
  */
-#define STM32_MSIS_ENABLED                  (((STM32_PLL1IN_ENABLED == TRUE) && \
+#define STM32_MSIS_ENABLED                  ((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+                                             ((STM32_PLL1IN_ENABLED == TRUE) && \
                                               (STM32_CFG_PLL1IN_SEL == RCC_PLL1CFGR_PLL1SRC_MSIS)) || \
                                              ((STM32_PLL2IN_ENABLED == TRUE) && \
                                               (STM32_CFG_PLL2IN_SEL == RCC_PLL2CFGR_PLL2SRC_MSIS)) || \
                                              ((STM32_PLL3IN_ENABLED == TRUE) && \
                                               (STM32_CFG_PLL3IN_SEL == RCC_PLL3CFGR_PLL3SRC_MSIS)) || \
                                              ((STM32_SYSCLK_ENABLED == TRUE) && \
-                                              (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_MSIS)))
+                                              (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_MSIS)) || \
+                                             ((STM32_MCODIV_ENABLED == TRUE) && \
+                                              (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIS)))
 
 /**
  * @brief   MSIKRC clock derived enable state.
@@ -1668,7 +1782,10 @@
 /**
  * @brief   MSIK clock derived enable state.
  */
-#define STM32_MSIK_ENABLED                  (((STM32_LPUART1_ENABLED == TRUE) && \
+#define STM32_MSIK_ENABLED                  ((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+                                             ((STM32_MCODIV_ENABLED == TRUE) && \
+                                              (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIK)) || \
+                                             ((STM32_LPUART1_ENABLED == TRUE) && \
                                               (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_MSIK)) || \
                                              ((STM32_I2C1_ENABLED == TRUE) && \
                                               (STM32_CFG_I2C1_SEL == RCC_CCIPR1_I2C1SEL_MSIK)) || \
@@ -1747,7 +1864,9 @@
 /**
  * @brief   PLL1R clock derived enable state.
  */
-#define STM32_PLL1R_ENABLED                 ((STM32_CFG_PLL1R_REQUIRED == TRUE))
+#define STM32_PLL1R_ENABLED                 ((STM32_CFG_PLL1R_REQUIRED == TRUE) || \
+                                             ((STM32_MCODIV_ENABLED == TRUE) && \
+                                              (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_PLL1R)))
 
 /**
  * @brief   PLL2IN clock derived enable state.
@@ -1875,6 +1994,16 @@
                                               (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_HSEDIV)))
 
 /**
+ * @brief   MCODIV clock derived enable state.
+ */
+#define STM32_MCODIV_ENABLED                TRUE
+
+/**
+ * @brief   MCO clock derived enable state.
+ */
+#define STM32_MCO_ENABLED                   TRUE
+
+/**
  * @brief   LSESYS clock derived enable state.
  */
 #define STM32_LSESYS_ENABLED                (((STM32_LSCO_ENABLED == TRUE) && \
@@ -1891,6 +2020,8 @@
                                               (STM32_CFG_UART5_SEL == RCC_CCIPR1_UART5SEL_LSE)) || \
                                              ((STM32_LPUART1_ENABLED == TRUE) && \
                                               (STM32_CFG_LPUART1_SEL == RCC_CCIPR3_LPUART1SEL_LSE)) || \
+                                             ((STM32_SYSTICK_ENABLED == TRUE) && \
+                                              (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSE)) || \
                                              ((STM32_DAC1SH_ENABLED == TRUE) && \
                                               (STM32_CFG_DAC1SH_SEL == RCC_CCIPR3_DAC1SEL_LSE)) || \
                                              ((STM32_LPTIM1_ENABLED == TRUE) && \
@@ -2005,6 +2136,32 @@
  */
 #define STM32_FDCAN1_ENABLED                (((HAL_USE_CAN == TRUE) &&      \
                                               (STM32_CAN_USE_FDCAN1 == TRUE)))
+
+/**
+ * @brief   HCLKDIV8 clock derived enable state.
+ */
+#define STM32_HCLKDIV8_ENABLED              (((STM32_SYSTICK_ENABLED == TRUE) && \
+                                              (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_HCLKDIV8)))
+
+/**
+ * @brief   SYSTICK clock derived enable state.
+ */
+#define STM32_SYSTICK_ENABLED               ((OSAL_ST_MODE == OSAL_ST_MODE_PERIODIC))
+
+/**
+ * @brief   TIM16IC clock derived enable state.
+ */
+#define STM32_TIM16IC_ENABLED               TRUE
+
+/**
+ * @brief   TIM17IC clock derived enable state.
+ */
+#define STM32_TIM17IC_ENABLED               TRUE
+
+/**
+ * @brief   LPTIM2IC clock derived enable state.
+ */
+#define STM32_LPTIM2IC_ENABLED              TRUE
 
 /**
  * @brief   ICLK clock derived enable state.
@@ -2161,6 +2318,12 @@
   #error "invalid STM32_CFG_HSI16_ENABLE value specified"
 #endif
 
+#if !((STM32_HSI16_ENABLED == TRUE) ||                                      \
+     !((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK))) &&             \
+    !defined(__DOXYGEN__)
+  #error "HSI16 not enabled, required by TIMICSEL_HSI16_SOURCE"
+#endif
+
 #if !defined(RCC_PLL1CFGR_PLL1SRC_HSI16) && !defined(__DOXYGEN__)
   #error "RCC_PLL1CFGR_PLL1SRC_HSI16 not defined"
 #endif
@@ -2194,6 +2357,14 @@
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_SYSCLK_ENABLED == TRUE) &&  \
       (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by SYSCLK"
+#endif
+
+#if !defined(RCC_CFGR1_MCOSEL_HSI16) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_MCOSEL_HSI16 not defined"
+#endif
+#if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI16))) && !defined(__DOXYGEN__)
+  #error "HSI16 not enabled, required by MCODIV"
 #endif
 
 #if !defined(RCC_CCIPR1_USART1SEL_HSI16) && !defined(__DOXYGEN__)
@@ -2396,6 +2567,14 @@
   #error "invalid STM32_CFG_HSI48_ENABLE value specified"
 #endif
 
+#if !defined(RCC_CFGR1_MCOSEL_HSI48) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_MCOSEL_HSI48 not defined"
+#endif
+#if !((STM32_HSI48_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI48))) && !defined(__DOXYGEN__)
+  #error "HSI48 not enabled, required by MCODIV"
+#endif
+
 #if !defined(RCC_CCIPR1_ICLKSEL_HSI48) && !defined(__DOXYGEN__)
   #error "RCC_CCIPR1_ICLKSEL_HSI48 not defined"
 #endif
@@ -2523,6 +2702,14 @@
   #error "HSE not enabled, required by HSEDIV"
 #endif
 
+#if !defined(RCC_CFGR1_MCOSEL_HSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_MCOSEL_HSE not defined"
+#endif
+#if !((STM32_HSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSE))) && !defined(__DOXYGEN__)
+  #error "HSE not enabled, required by MCODIV"
+#endif
+
 #if !defined(RCC_CCIPR1_FDCANSEL_HSE) && !defined(__DOXYGEN__)
   #error "RCC_CCIPR1_FDCANSEL_HSE not defined"
 #endif
@@ -2578,6 +2765,14 @@
 #if !((STM32_CFG_LSE_ENABLE == TRUE) || (STM32_CFG_LSE_ENABLE == FALSE)) && \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_LSE_ENABLE value specified"
+#endif
+
+#if !defined(RCC_CFGR1_MCOSEL_LSE) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_MCOSEL_LSE not defined"
+#endif
+#if !((STM32_LSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSE))) && !defined(__DOXYGEN__)
+  #error "LSE not enabled, required by MCODIV"
 #endif
 
 #if !defined(STM32_LSESYS_ENABLED) && !defined(__DOXYGEN__)
@@ -2637,6 +2832,14 @@
   #error "invalid STM32_CFG_LSI_ENABLE value specified"
 #endif
 
+#if !defined(RCC_CFGR1_MCOSEL_LSI) && !defined(__DOXYGEN__)
+  #error "RCC_CFGR1_MCOSEL_LSI not defined"
+#endif
+#if !((STM32_LSI_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSI))) && !defined(__DOXYGEN__)
+  #error "LSI not enabled, required by MCODIV"
+#endif
+
 #if !defined(RCC_BDCR_RTCSEL_LSI) && !defined(__DOXYGEN__)
   #error "RCC_BDCR_RTCSEL_LSI not defined"
 #endif
@@ -2648,6 +2851,15 @@
 #if !((STM32_LSI_ENABLED == TRUE) || !((STM32_LSCO_ENABLED == TRUE) &&      \
       (STM32_CFG_LSCO_SEL == RCC_BDCR_LSCOSEL_LSI))) && !defined(__DOXYGEN__)
   #error "LSI not enabled, required by LSCO"
+#endif
+
+#if !defined(RCC_CCIPR1_SYSTICKSEL_LSI) && !defined(__DOXYGEN__)
+  #error "RCC_CCIPR1_SYSTICKSEL_LSI not defined"
+#endif
+#if !((STM32_LSI_ENABLED == TRUE) || !((STM32_SYSTICK_ENABLED == TRUE) &&   \
+      (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSI))) &&             \
+    !defined(__DOXYGEN__)
+  #error "LSI not enabled, required by SYSTICK"
 #endif
 
 #if !defined(RCC_CCIPR3_DAC1SEL_LSI) && !defined(__DOXYGEN__)
@@ -3184,7 +3396,7 @@
 
 /*--- Macros and checks for the PLL1P clock point. -------------------------*/
 
-#if !((STM32_CFG_PLL1P_VALUE >= 2) && (STM32_CFG_PLL1P_VALUE <= 128)) &&    \
+#if !((STM32_CFG_PLL1P_VALUE >= 1) && (STM32_CFG_PLL1P_VALUE <= 128)) &&    \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_PLL1P_VALUE value specified"
 #endif
@@ -3456,7 +3668,7 @@
 
 /*--- Macros and checks for the PLL2P clock point. -------------------------*/
 
-#if !((STM32_CFG_PLL2P_VALUE >= 2) && (STM32_CFG_PLL2P_VALUE <= 128)) &&    \
+#if !((STM32_CFG_PLL2P_VALUE >= 1) && (STM32_CFG_PLL2P_VALUE <= 128)) &&    \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_PLL2P_VALUE value specified"
 #endif
@@ -3697,7 +3909,7 @@
 
 /*--- Macros and checks for the PLL3P clock point. -------------------------*/
 
-#if !((STM32_CFG_PLL3P_VALUE >= 2) && (STM32_CFG_PLL3P_VALUE <= 128)) &&    \
+#if !((STM32_CFG_PLL3P_VALUE >= 1) && (STM32_CFG_PLL3P_VALUE <= 128)) &&    \
     !defined(__DOXYGEN__)
   #error "invalid STM32_CFG_PLL3P_VALUE value specified"
 #endif
@@ -4042,6 +4254,98 @@
 #else
   #define STM32_HSEDIV_FREQ                 0U
 #endif
+
+/*--- Macros and checks for the MCODIV clock point. ------------------------*/
+
+/**
+ * @brief   MCODIV clock register bits.
+ */
+#if (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_NOCLOCK) || defined(__DOXYGEN__)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_NOCLOCK
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_SYSCLK)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_SYSCLK
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIS)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_MSIS
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI16)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_HSI16
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSE)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_HSE
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_PLL1R)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_PLL1R
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSI)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_LSI
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSE)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_LSE
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI48)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_HSI48
+#elif (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIK)
+  #define STM32_MCODIV_BITS                 RCC_CFGR1_MCOSEL_MSIK
+#else
+  #error "invalid STM32_CFG_MCODIV_SEL value specified"
+#endif
+
+/**
+ * @brief   MCO selected source before prescaler clock point.
+ */
+#if ((STM32_MCODIV_ENABLED == TRUE) && \
+     (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_NOCLOCK)) || \
+    defined(__DOXYGEN__)
+  #define STM32_MCODIV_FREQ                 STM32_NONE_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_SYSCLK)
+  #define STM32_MCODIV_FREQ                 STM32_SYSCLK_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIS)
+  #define STM32_MCODIV_FREQ                 STM32_MSIS_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI16)
+  #define STM32_MCODIV_FREQ                 STM32_HSI16_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSE)
+  #define STM32_MCODIV_FREQ                 STM32_HSE_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_PLL1R)
+  #define STM32_MCODIV_FREQ                 STM32_PLL1R_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSI)
+  #define STM32_MCODIV_FREQ                 STM32_LSI_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_LSE)
+  #define STM32_MCODIV_FREQ                 STM32_LSE_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_HSI48)
+  #define STM32_MCODIV_FREQ                 STM32_HSI48_FREQ
+#elif (STM32_MCODIV_ENABLED == TRUE) && \
+      (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIK)
+  #define STM32_MCODIV_FREQ                 STM32_MSIK_FREQ
+#else
+  #define STM32_MCODIV_FREQ                 0U
+#endif
+
+/*--- Macros and checks for the MCO clock point. ---------------------------*/
+
+/**
+ * @brief   MCO clock register bits.
+ */
+#if (STM32_CFG_MCO_VALUE == 1) || defined(__DOXYGEN__)
+  #define STM32_MCO_BITS                    RCC_CFGR1_MCOPRE_DIV1
+#elif (STM32_CFG_MCO_VALUE == 2)
+  #define STM32_MCO_BITS                    RCC_CFGR1_MCOPRE_DIV2
+#elif (STM32_CFG_MCO_VALUE == 4)
+  #define STM32_MCO_BITS                    RCC_CFGR1_MCOPRE_DIV4
+#elif (STM32_CFG_MCO_VALUE == 8)
+  #define STM32_MCO_BITS                    RCC_CFGR1_MCOPRE_DIV8
+#elif (STM32_CFG_MCO_VALUE == 16)
+  #define STM32_MCO_BITS                    RCC_CFGR1_MCOPRE_DIV16
+#else
+  #error "invalid STM32_CFG_MCO_VALUE value specified"
+#endif
+
+/**
+ * @brief   MCO output pin clock point.
+ */
+#define STM32_MCO_FREQ                      (STM32_MCODIV_FREQ /            \
+                                             STM32_CFG_MCO_VALUE)
 
 /*--- Macros and checks for the LSESYS clock point. ------------------------*/
 
@@ -4876,6 +5180,136 @@
   #define STM32_FDCAN1_FREQ                 STM32_PLL2P_FREQ
 #else
   #define STM32_FDCAN1_FREQ                 0U
+#endif
+
+/*--- Macros and checks for the HCLKDIV8 clock point. ----------------------*/
+
+/**
+ * @brief   HCLKDIV8 clock register bits.
+ */
+#define STM32_HCLKDIV8_BITS                 0U
+
+/**
+ * @brief   HCLK divided by 8 clock clock point.
+ */
+#if (STM32_HCLKDIV8_ENABLED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_HCLKDIV8_FREQ               (STM32_HCLK_FREQ / 8U)
+#else
+  #define STM32_HCLKDIV8_FREQ               0U
+#endif
+
+/*--- Macros and checks for the SYSTICK clock point. -----------------------*/
+
+/**
+ * @brief   SYSTICK clock register bits.
+ */
+#if (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_HCLKDIV8) ||            \
+    defined(__DOXYGEN__)
+  #if (STM32_SYSTICK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SYSTICK_BITS              RCC_CCIPR1_SYSTICKSEL_HCLKDIV8
+  #else
+    #define STM32_SYSTICK_BITS              0U
+  #endif
+#elif (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSI)
+  #if (STM32_SYSTICK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SYSTICK_BITS              RCC_CCIPR1_SYSTICKSEL_LSI
+  #else
+    #define STM32_SYSTICK_BITS              0U
+  #endif
+#elif (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSE)
+  #if (STM32_SYSTICK_ENABLED == TRUE) || defined(__DOXYGEN__)
+    #define STM32_SYSTICK_BITS              RCC_CCIPR1_SYSTICKSEL_LSE
+  #else
+    #define STM32_SYSTICK_BITS              0U
+  #endif
+#elif (STM32_SYSTICK_ENABLED == FALSE) &&                                   \
+      (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_IGNORE)
+  #define STM32_SYSTICK_BITS                0U
+#else
+  #error "invalid STM32_CFG_SYSTICK_SEL value specified"
+#endif
+
+/**
+ * @brief   SysTick clock clock point.
+ */
+#if ((STM32_SYSTICK_ENABLED == TRUE) && \
+     (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_HCLKDIV8)) || \
+    defined(__DOXYGEN__)
+  #define STM32_SYSTICK_FREQ                STM32_HCLKDIV8_FREQ
+#elif (STM32_SYSTICK_ENABLED == TRUE) && \
+      (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSI)
+  #define STM32_SYSTICK_FREQ                STM32_LSI_FREQ
+#elif (STM32_SYSTICK_ENABLED == TRUE) && \
+      (STM32_CFG_SYSTICK_SEL == RCC_CCIPR1_SYSTICKSEL_LSE)
+  #define STM32_SYSTICK_FREQ                STM32_LSESYS_FREQ
+#else
+  #define STM32_SYSTICK_FREQ                0U
+#endif
+
+/*--- Macros and checks for the TIM16IC clock point. -----------------------*/
+
+/**
+ * @brief   TIM16IC clock register bits.
+ */
+#define STM32_TIM16IC_BITS                  0U
+
+/**
+ * @brief   TIM16 internal capture clock clock point.
+ */
+#if (STM32_TIM16IC_ENABLED == FALSE) && !defined(__DOXYGEN__)
+  #define STM32_TIM16IC_FREQ                0U
+#elif (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+    defined(__DOXYGEN__)
+  #define STM32_TIM16IC_FREQ                0U
+#else
+  #define STM32_TIM16IC_FREQ                (hal_lld_get_clock_point(CLK_HSI16) / \
+                                             256U)
+#endif
+
+/*--- Macros and checks for the TIM17IC clock point. -----------------------*/
+
+/**
+ * @brief   TIM17IC clock register bits.
+ */
+#define STM32_TIM17IC_BITS                  0U
+
+/**
+ * @brief   TIM17 internal capture clock clock point.
+ */
+#if (STM32_TIM17IC_ENABLED == FALSE) && !defined(__DOXYGEN__)
+  #define STM32_TIM17IC_FREQ                0U
+#elif (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+    defined(__DOXYGEN__)
+  #define STM32_TIM17IC_FREQ                0U
+#elif ((STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIK4))
+  #define STM32_TIM17IC_FREQ                (hal_lld_get_clock_point(CLK_MSIS) / \
+                                             1024U)
+#else
+  #define STM32_TIM17IC_FREQ                (hal_lld_get_clock_point(CLK_MSIK) / \
+                                             1024U)
+#endif
+
+/*--- Macros and checks for the LPTIM2IC clock point. ----------------------*/
+
+/**
+ * @brief   LPTIM2IC clock register bits.
+ */
+#define STM32_LPTIM2IC_BITS                 0U
+
+/**
+ * @brief   LPTIM2 internal capture clock clock point.
+ */
+#if (STM32_LPTIM2IC_ENABLED == FALSE) && !defined(__DOXYGEN__)
+  #define STM32_LPTIM2IC_FREQ               0U
+#elif (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+    defined(__DOXYGEN__)
+  #define STM32_LPTIM2IC_FREQ               0U
+#elif ((STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIS1024_MSIS4) || (STM32_CFG_TIMICSEL == RCC_CCIPR1_TIMICSEL_HSI256_MSIK1024_MSIS4))
+  #define STM32_LPTIM2IC_FREQ               (hal_lld_get_clock_point(CLK_MSIS) / \
+                                             4U)
+#else
+  #define STM32_LPTIM2IC_FREQ               (hal_lld_get_clock_point(CLK_MSIK) / \
+                                             4U)
 #endif
 
 /*--- Macros and checks for the ICLK clock point. --------------------------*/
@@ -5800,6 +6234,8 @@
 #define STM32_PCLK2TIM_CLOCK                hal_lld_get_clock_point(CLK_PCLK2TIM)
 #define STM32_PCLK3_CLOCK                   hal_lld_get_clock_point(CLK_PCLK3)
 #define STM32_HSEDIV_CLOCK                  STM32_HSEDIV_FREQ
+#define STM32_MCODIV_CLOCK                  STM32_MCODIV_FREQ
+#define STM32_MCO_CLOCK                     hal_lld_get_clock_point(CLK_MCO)
 #define STM32_LSESYS_CLOCK                  STM32_LSESYS_FREQ
 #define STM32_RTC_CLOCK                     STM32_RTC_FREQ
 #define STM32_LSCO_CLOCK                    STM32_LSCO_FREQ
@@ -5817,6 +6253,11 @@
 #define STM32_SPI2_CLOCK                    STM32_SPI2_FREQ
 #define STM32_SPI3_CLOCK                    STM32_SPI3_FREQ
 #define STM32_FDCAN1_CLOCK                  STM32_FDCAN1_FREQ
+#define STM32_HCLKDIV8_CLOCK                STM32_HCLKDIV8_FREQ
+#define STM32_SYSTICK_CLOCK                 STM32_SYSTICK_FREQ
+#define STM32_TIM16IC_CLOCK                 STM32_TIM16IC_FREQ
+#define STM32_TIM17IC_CLOCK                 STM32_TIM17IC_FREQ
+#define STM32_LPTIM2IC_CLOCK                STM32_LPTIM2IC_FREQ
 #define STM32_ICLK_CLOCK                    STM32_ICLK_FREQ
 #define STM32_USB_CLOCK                     STM32_USB_FREQ
 #define STM32_SDMMC_CLOCK                   STM32_SDMMC_FREQ
@@ -5880,6 +6321,7 @@
    (clkpt) == CLK_PCLK2        ? STM32_PCLK2_FREQ         :                 \
    (clkpt) == CLK_PCLK2TIM     ? STM32_PCLK2TIM_FREQ      :                 \
    (clkpt) == CLK_PCLK3        ? STM32_PCLK3_FREQ         :                 \
+   (clkpt) == CLK_MCO          ? STM32_MCO_FREQ           :                 \
    0U)
 #endif
 
