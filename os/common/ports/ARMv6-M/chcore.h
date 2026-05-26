@@ -430,6 +430,9 @@ struct port_context {
 #else
   #define port_switch(ntp, otp) do {                                        \
     struct port_intctx *r13 = (struct port_intctx *)__get_PSP();            \
+    if (!MEM_IS_ALIGNED(r13, PORT_STACK_ALIGN)) {                           \
+      chSysHalt("stack alignment");                                         \
+    }                                                                       \
     if ((stkline_t *)(void *)(r13 - 1) < (otp)->wabase) {                   \
       chSysHalt("stack overflow");                                          \
     }                                                                       \
