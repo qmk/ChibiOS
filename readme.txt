@@ -77,6 +77,10 @@
 *****************************************************************************
 
 *** Next ***
+- FIX: RT: Fixed lign aheap-created thread working area size (bug #1307)
+  (backportted to 21.11.6).
+- FIX; NIL: Fixed wrong alignment check in chThdCreateI() (bug #1306)
+  (backportted to 21.11.6).
 - FIX: DACv1 trigger mask sized for 3 or 4 bit trigger source identifier
 - NEW: Thread mode for EP0 handling in USB HAL driver.
 - NEW: ADC driver in XHAL.
