@@ -54,6 +54,10 @@
     <definitions>
       <define name="RCC_BDCR_LSIPREDIV_DIV1" value="0U" />
       <define name="RCC_BDCR_LSIPREDIV_DIV128" value="RCC_BDCR_LSIPREDIV" />
+      <define name="RCC_BDCR_LSCOSEL_NOCLOCK" value="0U" />
+      <define name="RCC_BDCR_LSCOSEL_LSI" value="RCC_BDCR_LSCOEN" />
+      <define name="RCC_BDCR_LSCOSEL_LSE"
+              value="(RCC_BDCR_LSCOEN | RCC_BDCR_LSCOSEL)" />
     </definitions>
     <configs>
       <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
@@ -83,6 +87,15 @@
               default="RCC_ICSCR1_MSIBIAS_CONTINUOUS"
               values="RCC_ICSCR1_MSIBIAS_CONTINUOUS RCC_ICSCR1_MSIBIAS_SAMPLING">
         <description>Selects the MSI bias mode.</description>
+      </config>
+      <config name="LPTIM1_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the LPTIM1 clock.</description>
+      </config>
+      <config name="LPTIM2_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the LPTIM2 clock.</description>
+      </config>
+      <config name="LPTIM34_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the LPTIM3 and LPTIM4 clocks.</description>
       </config>
     </configs>
     <derived-configs>
@@ -317,17 +330,162 @@
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>system clock</description>
       <limits ref="SYSCLK" />
-      <mux name="SW">
-        <input point="MSIS" default="yes">
-          <bits value="RCC_CFGR1_SW_MSIS" />
+      <mux name="SW" field="RCC_CFGR1_SW" offset="0U">
+        <input point="MSIS" encoding="0U" default="yes" />
+        <input point="HSI16" encoding="1U" />
+        <input point="HSE" encoding="2U" />
+      </mux>
+    </clock>
+    <clock point="HCLK" enable="always" dynamic="yes">
+      <description>AHB clock</description>
+      <limits ref="HCLK" />
+      <divider name="HPRE" input="SYSCLK" field="RCC_CFGR2_HPRE"
+               offset="0U">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="8U" />
+          <choice item="DIV4" value="4" encoding="9U" />
+          <choice item="DIV8" value="8" encoding="10U" />
+          <choice item="DIV16" value="16" encoding="11U" />
+          <choice item="DIV64" value="64" encoding="12U" />
+          <choice item="DIV128" value="128" encoding="13U" />
+          <choice item="DIV256" value="256" encoding="14U" />
+          <choice item="DIV512" value="512" encoding="15U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="PCLK1" enable="always" dynamic="yes">
+      <description>APB1 clock</description>
+      <limits ref="PCLK1" />
+      <divider name="PPRE1" input="HCLK" field="RCC_CFGR2_PPRE1"
+               offset="4U">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="PCLK1TIM" enable="always" dynamic="yes">
+      <description>APB1 timer clock</description>
+      <derived input="PCLK1"
+               frequency="((STM32_CFG_PCLK1_VALUE == 1) ? %I% : (%I% * 2U))" />
+    </clock>
+    <clock point="PCLK2" enable="always" dynamic="yes">
+      <description>APB2 clock</description>
+      <limits ref="PCLK2" />
+      <divider name="PPRE2" input="HCLK" field="RCC_CFGR2_PPRE2"
+               offset="8U">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="PCLK2TIM" enable="always" dynamic="yes">
+      <description>APB2 timer clock</description>
+      <derived input="PCLK2"
+               frequency="((STM32_CFG_PCLK2_VALUE == 1) ? %I% : (%I% * 2U))" />
+    </clock>
+    <clock point="PCLK3" enable="always" dynamic="yes">
+      <description>APB3 clock</description>
+      <limits ref="PCLK3" />
+      <divider name="PPRE3" input="HCLK" field="RCC_CFGR3_PPRE3"
+               offset="4U">
+        <choices default="1">
+          <choice item="DIV1" value="1" encoding="0U" />
+          <choice item="DIV2" value="2" encoding="4U" />
+          <choice item="DIV4" value="4" encoding="5U" />
+          <choice item="DIV8" value="8" encoding="6U" />
+          <choice item="DIV16" value="16" encoding="7U" />
+        </choices>
+      </divider>
+    </clock>
+    <clock point="HSEDIV" enable="auto" dynamic="no">
+      <description>HSE divided-by-32 RTC clock</description>
+      <derived input="HSE" frequency="(%I% / 32U)" />
+    </clock>
+    <clock point="LSESYS" enable="auto" dynamic="no">
+      <description>LSE system clock</description>
+      <bits target="BDCR" enabled="RCC_BDCR_LSESYSEN" disabled="0U" />
+      <derived input="LSE" frequency="%I%" />
+    </clock>
+    <clock point="RTC" enable="always" dynamic="no">
+      <description>RTC and TAMP clock</description>
+      <mux name="RTC" field="RCC_BDCR_RTCSEL" offset="8U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" default="yes" />
+        <input point="LSE" encoding="1U" />
+        <input point="LSI" encoding="2U" />
+        <input point="HSEDIV" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="LSCO" enable="always" dynamic="no">
+      <description>LSCO output pin</description>
+      <mux name="LSCOSEL">
+        <input point="NONE" label="NOCLOCK" default="yes">
+          <bits value="RCC_BDCR_LSCOSEL_NOCLOCK" />
         </input>
-        <input point="HSI16">
-          <bits value="RCC_CFGR1_SW_HSI16" />
+        <input point="LSI">
+          <bits value="RCC_BDCR_LSCOSEL_LSI" />
         </input>
-        <input point="HSE">
-          <bits value="RCC_CFGR1_SW_HSE" />
+        <input point="LSESYS" label="LSE">
+          <bits value="RCC_BDCR_LSCOSEL_LSE" />
         </input>
       </mux>
     </clock>
+    <clock point="LPTIM1" enable="auto" dynamic="no">
+      <description>LPTIM1 clock</description>
+      <mux name="LPTIM1" field="RCC_CCIPR3_LPTIM1SEL" offset="10U">
+        <input point="MSIK" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSESYS" label="LSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="LPTIM2" enable="auto" dynamic="no">
+      <description>LPTIM2 clock</description>
+      <mux name="LPTIM2" field="RCC_CCIPR1_LPTIM2SEL" offset="18U">
+        <input point="PCLK1" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSESYS" label="LSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="LPTIM34" enable="auto" dynamic="no">
+      <description>LPTIM3 and LPTIM4 clock</description>
+      <mux name="LPTIM34" field="RCC_CCIPR3_LPTIM34SEL" offset="8U">
+        <input point="MSIK" encoding="0U" default="yes" />
+        <input point="LSI" encoding="1U" />
+        <input point="HSI16" encoding="2U" />
+        <input point="LSESYS" label="LSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="IWDG" enable="auto" dynamic="no">
+      <description>IWDG clock</description>
+      <derived input="LSI" frequency="%I%" />
+    </clock>
   </clocks>
+  <sinks>
+    <sink name="LPTIM1_REQUIRED" input="LPTIM1"
+              condition="STM32_CFG_LPTIM1_REQUIRED == TRUE">
+      <description>Local option demands the LPTIM1 clock when enabled.</description>
+    </sink>
+    <sink name="LPTIM2_REQUIRED" input="LPTIM2"
+              condition="STM32_CFG_LPTIM2_REQUIRED == TRUE">
+      <description>Local option demands the LPTIM2 clock when enabled.</description>
+    </sink>
+    <sink name="LPTIM34_REQUIRED" input="LPTIM34"
+              condition="STM32_CFG_LPTIM34_REQUIRED == TRUE">
+      <description>Local option demands the LPTIM3 and LPTIM4 clocks when enabled.</description>
+    </sink>
+    <sink name="IWDG_DRIVER" input="IWDG"
+              condition="(HAL_USE_WDG == TRUE) &amp;&amp; (STM32_WDG_USE_IWDG == TRUE)">
+      <description>WDG driver demands the IWDG clock when enabled.</description>
+    </sink>
+  </sinks>
 </clocktree>
