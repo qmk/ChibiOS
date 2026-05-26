@@ -473,6 +473,11 @@
 #define STM32_ADC2_CLOCK                    STM32_ADCDAC_CLOCK
 #define STM32_DAC1_CLOCK                    STM32_ADCDAC_CLOCK
 
+/**
+ * @brief   Maximum allowed SDMMC kernel clock frequency.
+ */
+#define STM32_SDMMC_MAXCLK                  STM32_SYSCLK_MAX
+
 /*===========================================================================*/
 /* Driver data structures and types.                                         */
 /*===========================================================================*/

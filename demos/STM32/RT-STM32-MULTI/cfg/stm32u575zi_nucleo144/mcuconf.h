@@ -32,17 +32,17 @@
  * HAL driver general settings.
  */
 #define STM32_NO_INIT                       FALSE
-#define STM32_CLOCK_DYNAMIC                 FALSE
+#define STM32_CFG_CLOCK_DYNAMIC             FALSE
 
 /*
  * Clock settings.
  */
-#define STM32_HSI16_ENABLED                 FALSE
-#define STM32_HSI48_ENABLED                 FALSE
-#define STM32_HSE_ENABLED                   FALSE
-#define STM32_LSI_ENABLED                   FALSE
-#define STM32_LSE_ENABLED                   FALSE
-#define STM32_LPUART1SEL                    RCC_CCIPR3_LPUART1SEL_PCLK3
+#define STM32_CFG_HSI16_ENABLE              FALSE
+#define STM32_CFG_HSI48_ENABLE              FALSE
+#define STM32_CFG_HSE_ENABLE                FALSE
+#define STM32_CFG_LSI_ENABLE                FALSE
+#define STM32_CFG_LSE_ENABLE                FALSE
+#define STM32_CFG_LPUART1_SEL               RCC_CCIPR3_LPUART1SEL_PCLK3
 
 /*
  * IRQ system settings.
