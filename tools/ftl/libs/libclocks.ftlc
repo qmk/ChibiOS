@@ -1187,6 +1187,11 @@ function GetScalerSettingMacro(point)
   return precfg + point["name"] + postvalues
 endfunction
 
+/* Returns the generated demand macro for a clock sink.*/
+function GetSinkDemandMacro(sink)
+  return premacro + sink["name"] + "_DEMANDED"
+endfunction
+
 /* Emits current clock point values in static or dynamic form as configured.*/
 macro EmitCurrentClockDefinitions()
   local points = model["clocks"]
@@ -1217,7 +1222,8 @@ function GetDemandConditions(point)
   local conditions = []
   list model["sinks"] as sink
     if sink["input"] == point["name"]
-      local conditions = conditions + [{"demander":sink["name"], "terms":SplitAndCondition(sink["condition"]), "requires":[]}]
+      local demandmacro = GetSinkDemandMacro(sink)
+      local conditions = conditions + [{"demander":sink["name"], "terms":[demandmacro + " == TRUE"], "requires":["TRUE"]}]
     endif
   endlist
   list model["clocks"] as downstream
@@ -1773,6 +1779,42 @@ macro EmitEnableExpression(name, expression, conditions)
     ppcode.EmitPPDefine(name=name, value=expression)
   else
     ppcode.EmitPPDefine(name=name, value=expression)
+  endif
+endmacro
+
+/* Emits generated sink demand states without embedding defined() in macros.*/
+macro EmitSinkDemandDefinitions()
+  if model["sinks"]?size > 0
+    emit """
+/**
+ * @name    Sink demand states
+ * @{
+ */
+"""
+    list model["sinks"] as sink
+      local demandmacro = GetSinkDemandMacro(sink)
+      local condition = sink["condition"]
+      emit """
+/**
+ * @brief   ${sink["name"]} sink demand state.
+ */
+"""
+      if condition == "TRUE"
+        ppcode.EmitPPDefine(name=demandmacro, value="TRUE")
+      else
+        ppcode.EmitPPIf(expression="(" + condition + ") || defined(__DOXYGEN__)")
+        ppcode.EmitPPDefine(name=demandmacro, value="TRUE")
+        ppcode.EmitPPElse()
+        ppcode.EmitPPDefine(name=demandmacro, value="FALSE")
+        ppcode.EmitPPEndif()
+      endif
+      sep
+        emit "\e"
+      endsep
+    endlist
+    emit """
+/** @} */
+"""
   endif
 endmacro
 
@@ -2463,6 +2505,10 @@ macro EmitDerivedConstants()
   endif
   EmitLimitDefinitions()
   if model["configs"]?size > 0 || model["derived_configs"]?size > 0 || model["limits"]["limits"]?size > 0
+    emit "\e"
+  endif
+  EmitSinkDemandDefinitions()
+  if model["sinks"]?size > 0
     emit "\e"
   endif
   EmitEnableDefinitions()

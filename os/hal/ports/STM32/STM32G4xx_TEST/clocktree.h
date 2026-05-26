@@ -814,6 +814,20 @@
 #endif
 
 /**
+ * @name    Sink demand states
+ * @{
+ */
+/**
+ * @brief   RTC sink demand state.
+ */
+#if (HAL_USE_RTC == TRUE) || defined(__DOXYGEN__)
+  #define STM32_RTC_DEMANDED                TRUE
+#else
+  #define STM32_RTC_DEMANDED                FALSE
+#endif
+/** @} */
+
+/**
  * @brief   NONE clock derived enable state.
  */
 #define STM32_NONE_ENABLED                  FALSE
@@ -949,7 +963,7 @@
 /**
  * @brief   RTC clock derived enable state.
  */
-#define STM32_RTC_ENABLED                   ((HAL_USE_RTC == TRUE))
+#define STM32_RTC_ENABLED                   ((STM32_RTC_DEMANDED == TRUE))
 
 /**
  * @brief   USART1 clock derived enable state.

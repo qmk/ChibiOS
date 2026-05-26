@@ -1673,6 +1673,493 @@
 #endif
 
 /**
+ * @name    Sink demand states
+ * @{
+ */
+/**
+ * @brief   PLL1P_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL1P_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL1P_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL1P_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL1Q_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL1Q_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL1Q_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL1Q_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL1R_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL1R_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL1R_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL1R_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL2P_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL2P_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL2P_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL2P_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL2Q_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL2Q_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL2Q_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL2Q_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL2R_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL2R_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL2R_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL2R_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL3P_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL3P_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL3P_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL3P_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL3Q_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL3Q_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL3Q_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL3Q_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   PLL3R_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_PLL3R_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_PLL3R_REQUIRED_DEMANDED     TRUE
+#else
+  #define STM32_PLL3R_REQUIRED_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   USART1_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_USART1 == TRUE)) ||      \
+    defined(__DOXYGEN__)
+  #define STM32_USART1_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_USART1_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   USART1_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_USART1 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_USART1_SIO_DRIVER_DEMANDED  TRUE
+#else
+  #define STM32_USART1_SIO_DRIVER_DEMANDED  FALSE
+#endif
+
+/**
+ * @brief   USART2_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_USART2 == TRUE)) ||      \
+    defined(__DOXYGEN__)
+  #define STM32_USART2_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_USART2_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   USART2_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_USART2 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_USART2_SIO_DRIVER_DEMANDED  TRUE
+#else
+  #define STM32_USART2_SIO_DRIVER_DEMANDED  FALSE
+#endif
+
+/**
+ * @brief   USART3_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_USART3 == TRUE)) ||      \
+    defined(__DOXYGEN__)
+  #define STM32_USART3_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_USART3_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   USART3_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_USART3 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_USART3_SIO_DRIVER_DEMANDED  TRUE
+#else
+  #define STM32_USART3_SIO_DRIVER_DEMANDED  FALSE
+#endif
+
+/**
+ * @brief   UART4_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_UART4 == TRUE)) ||       \
+    defined(__DOXYGEN__)
+  #define STM32_UART4_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_UART4_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   UART4_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_UART4 == TRUE)) ||             \
+    defined(__DOXYGEN__)
+  #define STM32_UART4_SIO_DRIVER_DEMANDED   TRUE
+#else
+  #define STM32_UART4_SIO_DRIVER_DEMANDED   FALSE
+#endif
+
+/**
+ * @brief   UART5_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_UART5 == TRUE)) ||       \
+    defined(__DOXYGEN__)
+  #define STM32_UART5_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_UART5_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   UART5_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_UART5 == TRUE)) ||             \
+    defined(__DOXYGEN__)
+  #define STM32_UART5_SIO_DRIVER_DEMANDED   TRUE
+#else
+  #define STM32_UART5_SIO_DRIVER_DEMANDED   FALSE
+#endif
+
+/**
+ * @brief   LPUART1_SERIAL_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SERIAL == TRUE) && (STM32_SERIAL_USE_LPUART1 == TRUE)) ||     \
+    defined(__DOXYGEN__)
+  #define STM32_LPUART1_SERIAL_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_LPUART1_SERIAL_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   LPUART1_SIO_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SIO == TRUE) && (STM32_SIO_USE_LPUART1 == TRUE)) ||           \
+    defined(__DOXYGEN__)
+  #define STM32_LPUART1_SIO_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_LPUART1_SIO_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   I2C1_DRIVER sink demand state.
+ */
+#if ((HAL_USE_I2C == TRUE) && (STM32_I2C_USE_I2C1 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_I2C1_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_I2C1_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   I2C2_DRIVER sink demand state.
+ */
+#if ((HAL_USE_I2C == TRUE) && (STM32_I2C_USE_I2C2 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_I2C2_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_I2C2_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   I2C3_DRIVER sink demand state.
+ */
+#if ((HAL_USE_I2C == TRUE) && (STM32_I2C_USE_I2C3 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_I2C3_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_I2C3_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   I2C4_DRIVER sink demand state.
+ */
+#if ((HAL_USE_I2C == TRUE) && (STM32_I2C_USE_I2C4 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_I2C4_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_I2C4_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   SPI1_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SPI == TRUE) && (STM32_SPI_USE_SPI1 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_SPI1_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_SPI1_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   SPI2_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SPI == TRUE) && (STM32_SPI_USE_SPI2 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_SPI2_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_SPI2_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   SPI3_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SPI == TRUE) && (STM32_SPI_USE_SPI3 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_SPI3_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_SPI3_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   FDCAN1_DRIVER sink demand state.
+ */
+#if ((HAL_USE_CAN == TRUE) && (STM32_CAN_USE_FDCAN1 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_FDCAN1_DRIVER_DEMANDED      TRUE
+#else
+  #define STM32_FDCAN1_DRIVER_DEMANDED      FALSE
+#endif
+
+/**
+ * @brief   SYSTICK_DRIVER sink demand state.
+ */
+#if (OSAL_ST_MODE == OSAL_ST_MODE_PERIODIC) || defined(__DOXYGEN__)
+  #define STM32_SYSTICK_DRIVER_DEMANDED     TRUE
+#else
+  #define STM32_SYSTICK_DRIVER_DEMANDED     FALSE
+#endif
+
+/**
+ * @brief   TIMICSEL_HSI16_SOURCE sink demand state.
+ */
+#if (STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || defined(__DOXYGEN__)
+  #define STM32_TIMICSEL_HSI16_SOURCE_DEMANDED TRUE
+#else
+  #define STM32_TIMICSEL_HSI16_SOURCE_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   TIMICSEL_MSIS_SOURCE sink demand state.
+ */
+#if (STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || defined(__DOXYGEN__)
+  #define STM32_TIMICSEL_MSIS_SOURCE_DEMANDED TRUE
+#else
+  #define STM32_TIMICSEL_MSIS_SOURCE_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   TIMICSEL_MSIK_SOURCE sink demand state.
+ */
+#if (STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || defined(__DOXYGEN__)
+  #define STM32_TIMICSEL_MSIK_SOURCE_DEMANDED TRUE
+#else
+  #define STM32_TIMICSEL_MSIK_SOURCE_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   USB1_DRIVER sink demand state.
+ */
+#if ((HAL_USE_USB == TRUE) && (STM32_USB_USE_USB1 == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_USB1_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_USB1_DRIVER_DEMANDED        FALSE
+#endif
+
+/**
+ * @brief   SDMMC1_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SDC == TRUE) && (STM32_SDC_USE_SDMMC1 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_SDMMC1_DRIVER_DEMANDED      TRUE
+#else
+  #define STM32_SDMMC1_DRIVER_DEMANDED      FALSE
+#endif
+
+/**
+ * @brief   SDMMC2_DRIVER sink demand state.
+ */
+#if ((HAL_USE_SDC == TRUE) && (STM32_SDC_USE_SDMMC2 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_SDMMC2_DRIVER_DEMANDED      TRUE
+#else
+  #define STM32_SDMMC2_DRIVER_DEMANDED      FALSE
+#endif
+
+/**
+ * @brief   OCTOSPI1_WSPI_DRIVER sink demand state.
+ */
+#if (defined(STM32_WSPI_USE_OCTOSPI1) && (HAL_USE_WSPI == TRUE) &&          \
+     (STM32_WSPI_USE_OCTOSPI1 == TRUE)) || defined(__DOXYGEN__)
+  #define STM32_OCTOSPI1_WSPI_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_OCTOSPI1_WSPI_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   OCTOSPI2_WSPI_DRIVER sink demand state.
+ */
+#if (defined(STM32_WSPI_USE_OCTOSPI2) && (HAL_USE_WSPI == TRUE) &&          \
+     (STM32_WSPI_USE_OCTOSPI2 == TRUE)) || defined(__DOXYGEN__)
+  #define STM32_OCTOSPI2_WSPI_DRIVER_DEMANDED TRUE
+#else
+  #define STM32_OCTOSPI2_WSPI_DRIVER_DEMANDED FALSE
+#endif
+
+/**
+ * @brief   RNG_DRIVER sink demand state.
+ */
+#if ((HAL_USE_TRNG == TRUE) && (STM32_TRNG_USE_RNG1 == TRUE)) ||            \
+    defined(__DOXYGEN__)
+  #define STM32_RNG_DRIVER_DEMANDED         TRUE
+#else
+  #define STM32_RNG_DRIVER_DEMANDED         FALSE
+#endif
+
+/**
+ * @brief   SAI1_I2S_DRIVER sink demand state.
+ */
+#if (defined(STM32_I2S_USE_SAI1) && (HAL_USE_I2S == TRUE) &&                \
+     (STM32_I2S_USE_SAI1 == TRUE)) || defined(__DOXYGEN__)
+  #define STM32_SAI1_I2S_DRIVER_DEMANDED    TRUE
+#else
+  #define STM32_SAI1_I2S_DRIVER_DEMANDED    FALSE
+#endif
+
+/**
+ * @brief   SAI2_I2S_DRIVER sink demand state.
+ */
+#if (defined(STM32_I2S_USE_SAI2) && (HAL_USE_I2S == TRUE) &&                \
+     (STM32_I2S_USE_SAI2 == TRUE)) || defined(__DOXYGEN__)
+  #define STM32_SAI2_I2S_DRIVER_DEMANDED    TRUE
+#else
+  #define STM32_SAI2_I2S_DRIVER_DEMANDED    FALSE
+#endif
+
+/**
+ * @brief   MDF1_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_MDF1_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_MDF1_REQUIRED_DEMANDED      TRUE
+#else
+  #define STM32_MDF1_REQUIRED_DEMANDED      FALSE
+#endif
+
+/**
+ * @brief   ADF1_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_ADF1_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_ADF1_REQUIRED_DEMANDED      TRUE
+#else
+  #define STM32_ADF1_REQUIRED_DEMANDED      FALSE
+#endif
+
+/**
+ * @brief   ADCDAC_ADC_DRIVER sink demand state.
+ */
+#if ((HAL_USE_ADC == TRUE) && ((STM32_ADC_USE_ADC1 == TRUE) ||              \
+      (defined(STM32_ADC_USE_ADC4) && (STM32_ADC_USE_ADC4 == TRUE)))) ||    \
+    defined(__DOXYGEN__)
+  #define STM32_ADCDAC_ADC_DRIVER_DEMANDED  TRUE
+#else
+  #define STM32_ADCDAC_ADC_DRIVER_DEMANDED  FALSE
+#endif
+
+/**
+ * @brief   ADCDAC_DAC_DRIVER sink demand state.
+ */
+#if ((HAL_USE_DAC == TRUE) && ((STM32_DAC_USE_DAC1_CH1 == TRUE) ||          \
+      (STM32_DAC_USE_DAC1_CH2 == TRUE))) || defined(__DOXYGEN__)
+  #define STM32_ADCDAC_DAC_DRIVER_DEMANDED  TRUE
+#else
+  #define STM32_ADCDAC_DAC_DRIVER_DEMANDED  FALSE
+#endif
+
+/**
+ * @brief   DAC1SH_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_DAC1SH_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_DAC1SH_REQUIRED_DEMANDED    TRUE
+#else
+  #define STM32_DAC1SH_REQUIRED_DEMANDED    FALSE
+#endif
+
+/**
+ * @brief   LPTIM1_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_LPTIM1_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_LPTIM1_REQUIRED_DEMANDED    TRUE
+#else
+  #define STM32_LPTIM1_REQUIRED_DEMANDED    FALSE
+#endif
+
+/**
+ * @brief   LPTIM2_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_LPTIM2_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_LPTIM2_REQUIRED_DEMANDED    TRUE
+#else
+  #define STM32_LPTIM2_REQUIRED_DEMANDED    FALSE
+#endif
+
+/**
+ * @brief   LPTIM34_REQUIRED sink demand state.
+ */
+#if (STM32_CFG_LPTIM34_REQUIRED == TRUE) || defined(__DOXYGEN__)
+  #define STM32_LPTIM34_REQUIRED_DEMANDED   TRUE
+#else
+  #define STM32_LPTIM34_REQUIRED_DEMANDED   FALSE
+#endif
+
+/**
+ * @brief   IWDG_DRIVER sink demand state.
+ */
+#if ((HAL_USE_WDG == TRUE) && (STM32_WDG_USE_IWDG == TRUE)) ||              \
+    defined(__DOXYGEN__)
+  #define STM32_IWDG_DRIVER_DEMANDED        TRUE
+#else
+  #define STM32_IWDG_DRIVER_DEMANDED        FALSE
+#endif
+/** @} */
+
+/**
  * @brief   NONE clock derived enable state.
  */
 #define STM32_NONE_ENABLED                  FALSE
@@ -1757,7 +2244,7 @@
 /**
  * @brief   MSIS clock derived enable state.
  */
-#define STM32_MSIS_ENABLED                  ((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+#define STM32_MSIS_ENABLED                  ((STM32_TIMICSEL_MSIS_SOURCE_DEMANDED == TRUE) || \
                                              ((STM32_PLL1IN_ENABLED == TRUE) && \
                                               (STM32_CFG_PLL1IN_SEL == RCC_PLL1CFGR_PLL1SRC_MSIS)) || \
                                              ((STM32_PLL2IN_ENABLED == TRUE) && \
@@ -1782,7 +2269,7 @@
 /**
  * @brief   MSIK clock derived enable state.
  */
-#define STM32_MSIK_ENABLED                  ((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK) || \
+#define STM32_MSIK_ENABLED                  ((STM32_TIMICSEL_MSIK_SOURCE_DEMANDED == TRUE) || \
                                              ((STM32_MCODIV_ENABLED == TRUE) && \
                                               (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_MSIK)) || \
                                              ((STM32_LPUART1_ENABLED == TRUE) && \
@@ -1836,7 +2323,7 @@
 /**
  * @brief   PLL1P clock derived enable state.
  */
-#define STM32_PLL1P_ENABLED                 ((STM32_CFG_PLL1P_REQUIRED == TRUE) || \
+#define STM32_PLL1P_ENABLED                 ((STM32_PLL1P_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_SYSCLK_ENABLED == TRUE) && \
                                               (STM32_CFG_SYSCLK_SEL == RCC_CFGR1_SW_PLL1P)) || \
                                              ((STM32_SDMMC_ENABLED == TRUE) && \
@@ -1853,7 +2340,7 @@
 /**
  * @brief   PLL1Q clock derived enable state.
  */
-#define STM32_PLL1Q_ENABLED                 ((STM32_CFG_PLL1Q_REQUIRED == TRUE) || \
+#define STM32_PLL1Q_ENABLED                 ((STM32_PLL1Q_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_FDCAN1_ENABLED == TRUE) && \
                                               (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCANSEL_PLL1Q)) || \
                                              ((STM32_ICLK_ENABLED == TRUE) && \
@@ -1864,7 +2351,7 @@
 /**
  * @brief   PLL1R clock derived enable state.
  */
-#define STM32_PLL1R_ENABLED                 ((STM32_CFG_PLL1R_REQUIRED == TRUE) || \
+#define STM32_PLL1R_ENABLED                 ((STM32_PLL1R_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_MCODIV_ENABLED == TRUE) && \
                                               (STM32_CFG_MCODIV_SEL == RCC_CFGR1_MCOSEL_PLL1R)))
 
@@ -1888,7 +2375,7 @@
 /**
  * @brief   PLL2P clock derived enable state.
  */
-#define STM32_PLL2P_ENABLED                 ((STM32_CFG_PLL2P_REQUIRED == TRUE) || \
+#define STM32_PLL2P_ENABLED                 ((STM32_PLL2P_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_FDCAN1_ENABLED == TRUE) && \
                                               (STM32_CFG_FDCAN1_SEL == RCC_CCIPR1_FDCANSEL_PLL2P)) || \
                                              ((STM32_SAI1_ENABLED == TRUE) && \
@@ -1899,7 +2386,7 @@
 /**
  * @brief   PLL2Q clock derived enable state.
  */
-#define STM32_PLL2Q_ENABLED                 ((STM32_CFG_PLL2Q_REQUIRED == TRUE) || \
+#define STM32_PLL2Q_ENABLED                 ((STM32_PLL2Q_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_ICLK_ENABLED == TRUE) && \
                                               (STM32_CFG_ICLK_SEL == RCC_CCIPR1_ICLKSEL_PLL2Q)) || \
                                              ((STM32_OCTOSPI_ENABLED == TRUE) && \
@@ -1908,7 +2395,7 @@
 /**
  * @brief   PLL2R clock derived enable state.
  */
-#define STM32_PLL2R_ENABLED                 ((STM32_CFG_PLL2R_REQUIRED == TRUE) || \
+#define STM32_PLL2R_ENABLED                 ((STM32_PLL2R_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_ADCDAC_ENABLED == TRUE) && \
                                               (STM32_CFG_ADCDAC_SEL == RCC_CCIPR3_ADCDACSEL_PLL2R)))
 
@@ -1932,7 +2419,7 @@
 /**
  * @brief   PLL3P clock derived enable state.
  */
-#define STM32_PLL3P_ENABLED                 ((STM32_CFG_PLL3P_REQUIRED == TRUE) || \
+#define STM32_PLL3P_ENABLED                 ((STM32_PLL3P_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_SAI1_ENABLED == TRUE) && \
                                               (STM32_CFG_SAI1_SEL == RCC_CCIPR2_SAI1SEL_PLL3P)) || \
                                              ((STM32_SAI2_ENABLED == TRUE) && \
@@ -1941,7 +2428,7 @@
 /**
  * @brief   PLL3Q clock derived enable state.
  */
-#define STM32_PLL3Q_ENABLED                 ((STM32_CFG_PLL3Q_REQUIRED == TRUE) || \
+#define STM32_PLL3Q_ENABLED                 ((STM32_PLL3Q_REQUIRED_DEMANDED == TRUE) || \
                                              ((STM32_MDF1_ENABLED == TRUE) && \
                                               (STM32_CFG_MDF1_SEL == RCC_CCIPR2_MDF1SEL_PLL3Q)) || \
                                              ((STM32_ADF1_ENABLED == TRUE) && \
@@ -1950,7 +2437,7 @@
 /**
  * @brief   PLL3R clock derived enable state.
  */
-#define STM32_PLL3R_ENABLED                 ((STM32_CFG_PLL3R_REQUIRED == TRUE))
+#define STM32_PLL3R_ENABLED                 ((STM32_PLL3R_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   SYSCLK clock derived enable state.
@@ -2044,98 +2531,78 @@
 /**
  * @brief   USART1 clock derived enable state.
  */
-#define STM32_USART1_ENABLED                (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_USART1 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_USART1 == TRUE)))
+#define STM32_USART1_ENABLED                ((STM32_USART1_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_USART1_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   USART2 clock derived enable state.
  */
-#define STM32_USART2_ENABLED                (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_USART2 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_USART2 == TRUE)))
+#define STM32_USART2_ENABLED                ((STM32_USART2_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_USART2_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   USART3 clock derived enable state.
  */
-#define STM32_USART3_ENABLED                (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_USART3 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_USART3 == TRUE)))
+#define STM32_USART3_ENABLED                ((STM32_USART3_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_USART3_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   UART4 clock derived enable state.
  */
-#define STM32_UART4_ENABLED                 (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_UART4 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_UART4 == TRUE)))
+#define STM32_UART4_ENABLED                 ((STM32_UART4_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_UART4_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   UART5 clock derived enable state.
  */
-#define STM32_UART5_ENABLED                 (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_UART5 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_UART5 == TRUE)))
+#define STM32_UART5_ENABLED                 ((STM32_UART5_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_UART5_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   LPUART1 clock derived enable state.
  */
-#define STM32_LPUART1_ENABLED               (((HAL_USE_SERIAL == TRUE) &&   \
-                                              (STM32_SERIAL_USE_LPUART1 == TRUE)) || \
-                                             ((HAL_USE_SIO == TRUE) &&      \
-                                              (STM32_SIO_USE_LPUART1 == TRUE)))
+#define STM32_LPUART1_ENABLED               ((STM32_LPUART1_SERIAL_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_LPUART1_SIO_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   I2C1 clock derived enable state.
  */
-#define STM32_I2C1_ENABLED                  (((HAL_USE_I2C == TRUE) &&      \
-                                              (STM32_I2C_USE_I2C1 == TRUE)))
+#define STM32_I2C1_ENABLED                  ((STM32_I2C1_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   I2C2 clock derived enable state.
  */
-#define STM32_I2C2_ENABLED                  (((HAL_USE_I2C == TRUE) &&      \
-                                              (STM32_I2C_USE_I2C2 == TRUE)))
+#define STM32_I2C2_ENABLED                  ((STM32_I2C2_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   I2C4 clock derived enable state.
  */
-#define STM32_I2C4_ENABLED                  (((HAL_USE_I2C == TRUE) &&      \
-                                              (STM32_I2C_USE_I2C4 == TRUE)))
+#define STM32_I2C4_ENABLED                  ((STM32_I2C4_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   I2C3 clock derived enable state.
  */
-#define STM32_I2C3_ENABLED                  (((HAL_USE_I2C == TRUE) &&      \
-                                              (STM32_I2C_USE_I2C3 == TRUE)))
+#define STM32_I2C3_ENABLED                  ((STM32_I2C3_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SPI1 clock derived enable state.
  */
-#define STM32_SPI1_ENABLED                  (((HAL_USE_SPI == TRUE) &&      \
-                                              (STM32_SPI_USE_SPI1 == TRUE)))
+#define STM32_SPI1_ENABLED                  ((STM32_SPI1_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SPI2 clock derived enable state.
  */
-#define STM32_SPI2_ENABLED                  (((HAL_USE_SPI == TRUE) &&      \
-                                              (STM32_SPI_USE_SPI2 == TRUE)))
+#define STM32_SPI2_ENABLED                  ((STM32_SPI2_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SPI3 clock derived enable state.
  */
-#define STM32_SPI3_ENABLED                  (((HAL_USE_SPI == TRUE) &&      \
-                                              (STM32_SPI_USE_SPI3 == TRUE)))
+#define STM32_SPI3_ENABLED                  ((STM32_SPI3_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   FDCAN1 clock derived enable state.
  */
-#define STM32_FDCAN1_ENABLED                (((HAL_USE_CAN == TRUE) &&      \
-                                              (STM32_CAN_USE_FDCAN1 == TRUE)))
+#define STM32_FDCAN1_ENABLED                ((STM32_FDCAN1_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   HCLKDIV8 clock derived enable state.
@@ -2146,7 +2613,7 @@
 /**
  * @brief   SYSTICK clock derived enable state.
  */
-#define STM32_SYSTICK_ENABLED               ((OSAL_ST_MODE == OSAL_ST_MODE_PERIODIC))
+#define STM32_SYSTICK_ENABLED               ((STM32_SYSTICK_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   TIM16IC clock derived enable state.
@@ -2173,8 +2640,7 @@
 /**
  * @brief   USB clock derived enable state.
  */
-#define STM32_USB_ENABLED                   (((HAL_USE_USB == TRUE) &&      \
-                                              (STM32_USB_USE_USB1 == TRUE)))
+#define STM32_USB_ENABLED                   ((STM32_USB1_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SDMMC clock derived enable state.
@@ -2185,24 +2651,18 @@
 /**
  * @brief   SDMMC1 clock derived enable state.
  */
-#define STM32_SDMMC1_ENABLED                (((HAL_USE_SDC == TRUE) &&      \
-                                              (STM32_SDC_USE_SDMMC1 == TRUE)))
+#define STM32_SDMMC1_ENABLED                ((STM32_SDMMC1_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SDMMC2 clock derived enable state.
  */
-#define STM32_SDMMC2_ENABLED                (((HAL_USE_SDC == TRUE) &&      \
-                                              (STM32_SDC_USE_SDMMC2 == TRUE)))
+#define STM32_SDMMC2_ENABLED                ((STM32_SDMMC2_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   OCTOSPI clock derived enable state.
  */
-#define STM32_OCTOSPI_ENABLED               ((defined(STM32_WSPI_USE_OCTOSPI1) && \
-                                              (HAL_USE_WSPI == TRUE) &&     \
-                                              (STM32_WSPI_USE_OCTOSPI1 == TRUE)) || \
-                                             (defined(STM32_WSPI_USE_OCTOSPI2) && \
-                                              (HAL_USE_WSPI == TRUE) &&     \
-                                              (STM32_WSPI_USE_OCTOSPI2 == TRUE)))
+#define STM32_OCTOSPI_ENABLED               ((STM32_OCTOSPI1_WSPI_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_OCTOSPI2_WSPI_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   HSI48DIV2 clock derived enable state.
@@ -2213,69 +2673,58 @@
 /**
  * @brief   RNG clock derived enable state.
  */
-#define STM32_RNG_ENABLED                   (((HAL_USE_TRNG == TRUE) &&     \
-                                              (STM32_TRNG_USE_RNG1 == TRUE)))
+#define STM32_RNG_ENABLED                   ((STM32_RNG_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SAI1 clock derived enable state.
  */
-#define STM32_SAI1_ENABLED                  ((defined(STM32_I2S_USE_SAI1) && \
-                                              (HAL_USE_I2S == TRUE) &&      \
-                                              (STM32_I2S_USE_SAI1 == TRUE)))
+#define STM32_SAI1_ENABLED                  ((STM32_SAI1_I2S_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   SAI2 clock derived enable state.
  */
-#define STM32_SAI2_ENABLED                  ((defined(STM32_I2S_USE_SAI2) && \
-                                              (HAL_USE_I2S == TRUE) &&      \
-                                              (STM32_I2S_USE_SAI2 == TRUE)))
+#define STM32_SAI2_ENABLED                  ((STM32_SAI2_I2S_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   MDF1 clock derived enable state.
  */
-#define STM32_MDF1_ENABLED                  ((STM32_CFG_MDF1_REQUIRED == TRUE))
+#define STM32_MDF1_ENABLED                  ((STM32_MDF1_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   ADF1 clock derived enable state.
  */
-#define STM32_ADF1_ENABLED                  ((STM32_CFG_ADF1_REQUIRED == TRUE))
+#define STM32_ADF1_ENABLED                  ((STM32_ADF1_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   ADCDAC clock derived enable state.
  */
-#define STM32_ADCDAC_ENABLED                (((HAL_USE_ADC == TRUE) &&      \
-                                              ((STM32_ADC_USE_ADC1 == TRUE) || \
-                                               (defined(STM32_ADC_USE_ADC4) && \
-                                                (STM32_ADC_USE_ADC4 == TRUE)))) || \
-                                             ((HAL_USE_DAC == TRUE) &&      \
-                                              ((STM32_DAC_USE_DAC1_CH1 == TRUE) || \
-                                               (STM32_DAC_USE_DAC1_CH2 == TRUE))))
+#define STM32_ADCDAC_ENABLED                ((STM32_ADCDAC_ADC_DRIVER_DEMANDED == TRUE) || \
+                                             (STM32_ADCDAC_DAC_DRIVER_DEMANDED == TRUE))
 
 /**
  * @brief   DAC1SH clock derived enable state.
  */
-#define STM32_DAC1SH_ENABLED                ((STM32_CFG_DAC1SH_REQUIRED == TRUE))
+#define STM32_DAC1SH_ENABLED                ((STM32_DAC1SH_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   LPTIM1 clock derived enable state.
  */
-#define STM32_LPTIM1_ENABLED                ((STM32_CFG_LPTIM1_REQUIRED == TRUE))
+#define STM32_LPTIM1_ENABLED                ((STM32_LPTIM1_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   LPTIM2 clock derived enable state.
  */
-#define STM32_LPTIM2_ENABLED                ((STM32_CFG_LPTIM2_REQUIRED == TRUE))
+#define STM32_LPTIM2_ENABLED                ((STM32_LPTIM2_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   LPTIM34 clock derived enable state.
  */
-#define STM32_LPTIM34_ENABLED               ((STM32_CFG_LPTIM34_REQUIRED == TRUE))
+#define STM32_LPTIM34_ENABLED               ((STM32_LPTIM34_REQUIRED_DEMANDED == TRUE))
 
 /**
  * @brief   IWDG clock derived enable state.
  */
-#define STM32_IWDG_ENABLED                  (((HAL_USE_WDG == TRUE) &&      \
-                                              (STM32_WDG_USE_IWDG == TRUE)))
+#define STM32_IWDG_ENABLED                  ((STM32_IWDG_DRIVER_DEMANDED == TRUE))
 
 /*--- Macros and checks for the NONE clock point. --------------------------*/
 
@@ -2319,8 +2768,7 @@
 #endif
 
 #if !((STM32_HSI16_ENABLED == TRUE) ||                                      \
-     !((STM32_CFG_TIMICSEL != RCC_CCIPR1_TIMICSEL_NOCLOCK))) &&             \
-    !defined(__DOXYGEN__)
+     !((STM32_TIMICSEL_HSI16_SOURCE_DEMANDED == TRUE))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by TIMICSEL_HSI16_SOURCE"
 #endif
 
