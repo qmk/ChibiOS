@@ -767,7 +767,7 @@ thread_t *chThdCreateI(const thread_descriptor_t *tdp) {
              (tdp->wbase != NULL) &&
              MEM_IS_ALIGNED(tdp->wbase, PORT_WORKING_AREA_ALIGN) &&
              (tdp->wend > tdp->wbase) &&
-             MEM_IS_ALIGNED(tdp->wbase, PORT_STACK_ALIGN) &&
+             MEM_IS_ALIGNED(tdp->wend, PORT_STACK_ALIGN) &&
              (tdp->funcp != NULL));
 
   chDbgCheckClassI();

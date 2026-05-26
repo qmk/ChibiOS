@@ -73,6 +73,10 @@
 *** Releases and Change Log                                               ***
 *****************************************************************************
 
+*** 21.11.6 ***
+- FIX: RT: Fixed lign aheap-created thread working area size (bug #1307).
+- FIX; NIL: Fixed wrong alignment check in chThdCreateI() (bug #1306).
+
 *** 21.11.5 ***
 - FIX: DACv1 trigger mask sized for 3 or 4 bit trigger source identifier
 - NEW: STM32U0xx support.

@@ -84,6 +84,7 @@ thread_t *chThdCreateFromHeap(memory_heap_t *heapp, size_t size,
   thread_t *tp;
   void *wbase, *wend;
 
+  size = MEM_ALIGN_NEXT(size, PORT_STACK_ALIGN);
   wbase = chHeapAllocAligned(heapp, size, PORT_WORKING_AREA_ALIGN);
   if (wbase == NULL) {
     return NULL;
