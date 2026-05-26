@@ -88,6 +88,33 @@
               values="RCC_ICSCR1_MSIBIAS_CONTINUOUS RCC_ICSCR1_MSIBIAS_SAMPLING">
         <description>Selects the MSI bias mode.</description>
       </config>
+      <config name="PLL1P_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL1 P output clock.</description>
+      </config>
+      <config name="PLL1Q_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL1 Q output clock.</description>
+      </config>
+      <config name="PLL1R_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL1 R output clock.</description>
+      </config>
+      <config name="PLL2P_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL2 P output clock.</description>
+      </config>
+      <config name="PLL2Q_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL2 Q output clock.</description>
+      </config>
+      <config name="PLL2R_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL2 R output clock.</description>
+      </config>
+      <config name="PLL3P_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL3 P output clock.</description>
+      </config>
+      <config name="PLL3Q_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL3 Q output clock.</description>
+      </config>
+      <config name="PLL3R_REQUIRED" type="bool" default="FALSE">
+        <description>Enables demand for the PLL3 R output clock.</description>
+      </config>
       <config name="LPTIM1_REQUIRED" type="bool" default="FALSE">
         <description>Enables demand for the LPTIM1 clock.</description>
       </config>
@@ -327,6 +354,168 @@
       <bits target="ICSCR1" enabled="(RCC_ICSCR1_MSIRGSEL_ICSCR1 | STM32_CFG_MSIBIAS)" disabled="0U" />
       <derived input="MSIKDIV" frequency="%I%" />
     </clock>
+    <clock point="PLL1IN" enable="auto" dynamic="yes">
+      <description>PLL1 input clock</description>
+      <mux name="PLL1SRC" field="RCC_PLL1CFGR_PLL1SRC" offset="0U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" />
+        <input point="MSIS" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="HSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="PLL1REF" enable="auto" dynamic="yes">
+      <description>PLL1 reference clock</description>
+      <limits ref="PLLIN" />
+      <divider name="PLL1M" input="PLL1IN">
+        <value min="1" max="16" default="1">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1CFGR_PLL1M_Pos) | (((STM32_PLL1REF_FREQ) &gt; 8000000U) ? RCC_PLL1CFGR_PLL1RGE_8TO16 : RCC_PLL1CFGR_PLL1RGE_4TO8)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL1VCO" enable="auto" dynamic="yes">
+      <description>PLL1 VCO clock</description>
+      <limits ref="PLLVCO" />
+      <multiplier name="PLL1N" input="PLL1REF">
+        <value min="4" max="136" default="32">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1DIVR_PLL1N_Pos)" />
+        </value>
+      </multiplier>
+    </clock>
+    <clock point="PLL1P" enable="auto" dynamic="yes">
+      <description>PLL1 P output clock</description>
+      <limits ref="PLLP" />
+      <divider name="PLL1P" input="PLL1VCO">
+        <value min="2" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1DIVR_PLL1P_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL1Q" enable="auto" dynamic="yes">
+      <description>PLL1 Q output clock</description>
+      <limits ref="PLLQ" />
+      <divider name="PLL1Q" input="PLL1VCO">
+        <value min="1" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1DIVR_PLL1Q_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL1R" enable="auto" dynamic="yes">
+      <description>PLL1 R output clock</description>
+      <limits ref="PLLR" />
+      <divider name="PLL1R" input="PLL1VCO">
+        <set values="1 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100 102 104 106 108 110 112 114 116 118 120 122 124 126 128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL1DIVR_PLL1R_Pos)" />
+        </set>
+      </divider>
+    </clock>
+    <clock point="PLL2IN" enable="auto" dynamic="yes">
+      <description>PLL2 input clock</description>
+      <mux name="PLL2SRC" field="RCC_PLL2CFGR_PLL2SRC" offset="0U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" />
+        <input point="MSIS" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="HSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="PLL2REF" enable="auto" dynamic="yes">
+      <description>PLL2 reference clock</description>
+      <limits ref="PLLIN" />
+      <divider name="PLL2M" input="PLL2IN">
+        <value min="1" max="16" default="1">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2CFGR_PLL2M_Pos) | (((STM32_PLL2REF_FREQ) &gt; 8000000U) ? RCC_PLL2CFGR_PLL2RGE_8TO16 : RCC_PLL2CFGR_PLL2RGE_4TO8)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL2VCO" enable="auto" dynamic="yes">
+      <description>PLL2 VCO clock</description>
+      <limits ref="PLLVCO" />
+      <multiplier name="PLL2N" input="PLL2REF">
+        <value min="4" max="136" default="32">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2DIVR_PLL2N_Pos)" />
+        </value>
+      </multiplier>
+    </clock>
+    <clock point="PLL2P" enable="auto" dynamic="yes">
+      <description>PLL2 P output clock</description>
+      <limits ref="PLLP" />
+      <divider name="PLL2P" input="PLL2VCO">
+        <value min="2" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2DIVR_PLL2P_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL2Q" enable="auto" dynamic="yes">
+      <description>PLL2 Q output clock</description>
+      <limits ref="PLLQ" />
+      <divider name="PLL2Q" input="PLL2VCO">
+        <value min="1" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2DIVR_PLL2Q_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL2R" enable="auto" dynamic="yes">
+      <description>PLL2 R output clock</description>
+      <limits ref="PLLR" />
+      <divider name="PLL2R" input="PLL2VCO">
+        <value min="1" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL2DIVR_PLL2R_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL3IN" enable="auto" dynamic="yes">
+      <description>PLL3 input clock</description>
+      <mux name="PLL3SRC" field="RCC_PLL3CFGR_PLL3SRC" offset="0U">
+        <input point="NONE" label="NOCLOCK" encoding="0U" />
+        <input point="MSIS" encoding="1U" default="yes" />
+        <input point="HSI16" encoding="2U" />
+        <input point="HSE" encoding="3U" />
+      </mux>
+    </clock>
+    <clock point="PLL3REF" enable="auto" dynamic="yes">
+      <description>PLL3 reference clock</description>
+      <limits ref="PLLIN" />
+      <divider name="PLL3M" input="PLL3IN">
+        <value min="1" max="16" default="1">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3CFGR_PLL3M_Pos) | (((STM32_PLL3REF_FREQ) &gt; 8000000U) ? RCC_PLL3CFGR_PLL3RGE_8TO16 : RCC_PLL3CFGR_PLL3RGE_4TO8)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL3VCO" enable="auto" dynamic="yes">
+      <description>PLL3 VCO clock</description>
+      <limits ref="PLLVCO" />
+      <multiplier name="PLL3N" input="PLL3REF">
+        <value min="4" max="136" default="32">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3DIVR_PLL3N_Pos)" />
+        </value>
+      </multiplier>
+    </clock>
+    <clock point="PLL3P" enable="auto" dynamic="yes">
+      <description>PLL3 P output clock</description>
+      <limits ref="PLLP" />
+      <divider name="PLL3P" input="PLL3VCO">
+        <value min="2" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3DIVR_PLL3P_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL3Q" enable="auto" dynamic="yes">
+      <description>PLL3 Q output clock</description>
+      <limits ref="PLLQ" />
+      <divider name="PLL3Q" input="PLL3VCO">
+        <value min="1" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3DIVR_PLL3Q_Pos)" />
+        </value>
+      </divider>
+    </clock>
+    <clock point="PLL3R" enable="auto" dynamic="yes">
+      <description>PLL3 R output clock</description>
+      <limits ref="PLLR" />
+      <divider name="PLL3R" input="PLL3VCO">
+        <value min="1" max="128" default="4">
+          <bits value="((%N% - 1U) &lt;&lt; RCC_PLL3DIVR_PLL3R_Pos)" />
+        </value>
+      </divider>
+    </clock>
     <clock point="SYSCLK" enable="always" dynamic="yes">
       <description>system clock</description>
       <limits ref="SYSCLK" />
@@ -334,6 +523,7 @@
         <input point="MSIS" encoding="0U" default="yes" />
         <input point="HSI16" encoding="1U" />
         <input point="HSE" encoding="2U" />
+        <input point="PLL1P" encoding="3U" />
       </mux>
     </clock>
     <clock point="HCLK" enable="always" dynamic="yes">
@@ -471,6 +661,42 @@
     </clock>
   </clocks>
   <sinks>
+    <sink name="PLL1P_REQUIRED" input="PLL1P"
+              condition="STM32_CFG_PLL1P_REQUIRED == TRUE">
+      <description>Local option demands the PLL1 P output clock when enabled.</description>
+    </sink>
+    <sink name="PLL1Q_REQUIRED" input="PLL1Q"
+              condition="STM32_CFG_PLL1Q_REQUIRED == TRUE">
+      <description>Local option demands the PLL1 Q output clock when enabled.</description>
+    </sink>
+    <sink name="PLL1R_REQUIRED" input="PLL1R"
+              condition="STM32_CFG_PLL1R_REQUIRED == TRUE">
+      <description>Local option demands the PLL1 R output clock when enabled.</description>
+    </sink>
+    <sink name="PLL2P_REQUIRED" input="PLL2P"
+              condition="STM32_CFG_PLL2P_REQUIRED == TRUE">
+      <description>Local option demands the PLL2 P output clock when enabled.</description>
+    </sink>
+    <sink name="PLL2Q_REQUIRED" input="PLL2Q"
+              condition="STM32_CFG_PLL2Q_REQUIRED == TRUE">
+      <description>Local option demands the PLL2 Q output clock when enabled.</description>
+    </sink>
+    <sink name="PLL2R_REQUIRED" input="PLL2R"
+              condition="STM32_CFG_PLL2R_REQUIRED == TRUE">
+      <description>Local option demands the PLL2 R output clock when enabled.</description>
+    </sink>
+    <sink name="PLL3P_REQUIRED" input="PLL3P"
+              condition="STM32_CFG_PLL3P_REQUIRED == TRUE">
+      <description>Local option demands the PLL3 P output clock when enabled.</description>
+    </sink>
+    <sink name="PLL3Q_REQUIRED" input="PLL3Q"
+              condition="STM32_CFG_PLL3Q_REQUIRED == TRUE">
+      <description>Local option demands the PLL3 Q output clock when enabled.</description>
+    </sink>
+    <sink name="PLL3R_REQUIRED" input="PLL3R"
+              condition="STM32_CFG_PLL3R_REQUIRED == TRUE">
+      <description>Local option demands the PLL3 R output clock when enabled.</description>
+    </sink>
     <sink name="LPTIM1_REQUIRED" input="LPTIM1"
               condition="STM32_CFG_LPTIM1_REQUIRED == TRUE">
       <description>Local option demands the LPTIM1 clock when enabled.</description>
