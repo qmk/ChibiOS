@@ -1,0 +1,43 @@
+<clocktree>
+  <settings>
+    <prefixes clock_points="TCLK_" macros="TST_" cfgs="TST_CFG_" />
+    <suffixes frequency="_FREQ" values="_VALUE" bits="_BITS"
+              selector="_SEL" enable="_ENABLE" enabled="_ENABLED" />
+    <configs>
+      <config name="CLOCK_DYNAMIC" type="bool" default="FALSE"
+              role="dynamic_mode">
+        <description>Enables dynamic clock handling.</description>
+      </config>
+    </configs>
+    <states>
+      <state name="normal" when="TRUE" />
+    </states>
+    <limit-set>
+      <limit name="PERCLK" min="yes" max="yes" />
+    </limit-set>
+    <limit-values>
+      <state-values state="normal">
+        <limit name="PERCLK" min="1000000U" max="8000000U" />
+      </state-values>
+    </limit-values>
+  </settings>
+  <sources>
+    <source point="NONE" enable="never" dynamic="no" frequency="0U">
+      <description>pseudo-clock for disabled sources</description>
+    </source>
+  </sources>
+  <clocks>
+    <clock point="OSC" enable="always" dynamic="no">
+      <description>fixed oscillator</description>
+      <derived frequency="4000000U" />
+    </clock>
+    <clock point="PER" enable="always" dynamic="no">
+      <description>peripheral clock</description>
+      <limits ref="PERCLK" />
+      <mux name="PERSEL" field="RCC_CCIPR_PERSEL" offset="0U">
+        <input point="NONE" encoding="0U" />
+        <input point="OSC" encoding="1U" default="yes" />
+      </mux>
+    </clock>
+  </clocks>
+</clocktree>

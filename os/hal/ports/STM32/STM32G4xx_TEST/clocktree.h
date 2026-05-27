@@ -1105,126 +1105,81 @@
   #error "HSI16 not enabled, required by SYSCLK"
 #endif
 
-#if !defined(RCC_CFGR_MCOSEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR_MCOSEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
       (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by MCODIV"
 #endif
 
-#if !defined(RCC_CCIPR_USART1SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART1SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_USART1_ENABLED == TRUE) &&  \
       (STM32_CFG_USART1_SEL == RCC_CCIPR_USART1SEL_HSI16))) &&              \
     !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by USART1"
 #endif
 
-#if !defined(RCC_CCIPR_USART2SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART2SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_USART2_ENABLED == TRUE) &&  \
       (STM32_CFG_USART2_SEL == RCC_CCIPR_USART2SEL_HSI16))) &&              \
     !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by USART2"
 #endif
 
-#if !defined(RCC_CCIPR_USART3SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART3SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_USART3_ENABLED == TRUE) &&  \
       (STM32_CFG_USART3_SEL == RCC_CCIPR_USART3SEL_HSI16))) &&              \
     !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by USART3"
 #endif
 
-#if !defined(RCC_CCIPR_UART4SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_UART4SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_UART4_ENABLED == TRUE) &&   \
       (STM32_CFG_UART4_SEL == RCC_CCIPR_UART4SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by UART4"
 #endif
 
-#if !defined(RCC_CCIPR_UART5SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_UART5SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_UART5_ENABLED == TRUE) &&   \
       (STM32_CFG_UART5_SEL == RCC_CCIPR_UART5SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by UART5"
 #endif
 
-#if !defined(RCC_CCIPR_LPUART1SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_LPUART1SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_LPUART1_ENABLED == TRUE) && \
       (STM32_CFG_LPUART1_SEL == RCC_CCIPR_LPUART1SEL_HSI16))) &&            \
     !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by LPUART1"
 #endif
 
-#if !defined(RCC_CCIPR_I2C1SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_I2C1SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_I2C1_ENABLED == TRUE) &&    \
       (STM32_CFG_I2C1_SEL == RCC_CCIPR_I2C1SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by I2C1"
 #endif
 
-#if !defined(RCC_CCIPR_I2C2SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_I2C2SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_I2C2_ENABLED == TRUE) &&    \
       (STM32_CFG_I2C2_SEL == RCC_CCIPR_I2C2SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by I2C2"
 #endif
 
-#if !defined(RCC_CCIPR_I2C3SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_I2C3SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_I2C3_ENABLED == TRUE) &&    \
       (STM32_CFG_I2C3_SEL == RCC_CCIPR_I2C3SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by I2C3"
 #endif
 
-#if !defined(RCC_CCIPR2_I2C4SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR2_I2C4SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_I2C4_ENABLED == TRUE) &&    \
       (STM32_CFG_I2C4_SEL == RCC_CCIPR2_I2C4SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by I2C4"
 #endif
 
-#if !defined(RCC_CCIPR_LPTIM1SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_LPTIM1SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_LPTIM1_ENABLED == TRUE) &&  \
       (STM32_CFG_LPTIM1_SEL == RCC_CCIPR_LPTIM1SEL_HSI16))) &&              \
     !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by LPTIM1"
 #endif
 
-#if !defined(RCC_CCIPR_SAI1SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_SAI1SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_SAI1_ENABLED == TRUE) &&    \
       (STM32_CFG_SAI1_SEL == RCC_CCIPR_SAI1SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by SAI1"
 #endif
 
-#if !defined(RCC_CCIPR_I2S23SEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_I2S23SEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_I2S23_ENABLED == TRUE) &&   \
       (STM32_CFG_I2S23_SEL == RCC_CCIPR_I2S23SEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by I2S23"
 #endif
 
-#if !defined(RCC_CCIPR2_QSPISEL_HSI16) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR2_QSPISEL_HSI16 not defined"
-#endif
 #if !((STM32_HSI16_ENABLED == TRUE) || !((STM32_QSPI_ENABLED == TRUE) &&    \
       (STM32_CFG_QSPI_SEL == RCC_CCIPR2_QSPISEL_HSI16))) && !defined(__DOXYGEN__)
   #error "HSI16 not enabled, required by QSPI"
@@ -1260,17 +1215,11 @@
   #error "invalid STM32_CFG_HSI48_ENABLE value specified"
 #endif
 
-#if !defined(RCC_CFGR_MCOSEL_HSI48) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR_MCOSEL_HSI48 not defined"
-#endif
 #if !((STM32_HSI48_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&  \
       (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSI48))) && !defined(__DOXYGEN__)
   #error "HSI48 not enabled, required by MCODIV"
 #endif
 
-#if !defined(RCC_CCIPR_CLK48SEL_HSI48) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_CLK48SEL_HSI48 not defined"
-#endif
 #if !((STM32_HSI48_ENABLED == TRUE) || !((STM32_CLK48_ENABLED == TRUE) &&   \
       (STM32_CFG_CLK48_SEL == RCC_CCIPR_CLK48SEL_HSI48))) && !defined(__DOXYGEN__)
   #error "HSI48 not enabled, required by CLK48"
@@ -1330,17 +1279,11 @@
   #error "HSE not enabled, required by HSEDIV"
 #endif
 
-#if !defined(RCC_CFGR_MCOSEL_HSE) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR_MCOSEL_HSE not defined"
-#endif
 #if !((STM32_HSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
       (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_HSE))) && !defined(__DOXYGEN__)
   #error "HSE not enabled, required by MCODIV"
 #endif
 
-#if !defined(RCC_CCIPR_FDCANSEL_HSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_FDCANSEL_HSE not defined"
-#endif
 #if !((STM32_HSE_ENABLED == TRUE) || !((STM32_FDCAN_ENABLED == TRUE) &&     \
       (STM32_CFG_FDCAN_SEL == RCC_CCIPR_FDCANSEL_HSE))) && !defined(__DOXYGEN__)
   #error "HSE not enabled, required by FDCAN"
@@ -1386,9 +1329,6 @@
   #error "invalid STM32_CFG_LSE_ENABLE value specified"
 #endif
 
-#if !defined(RCC_CFGR_MCOSEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR_MCOSEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
       (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by MCODIV"
@@ -1399,66 +1339,42 @@
   #error "LSE not enabled, required by LSCO"
 #endif
 
-#if !defined(RCC_BDCR_RTCSEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_BDCR_RTCSEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_RTC_ENABLED == TRUE) &&       \
       (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by RTC"
 #endif
 
-#if !defined(RCC_CCIPR_USART1SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART1SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_USART1_ENABLED == TRUE) &&    \
       (STM32_CFG_USART1_SEL == RCC_CCIPR_USART1SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by USART1"
 #endif
 
-#if !defined(RCC_CCIPR_USART2SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART2SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_USART2_ENABLED == TRUE) &&    \
       (STM32_CFG_USART2_SEL == RCC_CCIPR_USART2SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by USART2"
 #endif
 
-#if !defined(RCC_CCIPR_USART3SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_USART3SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_USART3_ENABLED == TRUE) &&    \
       (STM32_CFG_USART3_SEL == RCC_CCIPR_USART3SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by USART3"
 #endif
 
-#if !defined(RCC_CCIPR_UART4SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_UART4SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_UART4_ENABLED == TRUE) &&     \
       (STM32_CFG_UART4_SEL == RCC_CCIPR_UART4SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by UART4"
 #endif
 
-#if !defined(RCC_CCIPR_UART5SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_UART5SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_UART5_ENABLED == TRUE) &&     \
       (STM32_CFG_UART5_SEL == RCC_CCIPR_UART5SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by UART5"
 #endif
 
-#if !defined(RCC_CCIPR_LPUART1SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_LPUART1SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_LPUART1_ENABLED == TRUE) &&   \
       (STM32_CFG_LPUART1_SEL == RCC_CCIPR_LPUART1SEL_LSE))) &&              \
     !defined(__DOXYGEN__)
   #error "LSE not enabled, required by LPUART1"
 #endif
 
-#if !defined(RCC_CCIPR_LPTIM1SEL_LSE) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_LPTIM1SEL_LSE not defined"
-#endif
 #if !((STM32_LSE_ENABLED == TRUE) || !((STM32_LPTIM1_ENABLED == TRUE) &&    \
       (STM32_CFG_LPTIM1_SEL == RCC_CCIPR_LPTIM1SEL_LSE))) && !defined(__DOXYGEN__)
   #error "LSE not enabled, required by LPTIM1"
@@ -1504,9 +1420,6 @@
   #error "invalid STM32_CFG_LSI_ENABLE value specified"
 #endif
 
-#if !defined(RCC_CFGR_MCOSEL_LSI) && !defined(__DOXYGEN__)
-  #error "RCC_CFGR_MCOSEL_LSI not defined"
-#endif
 #if !((STM32_LSI_ENABLED == TRUE) || !((STM32_MCODIV_ENABLED == TRUE) &&    \
       (STM32_CFG_MCODIV_SEL == RCC_CFGR_MCOSEL_LSI))) && !defined(__DOXYGEN__)
   #error "LSI not enabled, required by MCODIV"
@@ -1517,17 +1430,11 @@
   #error "LSI not enabled, required by LSCO"
 #endif
 
-#if !defined(RCC_BDCR_RTCSEL_LSI) && !defined(__DOXYGEN__)
-  #error "RCC_BDCR_RTCSEL_LSI not defined"
-#endif
 #if !((STM32_LSI_ENABLED == TRUE) || !((STM32_RTC_ENABLED == TRUE) &&       \
       (STM32_CFG_RTC_SEL == RCC_BDCR_RTCSEL_LSI))) && !defined(__DOXYGEN__)
   #error "LSI not enabled, required by RTC"
 #endif
 
-#if !defined(RCC_CCIPR_LPTIM1SEL_LSI) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_LPTIM1SEL_LSI not defined"
-#endif
 #if !((STM32_LSI_ENABLED == TRUE) || !((STM32_LPTIM1_ENABLED == TRUE) &&    \
       (STM32_CFG_LPTIM1_SEL == RCC_CCIPR_LPTIM1SEL_LSI))) && !defined(__DOXYGEN__)
   #error "LSI not enabled, required by LPTIM1"
@@ -1824,7 +1731,7 @@
 #endif
 
 /**
- * @brief   System clock clock point.
+ * @brief   System clock point.
  */
 #if ((STM32_SYSCLK_ENABLED == TRUE) && \
      (STM32_CFG_SYSCLK_SEL == RCC_CFGR_SW_HSI)) || \
@@ -1967,7 +1874,7 @@
 #define STM32_PCLK1TIM_BITS                 0U
 
 /**
- * @brief   APB1 timer clock clock point.
+ * @brief   APB1 timer clock point.
  */
 #define STM32_PCLK1TIM_FREQ                 ((STM32_CFG_PCLK1_VALUE == 1) ? STM32_PCLK1_FREQ : \
                                              (STM32_PCLK1_FREQ * 2U))
@@ -1980,7 +1887,7 @@
 #define STM32_PCLK2TIM_BITS                 0U
 
 /**
- * @brief   APB2 timer clock clock point.
+ * @brief   APB2 timer clock point.
  */
 #define STM32_PCLK2TIM_FREQ                 ((STM32_CFG_PCLK2_VALUE == 1) ? STM32_PCLK2_FREQ : \
                                              (STM32_PCLK2_FREQ * 2U))
@@ -1993,7 +1900,7 @@
 #define STM32_HSEDIV_BITS                   0U
 
 /**
- * @brief   HSE divided-by-32 RTC clock clock point.
+ * @brief   HSE divided-by-32 RTC clock point.
  */
 #if (STM32_HSEDIV_ENABLED == TRUE) || defined(__DOXYGEN__)
   #define STM32_HSEDIV_FREQ                 (STM32_HSE_FREQ / 32U)
@@ -2678,7 +2585,7 @@
 #endif
 
 /**
- * @brief   48MHz clock clock point.
+ * @brief   48MHz clock point.
  */
 #if ((STM32_CLK48_ENABLED == TRUE) && \
      (STM32_CFG_CLK48_SEL == RCC_CCIPR_CLK48SEL_HSI48)) || \
@@ -2723,27 +2630,12 @@
   #define STM32_ADC12_FREQ                  0U
 #endif
 
-#if !defined(RCC_CCIPR_ADC12SEL_NOCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC12SEL_NOCLK not defined"
-#endif
-#if !(!((STM32_ADC12_ENABLED == TRUE) &&                                    \
-      (STM32_CFG_ADC12_SEL == RCC_CCIPR_ADC12SEL_NOCLK)) ||                 \
-     (STM32_NONE_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
-  #error "STM32_ADC12_FREQ above maximum frequency"
-#endif
-
-#if !defined(RCC_CCIPR_ADC12SEL_PLLPCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC12SEL_PLLPCLK not defined"
-#endif
 #if !(!((STM32_ADC12_ENABLED == TRUE) &&                                    \
       (STM32_CFG_ADC12_SEL == RCC_CCIPR_ADC12SEL_PLLPCLK)) ||               \
      (STM32_PLLP_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_ADC12_FREQ above maximum frequency"
 #endif
 
-#if !defined(RCC_CCIPR_ADC12SEL_SYSCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC12SEL_SYSCLK not defined"
-#endif
 #if !(!((STM32_ADC12_ENABLED == TRUE) &&                                    \
       (STM32_CFG_ADC12_SEL == RCC_CCIPR_ADC12SEL_SYSCLK)) ||                \
      (STM32_SYSCLK_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
@@ -2782,27 +2674,12 @@
   #define STM32_ADC345_FREQ                 0U
 #endif
 
-#if !defined(RCC_CCIPR_ADC345SEL_NOCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC345SEL_NOCLK not defined"
-#endif
-#if !(!((STM32_ADC345_ENABLED == TRUE) &&                                   \
-      (STM32_CFG_ADC345_SEL == RCC_CCIPR_ADC345SEL_NOCLK)) ||               \
-     (STM32_NONE_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
-  #error "STM32_ADC345_FREQ above maximum frequency"
-#endif
-
-#if !defined(RCC_CCIPR_ADC345SEL_PLLPCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC345SEL_PLLPCLK not defined"
-#endif
 #if !(!((STM32_ADC345_ENABLED == TRUE) &&                                   \
       (STM32_CFG_ADC345_SEL == RCC_CCIPR_ADC345SEL_PLLPCLK)) ||             \
      (STM32_PLLP_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
   #error "STM32_ADC345_FREQ above maximum frequency"
 #endif
 
-#if !defined(RCC_CCIPR_ADC345SEL_SYSCLK) && !defined(__DOXYGEN__)
-  #error "RCC_CCIPR_ADC345SEL_SYSCLK not defined"
-#endif
 #if !(!((STM32_ADC345_ENABLED == TRUE) &&                                   \
       (STM32_CFG_ADC345_SEL == RCC_CCIPR_ADC345SEL_SYSCLK)) ||              \
      (STM32_SYSCLK_FREQ <= STM32_ADCCLK_MAX)) && !defined(__DOXYGEN__)
