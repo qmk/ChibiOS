@@ -1450,6 +1450,102 @@
 #define STM32_VOS1_ADCCLK_MAX               55000000
 #define STM32_VOS1_USBCLK_MIN               47880000
 #define STM32_VOS1_USBCLK_MAX               48120000
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_0WS_MAX            32000000
+#else
+#define STM32_VOS1_FLASH_0WS_MAX            10000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_1WS_MAX            64000000
+#else
+#define STM32_VOS1_FLASH_1WS_MAX            20000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_2WS_MAX            96000000
+#else
+#define STM32_VOS1_FLASH_2WS_MAX            30000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_3WS_MAX            128000000
+#else
+#define STM32_VOS1_FLASH_3WS_MAX            40000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_4WS_MAX            160000000
+#else
+#define STM32_VOS1_FLASH_4WS_MAX            50000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_5WS_MAX            0
+#else
+#define STM32_VOS1_FLASH_5WS_MAX            60000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_6WS_MAX            0
+#else
+#define STM32_VOS1_FLASH_6WS_MAX            70000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_7WS_MAX            0
+#else
+#define STM32_VOS1_FLASH_7WS_MAX            80000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_8WS_MAX            0
+#else
+#define STM32_VOS1_FLASH_8WS_MAX            90000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_9WS_MAX            0
+#else
+#define STM32_VOS1_FLASH_9WS_MAX            100000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_10WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_10WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_11WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_11WS_MAX           120000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_12WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_12WS_MAX           130000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_13WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_13WS_MAX           140000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_14WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_14WS_MAX           150000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS1_FLASH_15WS_MAX           0
+#else
+#define STM32_VOS1_FLASH_15WS_MAX           160000000
+#endif
 /** @} */
 
 /**
@@ -1490,6 +1586,102 @@
 #define STM32_VOS2_ADCCLK_MAX               55000000
 #define STM32_VOS2_USBCLK_MIN               47880000
 #define STM32_VOS2_USBCLK_MAX               48120000
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_0WS_MAX            30000000
+#else
+#define STM32_VOS2_FLASH_0WS_MAX            10000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_1WS_MAX            60000000
+#else
+#define STM32_VOS2_FLASH_1WS_MAX            20000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_2WS_MAX            90000000
+#else
+#define STM32_VOS2_FLASH_2WS_MAX            30000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_3WS_MAX            110000000
+#else
+#define STM32_VOS2_FLASH_3WS_MAX            40000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_4WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_4WS_MAX            50000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_5WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_5WS_MAX            60000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_6WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_6WS_MAX            70000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_7WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_7WS_MAX            80000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_8WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_8WS_MAX            90000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_9WS_MAX            0
+#else
+#define STM32_VOS2_FLASH_9WS_MAX            100000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_10WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_10WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_11WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_11WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_12WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_12WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_13WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_13WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_14WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_14WS_MAX           110000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS2_FLASH_15WS_MAX           0
+#else
+#define STM32_VOS2_FLASH_15WS_MAX           110000000
+#endif
 /** @} */
 
 /**
@@ -1530,6 +1722,102 @@
 #define STM32_VOS3_ADCCLK_MAX               55000000
 #define STM32_VOS3_USBCLK_MIN               47880000
 #define STM32_VOS3_USBCLK_MAX               48120000
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_0WS_MAX            24000000
+#else
+#define STM32_VOS3_FLASH_0WS_MAX            10000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_1WS_MAX            48000000
+#else
+#define STM32_VOS3_FLASH_1WS_MAX            20000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_2WS_MAX            55000000
+#else
+#define STM32_VOS3_FLASH_2WS_MAX            30000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_3WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_3WS_MAX            40000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_4WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_4WS_MAX            50000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_5WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_5WS_MAX            55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_6WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_6WS_MAX            55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_7WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_7WS_MAX            55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_8WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_8WS_MAX            55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_9WS_MAX            0
+#else
+#define STM32_VOS3_FLASH_9WS_MAX            55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_10WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_10WS_MAX           55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_11WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_11WS_MAX           55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_12WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_12WS_MAX           55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_13WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_13WS_MAX           55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_14WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_14WS_MAX           55000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS3_FLASH_15WS_MAX           0
+#else
+#define STM32_VOS3_FLASH_15WS_MAX           55000000
+#endif
 /** @} */
 
 /**
@@ -1570,6 +1858,102 @@
 #define STM32_VOS4_ADCCLK_MAX               25000000
 #define STM32_VOS4_USBCLK_MIN               47880000
 #define STM32_VOS4_USBCLK_MAX               48120000
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_0WS_MAX            12000000
+#else
+#define STM32_VOS4_FLASH_0WS_MAX            8000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_1WS_MAX            25000000
+#else
+#define STM32_VOS4_FLASH_1WS_MAX            16000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_2WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_2WS_MAX            25000000
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_3WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_3WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_4WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_4WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_5WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_5WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_6WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_6WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_7WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_7WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_8WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_8WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_9WS_MAX            0
+#else
+#define STM32_VOS4_FLASH_9WS_MAX            0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_10WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_10WS_MAX           0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_11WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_11WS_MAX           0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_12WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_12WS_MAX           0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_13WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_13WS_MAX           0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_14WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_14WS_MAX           0
+#endif
+#if ((STM32_FLASH_ACR & FLASH_ACR_LPM) == 0) || \
+    defined(__DOXYGEN__)
+#define STM32_VOS4_FLASH_15WS_MAX           0
+#else
+#define STM32_VOS4_FLASH_15WS_MAX           0
+#endif
 /** @} */
 
 /*
@@ -1599,6 +1983,22 @@
 #define STM32_ADCCLK_MAX                    STM32_VOS1_ADCCLK_MAX
 #define STM32_USBCLK_MIN                    STM32_VOS1_USBCLK_MIN
 #define STM32_USBCLK_MAX                    STM32_VOS1_USBCLK_MAX
+#define STM32_FLASH_0WS_MAX                 STM32_VOS1_FLASH_0WS_MAX
+#define STM32_FLASH_1WS_MAX                 STM32_VOS1_FLASH_1WS_MAX
+#define STM32_FLASH_2WS_MAX                 STM32_VOS1_FLASH_2WS_MAX
+#define STM32_FLASH_3WS_MAX                 STM32_VOS1_FLASH_3WS_MAX
+#define STM32_FLASH_4WS_MAX                 STM32_VOS1_FLASH_4WS_MAX
+#define STM32_FLASH_5WS_MAX                 STM32_VOS1_FLASH_5WS_MAX
+#define STM32_FLASH_6WS_MAX                 STM32_VOS1_FLASH_6WS_MAX
+#define STM32_FLASH_7WS_MAX                 STM32_VOS1_FLASH_7WS_MAX
+#define STM32_FLASH_8WS_MAX                 STM32_VOS1_FLASH_8WS_MAX
+#define STM32_FLASH_9WS_MAX                 STM32_VOS1_FLASH_9WS_MAX
+#define STM32_FLASH_10WS_MAX                STM32_VOS1_FLASH_10WS_MAX
+#define STM32_FLASH_11WS_MAX                STM32_VOS1_FLASH_11WS_MAX
+#define STM32_FLASH_12WS_MAX                STM32_VOS1_FLASH_12WS_MAX
+#define STM32_FLASH_13WS_MAX                STM32_VOS1_FLASH_13WS_MAX
+#define STM32_FLASH_14WS_MAX                STM32_VOS1_FLASH_14WS_MAX
+#define STM32_FLASH_15WS_MAX                STM32_VOS1_FLASH_15WS_MAX
 #elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE2)
 #define STM32_HSECLK_MIN                    STM32_VOS2_HSECLK_MIN
 #define STM32_HSECLK_MAX                    STM32_VOS2_HSECLK_MAX
@@ -1622,6 +2022,22 @@
 #define STM32_ADCCLK_MAX                    STM32_VOS2_ADCCLK_MAX
 #define STM32_USBCLK_MIN                    STM32_VOS2_USBCLK_MIN
 #define STM32_USBCLK_MAX                    STM32_VOS2_USBCLK_MAX
+#define STM32_FLASH_0WS_MAX                 STM32_VOS2_FLASH_0WS_MAX
+#define STM32_FLASH_1WS_MAX                 STM32_VOS2_FLASH_1WS_MAX
+#define STM32_FLASH_2WS_MAX                 STM32_VOS2_FLASH_2WS_MAX
+#define STM32_FLASH_3WS_MAX                 STM32_VOS2_FLASH_3WS_MAX
+#define STM32_FLASH_4WS_MAX                 STM32_VOS2_FLASH_4WS_MAX
+#define STM32_FLASH_5WS_MAX                 STM32_VOS2_FLASH_5WS_MAX
+#define STM32_FLASH_6WS_MAX                 STM32_VOS2_FLASH_6WS_MAX
+#define STM32_FLASH_7WS_MAX                 STM32_VOS2_FLASH_7WS_MAX
+#define STM32_FLASH_8WS_MAX                 STM32_VOS2_FLASH_8WS_MAX
+#define STM32_FLASH_9WS_MAX                 STM32_VOS2_FLASH_9WS_MAX
+#define STM32_FLASH_10WS_MAX                STM32_VOS2_FLASH_10WS_MAX
+#define STM32_FLASH_11WS_MAX                STM32_VOS2_FLASH_11WS_MAX
+#define STM32_FLASH_12WS_MAX                STM32_VOS2_FLASH_12WS_MAX
+#define STM32_FLASH_13WS_MAX                STM32_VOS2_FLASH_13WS_MAX
+#define STM32_FLASH_14WS_MAX                STM32_VOS2_FLASH_14WS_MAX
+#define STM32_FLASH_15WS_MAX                STM32_VOS2_FLASH_15WS_MAX
 #elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE3)
 #define STM32_HSECLK_MIN                    STM32_VOS3_HSECLK_MIN
 #define STM32_HSECLK_MAX                    STM32_VOS3_HSECLK_MAX
@@ -1645,6 +2061,22 @@
 #define STM32_ADCCLK_MAX                    STM32_VOS3_ADCCLK_MAX
 #define STM32_USBCLK_MIN                    STM32_VOS3_USBCLK_MIN
 #define STM32_USBCLK_MAX                    STM32_VOS3_USBCLK_MAX
+#define STM32_FLASH_0WS_MAX                 STM32_VOS3_FLASH_0WS_MAX
+#define STM32_FLASH_1WS_MAX                 STM32_VOS3_FLASH_1WS_MAX
+#define STM32_FLASH_2WS_MAX                 STM32_VOS3_FLASH_2WS_MAX
+#define STM32_FLASH_3WS_MAX                 STM32_VOS3_FLASH_3WS_MAX
+#define STM32_FLASH_4WS_MAX                 STM32_VOS3_FLASH_4WS_MAX
+#define STM32_FLASH_5WS_MAX                 STM32_VOS3_FLASH_5WS_MAX
+#define STM32_FLASH_6WS_MAX                 STM32_VOS3_FLASH_6WS_MAX
+#define STM32_FLASH_7WS_MAX                 STM32_VOS3_FLASH_7WS_MAX
+#define STM32_FLASH_8WS_MAX                 STM32_VOS3_FLASH_8WS_MAX
+#define STM32_FLASH_9WS_MAX                 STM32_VOS3_FLASH_9WS_MAX
+#define STM32_FLASH_10WS_MAX                STM32_VOS3_FLASH_10WS_MAX
+#define STM32_FLASH_11WS_MAX                STM32_VOS3_FLASH_11WS_MAX
+#define STM32_FLASH_12WS_MAX                STM32_VOS3_FLASH_12WS_MAX
+#define STM32_FLASH_13WS_MAX                STM32_VOS3_FLASH_13WS_MAX
+#define STM32_FLASH_14WS_MAX                STM32_VOS3_FLASH_14WS_MAX
+#define STM32_FLASH_15WS_MAX                STM32_VOS3_FLASH_15WS_MAX
 #elif (STM32_CFG_PWR_VOSR == PWR_VOSR_VOS_RANGE4)
 #define STM32_HSECLK_MIN                    STM32_VOS4_HSECLK_MIN
 #define STM32_HSECLK_MAX                    STM32_VOS4_HSECLK_MAX
@@ -1668,6 +2100,22 @@
 #define STM32_ADCCLK_MAX                    STM32_VOS4_ADCCLK_MAX
 #define STM32_USBCLK_MIN                    STM32_VOS4_USBCLK_MIN
 #define STM32_USBCLK_MAX                    STM32_VOS4_USBCLK_MAX
+#define STM32_FLASH_0WS_MAX                 STM32_VOS4_FLASH_0WS_MAX
+#define STM32_FLASH_1WS_MAX                 STM32_VOS4_FLASH_1WS_MAX
+#define STM32_FLASH_2WS_MAX                 STM32_VOS4_FLASH_2WS_MAX
+#define STM32_FLASH_3WS_MAX                 STM32_VOS4_FLASH_3WS_MAX
+#define STM32_FLASH_4WS_MAX                 STM32_VOS4_FLASH_4WS_MAX
+#define STM32_FLASH_5WS_MAX                 STM32_VOS4_FLASH_5WS_MAX
+#define STM32_FLASH_6WS_MAX                 STM32_VOS4_FLASH_6WS_MAX
+#define STM32_FLASH_7WS_MAX                 STM32_VOS4_FLASH_7WS_MAX
+#define STM32_FLASH_8WS_MAX                 STM32_VOS4_FLASH_8WS_MAX
+#define STM32_FLASH_9WS_MAX                 STM32_VOS4_FLASH_9WS_MAX
+#define STM32_FLASH_10WS_MAX                STM32_VOS4_FLASH_10WS_MAX
+#define STM32_FLASH_11WS_MAX                STM32_VOS4_FLASH_11WS_MAX
+#define STM32_FLASH_12WS_MAX                STM32_VOS4_FLASH_12WS_MAX
+#define STM32_FLASH_13WS_MAX                STM32_VOS4_FLASH_13WS_MAX
+#define STM32_FLASH_14WS_MAX                STM32_VOS4_FLASH_14WS_MAX
+#define STM32_FLASH_15WS_MAX                STM32_VOS4_FLASH_15WS_MAX
 #else
   #error "unable to select clock frequency limits"
 #endif

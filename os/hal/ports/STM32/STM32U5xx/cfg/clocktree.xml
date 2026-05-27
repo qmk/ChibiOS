@@ -202,6 +202,22 @@
       <limit name="PCLK3" min="no" max="yes" />
       <limit name="ADCCLK" min="no" max="yes" />
       <limit name="USBCLK" min="yes" max="yes" />
+      <limit name="FLASH_0WS" min="no" max="yes" />
+      <limit name="FLASH_1WS" min="no" max="yes" />
+      <limit name="FLASH_2WS" min="no" max="yes" />
+      <limit name="FLASH_3WS" min="no" max="yes" />
+      <limit name="FLASH_4WS" min="no" max="yes" />
+      <limit name="FLASH_5WS" min="no" max="yes" />
+      <limit name="FLASH_6WS" min="no" max="yes" />
+      <limit name="FLASH_7WS" min="no" max="yes" />
+      <limit name="FLASH_8WS" min="no" max="yes" />
+      <limit name="FLASH_9WS" min="no" max="yes" />
+      <limit name="FLASH_10WS" min="no" max="yes" />
+      <limit name="FLASH_11WS" min="no" max="yes" />
+      <limit name="FLASH_12WS" min="no" max="yes" />
+      <limit name="FLASH_13WS" min="no" max="yes" />
+      <limit name="FLASH_14WS" min="no" max="yes" />
+      <limit name="FLASH_15WS" min="no" max="yes" />
     </limit-set>
     <limit-values>
       <state-values state="vos1">
@@ -225,6 +241,70 @@
         <limit name="PCLK3" max="160000000" />
         <limit name="ADCCLK" max="55000000" />
         <limit name="USBCLK" min="47880000" max="48120000" />
+        <limit name="FLASH_0WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="32000000" />
+          <default max="10000000" />
+        </limit>
+        <limit name="FLASH_1WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="64000000" />
+          <default max="20000000" />
+        </limit>
+        <limit name="FLASH_2WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="96000000" />
+          <default max="30000000" />
+        </limit>
+        <limit name="FLASH_3WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="128000000" />
+          <default max="40000000" />
+        </limit>
+        <limit name="FLASH_4WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="160000000" />
+          <default max="50000000" />
+        </limit>
+        <limit name="FLASH_5WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="60000000" />
+        </limit>
+        <limit name="FLASH_6WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="70000000" />
+        </limit>
+        <limit name="FLASH_7WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="80000000" />
+        </limit>
+        <limit name="FLASH_8WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="90000000" />
+        </limit>
+        <limit name="FLASH_9WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="100000000" />
+        </limit>
+        <limit name="FLASH_10WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_11WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="120000000" />
+        </limit>
+        <limit name="FLASH_12WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="130000000" />
+        </limit>
+        <limit name="FLASH_13WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="140000000" />
+        </limit>
+        <limit name="FLASH_14WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="150000000" />
+        </limit>
+        <limit name="FLASH_15WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="160000000" />
+        </limit>
       </state-values>
       <state-values state="vos2">
         <limit name="HSECLK">
@@ -247,6 +327,70 @@
         <limit name="PCLK3" max="110000000" />
         <limit name="ADCCLK" max="55000000" />
         <limit name="USBCLK" min="47880000" max="48120000" />
+        <limit name="FLASH_0WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="30000000" />
+          <default max="10000000" />
+        </limit>
+        <limit name="FLASH_1WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="60000000" />
+          <default max="20000000" />
+        </limit>
+        <limit name="FLASH_2WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="90000000" />
+          <default max="30000000" />
+        </limit>
+        <limit name="FLASH_3WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="110000000" />
+          <default max="40000000" />
+        </limit>
+        <limit name="FLASH_4WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="50000000" />
+        </limit>
+        <limit name="FLASH_5WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="60000000" />
+        </limit>
+        <limit name="FLASH_6WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="70000000" />
+        </limit>
+        <limit name="FLASH_7WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="80000000" />
+        </limit>
+        <limit name="FLASH_8WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="90000000" />
+        </limit>
+        <limit name="FLASH_9WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="100000000" />
+        </limit>
+        <limit name="FLASH_10WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_11WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_12WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_13WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_14WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
+        <limit name="FLASH_15WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="110000000" />
+        </limit>
       </state-values>
       <state-values state="vos3">
         <limit name="HSECLK">
@@ -269,6 +413,70 @@
         <limit name="PCLK3" max="55000000" />
         <limit name="ADCCLK" max="55000000" />
         <limit name="USBCLK" min="47880000" max="48120000" />
+        <limit name="FLASH_0WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="24000000" />
+          <default max="10000000" />
+        </limit>
+        <limit name="FLASH_1WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="48000000" />
+          <default max="20000000" />
+        </limit>
+        <limit name="FLASH_2WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="55000000" />
+          <default max="30000000" />
+        </limit>
+        <limit name="FLASH_3WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="40000000" />
+        </limit>
+        <limit name="FLASH_4WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="50000000" />
+        </limit>
+        <limit name="FLASH_5WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_6WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_7WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_8WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_9WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_10WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_11WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_12WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_13WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_14WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
+        <limit name="FLASH_15WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="55000000" />
+        </limit>
       </state-values>
       <state-values state="vos4">
         <limit name="HSECLK">
@@ -291,6 +499,70 @@
         <limit name="PCLK3" max="25000000" />
         <limit name="ADCCLK" max="25000000" />
         <limit name="USBCLK" min="47880000" max="48120000" />
+        <limit name="FLASH_0WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="12000000" />
+          <default max="8000000" />
+        </limit>
+        <limit name="FLASH_1WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="25000000" />
+          <default max="16000000" />
+        </limit>
+        <limit name="FLASH_2WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="25000000" />
+        </limit>
+        <limit name="FLASH_3WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_4WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_5WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_6WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_7WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_8WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_9WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_10WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_11WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_12WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_13WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_14WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
+        <limit name="FLASH_15WS">
+          <case when="((STM32_FLASH_ACR &amp; FLASH_ACR_LPM) == 0)" max="0" />
+          <default max="0" />
+        </limit>
       </state-values>
     </limit-values>
   </settings>
