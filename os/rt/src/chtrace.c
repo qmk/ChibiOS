@@ -193,7 +193,9 @@ void __trace_isr_leave(const char *isr) {
 void __trace_halt(const char *reason) {
   os_instance_t *oip = currcore;
 
-  if ((oip->trace_buffer.suspended & CH_DBG_TRACE_MASK_HALT) == 0U) {
+  /* Halt can be reached before trace buffer initialization.*/
+  if ((ch_system.state == ch_sys_running) &&
+      ((oip->trace_buffer.suspended & CH_DBG_TRACE_MASK_HALT) == 0U)) {
     oip->trace_buffer.ptr->type          = CH_TRACE_TYPE_HALT;
     oip->trace_buffer.ptr->state         = 0;
     oip->trace_buffer.ptr->u.halt.reason = reason;
