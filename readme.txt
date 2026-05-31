@@ -74,6 +74,8 @@
 *****************************************************************************
 
 *** 21.11.6 ***
+- FIX: Fixed RT trace halt event can dereference uninitialized trace buffer
+       before kernel startup completes (bug #1309).
 - FIX: RT: Fixed lign aheap-created thread working area size (bug #1307).
 - FIX; NIL: Fixed wrong alignment check in chThdCreateI() (bug #1306).
 
@@ -81,6 +83,8 @@
 - FIX: DACv1 trigger mask sized for 3 or 4 bit trigger source identifier
 - NEW: STM32U0xx support.
 - NEW: STM32U3xx support.
+- FIX: Fixed RT trace halt event can dereference uninitialized trace buffer
+       before kernel startup completes (bug #1309).
 - FIX: Fixed OSLIB Jobs Queues: return JOB_NULL descriptors to the free pool
        (bug #1304).
 - FIX: Fixed serialize ref duplication and harden dynamic object size
